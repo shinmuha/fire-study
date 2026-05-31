@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>소방관의 선택 — 사브리나 코헨-해턴</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f9f6f1;
+  --card: #ffffff;
+  --text: #1a1812;
+  --sub: #4a453c;
+  --light: #7a746a;
+  --border: #e0d8cc;
+  --accent: #b5411c;
+  --blue: #1e548a;
+  --gold: #c9963a;
+  --story-bg: #f4ede0;
+  --story-border: #d4b888;
+  --theory-bg: #edf3fb;
+  --theory-border: #a8c8e8;
+  --hl-bg: #fffbe8;
+  --hl-border: #e8cc60;
+  --quote-border: #c9963a;
+  --nav-bg: #1c1a16;
+  --nav-text: #f0ead8;
+  --nav-accent: #d4a853;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 18px;
+  line-height: 1.85;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── NAV ── */
+#topnav {
+  background: var(--nav-bg);
+  padding: 0;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+}
+.nav-inner {
+  display: flex;
+  align-items: center;
+  padding: 14px 18px;
+  gap: 12px;
+}
+.nav-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 15px;
+  color: var(--nav-accent);
+  font-weight: 700;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#menu-btn {
+  background: none;
+  border: 1px solid #444;
+  color: #ccc;
+  padding: 7px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+#toc-drawer {
+  display: none;
+  background: #141210;
+  padding: 0 0 16px;
+  border-top: 1px solid #333;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+#toc-drawer.open { display: block; }
+.toc-group-label {
+  padding: 12px 20px 4px;
+  font-size: 11px;
+  color: #666;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.toc-link {
+  display: block;
+  padding: 10px 20px;
+  color: #bbb;
+  text-decoration: none;
+  font-size: 15px;
+  border-left: 3px solid transparent;
+}
+.toc-link:active { background: #222; }
+.toc-link.cur { color: var(--nav-accent); border-left-color: var(--nav-accent); }
+
+/* ── WRAP ── */
+.wrap {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 18px 80px;
+}
+
+/* ── COVER ── */
+.cover {
+  padding: 40px 0 32px;
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 40px;
+}
+.cover-label {
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  color: var(--light);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.cover h1 {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 6px;
+}
+.cover-en {
+  font-size: 15px;
+  font-style: italic;
+  color: var(--light);
+  margin-bottom: 14px;
+}
+.cover-meta {
+  font-size: 15px;
+  color: var(--sub);
+  margin-bottom: 20px;
+}
+.cover-note {
+  background: #f0ebe0;
+  border-left: 3px solid var(--gold);
+  border-radius: 0 8px 8px 0;
+  padding: 11px 14px;
+  font-size: 14px;
+  color: var(--light);
+  line-height: 1.65;
+}
+
+/* ── AUTHOR ── */
+.author-box {
+  background: var(--nav-bg);
+  border-radius: 12px;
+  padding: 22px 20px;
+  margin-bottom: 36px;
+  color: var(--nav-text);
+}
+.author-box .label {
+  font-size: 11px;
+  color: var(--nav-accent);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+.author-box p {
+  font-size: 16px;
+  line-height: 1.85;
+  color: #ccc;
+}
+
+/* ── CHAPTER ── */
+.chapter {
+  margin-bottom: 60px;
+  scroll-margin-top: 70px;
+}
+.ch-header {
+  margin-bottom: 24px;
+}
+.ch-num {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.ch-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.35;
+  margin-bottom: 6px;
+}
+.ch-page {
+  font-size: 13px;
+  color: var(--light);
+}
+.ch-rule {
+  height: 2px;
+  background: linear-gradient(to right, var(--accent), transparent);
+  margin-top: 14px;
+  border-radius: 2px;
+}
+
+/* ── EPIGRAPH ── */
+.epigraph {
+  margin: 0 0 24px;
+  padding: 14px 18px;
+  border-left: 3px solid var(--gold);
+  border-radius: 0 8px 8px 0;
+  background: #fdf7ec;
+}
+.epigraph p {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 16px;
+  font-style: italic;
+  color: var(--sub);
+  line-height: 1.8;
+  margin-bottom: 5px;
+}
+.epigraph cite {
+  font-size: 13px;
+  color: var(--light);
+}
+
+/* ── SECTION LABELS ── */
+.sec-label {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 5px 11px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+}
+.lbl-story { background: #f0e8d4; color: #7a5214; }
+.lbl-theory { background: #ddeaf8; color: #1a4d80; }
+
+/* ── STORY BLOCK ── */
+.story {
+  background: var(--story-bg);
+  border: 1px solid var(--story-border);
+  border-radius: 12px;
+  padding: 20px 18px;
+  margin-bottom: 28px;
+}
+.story p {
+  font-size: 17px;
+  line-height: 1.9;
+  color: var(--sub);
+  margin-bottom: 12px;
+}
+.story p:last-child { margin-bottom: 0; }
+
+/* ── CONCEPT CARD ── */
+.concept {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--blue);
+  border-radius: 0 10px 10px 0;
+  padding: 18px 18px;
+  margin-bottom: 14px;
+}
+.concept h4 {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+.concept h4 .en {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--light);
+  display: block;
+  margin-top: 2px;
+}
+.concept p {
+  font-size: 17px;
+  line-height: 1.9;
+  color: var(--sub);
+  margin-bottom: 10px;
+}
+.concept p:last-child { margin-bottom: 0; }
+
+/* ── HIGHLIGHT ── */
+.hl {
+  background: var(--hl-bg);
+  border: 1px solid var(--hl-border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin: 12px 0;
+  font-size: 17px;
+  font-weight: 500;
+  color: #4a3800;
+  line-height: 1.75;
+}
+
+/* ── INLINE QUOTE ── */
+.iq {
+  border-left: 4px solid var(--accent);
+  padding: 11px 16px;
+  margin: 14px 0;
+  background: #fdf4f0;
+  border-radius: 0 8px 8px 0;
+  font-family: 'Noto Serif KR', serif;
+  font-size: 16.5px;
+  color: var(--sub);
+  line-height: 1.85;
+  font-style: italic;
+}
+
+/* ── STATS ── */
+.stats {
+  display: flex;
+  gap: 10px;
+  margin: 16px 0;
+  flex-wrap: wrap;
+}
+.stat {
+  flex: 1;
+  min-width: 80px;
+  background: var(--nav-bg);
+  border-radius: 10px;
+  padding: 14px 12px;
+  text-align: center;
+}
+.stat-n {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--nav-accent);
+  line-height: 1.1;
+}
+.stat-l {
+  font-size: 12px;
+  color: #999;
+  margin-top: 3px;
+  line-height: 1.4;
+}
+
+/* ── PROCESS ── */
+.process {
+  background: var(--theory-bg);
+  border: 1px solid var(--theory-border);
+  border-radius: 10px;
+  padding: 18px 16px;
+  margin: 14px 0;
+}
+.process-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--blue);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.p-step {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+.p-step:last-child { margin-bottom: 0; }
+.p-circle {
+  flex-shrink: 0;
+  width: 26px; height: 26px;
+  background: var(--blue);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  margin-top: 3px;
+}
+.p-text {
+  font-size: 17px;
+  line-height: 1.8;
+  color: var(--sub);
+}
+.p-text strong { color: var(--text); }
+
+/* ── THINCS ── */
+.thincs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 14px 0;
+}
+.tc-item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 13px 16px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.tc-num {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.tc-body .tc-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 3px;
+}
+.tc-body .tc-subs {
+  font-size: 14px;
+  color: var(--light);
+  line-height: 1.6;
+}
+
+/* ── RANK LIST ── */
+.rank-list {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 14px 0;
+}
+.rank-item {
+  display: flex;
+  align-items: center;
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+  font-size: 16px;
+}
+.rank-item:last-child { border-bottom: none; }
+.r-badge {
+  font-size: 12px;
+  color: var(--light);
+  min-width: 22px;
+  text-align: center;
+}
+.r-ko { color: var(--text); font-weight: 500; flex: 1; }
+.r-en { font-size: 12px; color: var(--light); text-align: right; }
+
+/* ── SEP ── */
+.sep {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 56px 0;
+}
+
+/* ── BACK TOP ── */
+.back-top {
+  display: block;
+  text-align: center;
+  margin-top: 40px;
+  padding: 14px;
+  background: var(--nav-bg);
+  border-radius: 10px;
+  color: var(--nav-accent);
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+}
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<div id="topnav">
+  <div class="nav-inner">
+    <div class="nav-title">소방관의 선택</div>
+    <button id="menu-btn" onclick="toggleMenu()">목차 ▾</button>
+  </div>
+  <div id="toc-drawer">
+    <div class="toc-group-label">책 정보</div>
+    <a class="toc-link" href="#cover" onclick="closeMenu()">표지 · 저자 소개</a>
+    <a class="toc-link" href="#intro" onclick="closeMenu()">들어가는 말</a>
+    <div class="toc-group-label">본문</div>
+    <a class="toc-link" href="#ch1" onclick="closeMenu()">1장 — 입장을 바꿔보기</a>
+    <a class="toc-link" href="#ch2" onclick="closeMenu()">2장 — 난제</a>
+    <a class="toc-link" href="#ch3" onclick="closeMenu()">3장 — 인간에 불과해</a>
+    <a class="toc-link" href="#ch4" onclick="closeMenu()">4장 — 퍼즐</a>
+    <a class="toc-link" href="#ch5" onclick="closeMenu()">5장 — 자신의 직감을 믿어라</a>
+    <a class="toc-link" href="#ch6" onclick="closeMenu()">6장 — 그림자로 평가받기</a>
+    <a class="toc-link" href="#ch7" onclick="closeMenu()">7장 — 정신적 준비</a>
+    <a class="toc-link" href="#ch8" onclick="closeMenu()">8장 — 인간됨의 대가</a>
+    <a class="toc-link" href="#ch9" onclick="closeMenu()">9장 — 두뇌와 행동</a>
+    <a class="toc-link" href="#ch10" onclick="closeMenu()">10장 — 다 끝난 뒤에 깨닫는 것들</a></div>
+
+<div class="wrap">
+
+<!-- COVER -->
+<section id="cover">
+  <div class="cover">
+    <div class="cover-label">사브리나 코헨-해턴 · 김희정 옮김 · 북하우스</div>
+    <h1>소방관의 선택</h1>
+    <div class="cover-en">The Heat of the Moment</div>
+    <div class="cover-meta">생사의 순간, 최선의 결정을 내리는 법</div>
+    <div class="cover-note">교육·연구 목적의 요약·정리본. 서사는 요약, 이론·개념은 원문에 최대한 충실하게 재구성했습니다.</div>
+  </div>
+
+  <div class="author-box">
+    <div class="label">저자 소개</div>
+    <p>사브리나 코헨-해턴(Sabrina Cohen-Hatton)은 영국에서 직급이 가장 높은 여성 소방관이다. 키 155cm, 몸무게 48kg의 작은 체구로, 15~16세에 2년간 노숙 생활을 경험했다. 열여덟 살에 여성 최초로 웨일스 소방 구조대에 입대한 뒤 약 20년간 웨스트민스터 테러 공격, 홀본 지하 터널 화재 등 수많은 대형 사건을 지휘했다. 카디프 대학교에서 행동 신경과학 심리학 박사학위를 취득했으며, 긴급 상황에서의 의사 결정과 지휘 기술 연구로 다수의 국제 학술상을 수상했다. 그녀가 개발한 의사 결정법과 훈련 시스템은 영국 전역 소방 구조 시스템을 혁신했고, 현재 여러 나라에서 벤치마킹하고 있다.</p>
+  </div>
+</section>
+
+<!-- 들어가는 말 -->
+<section id="intro" class="chapter">
+  <div class="ch-header">
+    <div class="ch-num">들어가는 말</div>
+    <div class="ch-title">이 책을 쓴 이유</div>
+    <div class="ch-page">p.13~19</div>
+    <div class="ch-rule"></div>
+  </div>
+
+  <div class="sec-label lbl-story">서사 요약</div>
+  <div class="story">
+    <p>저자는 아버지의 말로 글을 시작한다. "건물 밖으로 모든 사람이 뛰쳐나갈 때 안으로 뛰어들어가는 사람은 특별한 사람이다." 소방관으로 20년이 되어가는 지금, 그 말이 얼마나 옳았는지 절감한다고 쓴다. 저자는 키 155cm, 손톱에 매니큐어를 바르고 다니는 여성이자 박사학위 소지자이며 아이 엄마라는 점에서, 사람들이 상상하는 전형적인 소방관 이미지와 전혀 다르다고 밝힌다.</p>
+  </div>
+
+  <div class="sec-label lbl-theory">핵심 이론 및 개념</div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-n">80%</div><div class="stat-l">산업 재해 중 인재 비율</div></div>
+    <div class="stat"><div class="stat-n">80%</div><div class="stat-l">소방관 부상 중 잘못된 결정이 원인</div></div>
+    <div class="stat"><div class="stat-n">20년</div><div class="stat-l">저자의 소방관 경력</div></div>
+  </div>
+
+  <div class="concept">
+    <h4>집필 동기</h4>
+    <p>동료 소방관이 부상을 입은 사건이 계기가 되었다. 조사 결과 산업 재해의 80%가 인재(人災)라는 사실을 확인했다. 이 통계는 소방관 부상에도 그대로 적용된다. 판단 착오로 인한 잘못된 의사 결정, 즉 잘못된 시점과 장소에서 잘못 선택한 결정 때문에 많은 부상이 발생한다.</p>
+    <p>저자는 카디프 대학교와 협력해 영국 전역 실제 재난 현장에서 사건 총지휘관들이 실행한 인명을 좌우하는 결정 사례들을 연구했다. 이 연구 결과를 토대로 지휘관들이 더 효과적인 의사 결정을 할 수 있도록 돕는 기법을 개발했으며, 이 기법은 영국 전역 및 국제적으로 표준 지침으로 사용되고 있다.</p>
+    <div class="hl">이 책의 연구 결과와 원리들은 소방 현장뿐 아니라 일상생활에서도 적용할 수 있다.</div>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- 1장 -->
+<section id="ch1" class="chapter">
+  <div class="ch-header">
+    <div class="ch-num">1장</div>
+    <div class="ch-title">입장을 바꿔보기</div>
+    <div class="ch-page">p.21~52</div>
+    <div class="ch-rule"></div>
+  </div>
+  <div class="epigraph">
+    <p>"공감이란 자기 안에서 타인의 메아리를 찾는 일이다."</p>
+    <cite>— 모신 하미드</cite>
+  </div>
+
+  <div class="sec-label lbl-story">서사 요약</div>
+  <div class="story">
+    <p>초년 소방관 시절 두 가지 사건이 이 책의 출발점이 된다. 첫째, 새벽 가정집 화재에서 아기 유모차를 발견하고 연기 속에서 필사적으로 수색했으나 아기는 집에 없었다. 만취한 성인 남성을 구조했지만, 수색을 끝내지 못했다는 죄책감을 오래 안고 살았다. 둘째, 약혼자 마이크가 포함된 팀이 화재에 출동했을 때 대원 부상 소식을 듣고 마이크일까 두려워하며 달려갔다. 부상자가 마이크가 아님을 알고 안도했지만, 동시에 그 안도감에 다시 죄책감을 느꼈다. 이 경험이 연구의 시작이었다.</p>
+  </div>
+
+  <div class="sec-label lbl-theory">핵심 이론 및 개념</div>
+
+  <div class="concept">
+    <h4>스트레스와 의사결정 능력 저하</h4>
+    <p>출동 차량 안 4분 37초 동안 아무것도 집중할 수 없었던 것은 스트레스 때문이었다. 스트레스는 뇌의 정보 처리 용량을 감소시키고 결정을 내리는 능력을 방해한다. 그것은 실존주의적 경험이 아니라 단순한 생물학적 반응이다. 그 상황에서 뭔가를 잘못 이해하거나, 중요한 정보를 놓치거나, 최선이 아닌 대응을 했을 확률이 훨씬 높아진다는 것을 부인할 수 없다.</p>
+  </div>
+
+  <div class="concept">
+    <h4>공감(Empathy)의 역할</h4>
+    <p>공감은 물리적인 감각일 수도 있다. 저자는 화재 현장의 상황이 어떤지 알고, 불타오르는 건물에 23킬로그램이나 나가는 장비를 지고 들어가서 치열하게 임무를 수행하는 것이 어떤 느낌인지 안다. 그러나 동시에 소방관으로 일하는 것이 어떤 정서적 영향을 주는지 또한 이해한다.</p>
+    <div class="hl">공감은 나를 조금 더 앞으로 나아가게 하고, 조금 더 노력하게 만드는 동력이다. 내가 동료들에게 무엇을 요구할 때 그것이 어떤 결과를 초래할지를 이해하는 것도 중요하지만, 그들이 거기에 대해 어떻게 느낄지를 이해하는 것 또한 극도로 중요하다.</div>
+  </div>
+
+  <div class="concept">
+    <h4>죄책감의 기능적 활용</h4>
+    <p>처음에 죄책감을 가진 것은 정상적인 반응이었다. 그러나 그렇게 오래도록 그 죄책감에서 벗어나지 못한 것은 정상 범위에서 벗어나는 일이었다. 그 생각이 머릿속에서 계속 맴돌지 못하도록 제동을 걸어야만 했다. 그래서 그 느낌을 뭔가 좋은 일을 하는 원동력으로 삼기로 결심했다.</p>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- 2장 -->
+<section id="ch2" class="chapter">
+  <div class="ch-header">
+    <div class="ch-num">2장</div>
+    <div class="ch-title">난제</div>
+    <div class="ch-page">p.53~86</div>
+    <div class="ch-rule"></div>
+  </div>
+  <div class="epigraph">
+    <p>"그는 과도한 분석으로 인한 마비 증상을 앓고 있다."</p>
+    <cite>— 해럴드 제넌</cite>
+  </div>
+
+  <div class="sec-label lbl-story">서사 요약</div>
+  <div class="story">
+    <p>터널 화재 진압 중 2차 폭탄 경고를 받는다. 15~20분 안에 폭탄이 터질 수 있다. 터널 안 대원 20명과 민간인 부상자 30명 이상의 생사를 결정해야 하는 극한 상황에서 저자는 전원 철수 명령을 내린다. 맷 카네기 소방관은 구조 중인 어린 소녀가 있어 철수를 거부했다. "이 아이가 죽으면 저도 같이 죽습니다." 맷은 폭탄이 터지기 7분 늦게 사망했고, 소녀는 살았다.</p>
+  </div>
+
+  <div class="sec-label lbl-theory">핵심 이론 및 개념</div>
+
+  <div class="concept">
+    <h4>의사 결정 마비 현상<span class="en">Decision Inertia</span></h4>
+    <p>잘못될 수 있는 모든 요인들에 대한 걱정으로 인해 결정을 내리는 능력이 마비되어 버리는 현상이다. 촌각을 다투는 상황에서 상당히 심각한 문제를 야기할 수 있다. 마비 현상으로 인해 결정을 아예 내리지 않는 <strong>결정 누락(decision omission)</strong> 상황, 결정을 내리는 시간을 미루거나 다른 사람에게 떠넘기는 <strong>선택 전가(choice deferral)</strong> 상황으로 이어질 수 있다.</p>
+    <div class="hl">다 알면서도 무엇인가를 선택하는 이유는 아무것도 하지 않는 것, 즉 의사 결정 마비 현상에 굴복하는 것이야말로 단연 최악의 선택이기 때문이다.</div>
+  </div>
+
+  <div class="concept">
+    <h4>'가장 덜 나쁜 선택지' 원칙</h4>
+    <p>어떤 결정을 해도 원치 않는 결과가 나올 수밖에 없는 선택지만 있을 때 그중 가장 나은 것을 선택하는 것이다. 사망자의 숫자를 최소화하는 것이 가장 덜 나쁜 선택지를 고르는 결정이다. 이런 상황은 '만일 이랬다면?'류의 문제로 가득하다. 동료와 상사, 언론, 재판관, 유족은 내가 누리지 못한 조건들, 즉 시간적 여유와 사후 정보를 가진 유리한 고지에 서 있다. 나는 일이 벌어지는 와중에 순간적으로 판단해서 결정을 내려야 한다.</p>
+    <div class="iq">"가장 덜 나쁜 선택지를 골랐다는 자신은 있어요. 모든 게 괜찮을 것이라는 자신감? 물론 아니죠. 내 결정으로 사상자가 최소화될 것이라는 자신감? 그 자신은 있어요."</div>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- 3장 -->
+<section id="ch3" class="chapter">
+  <div class="ch-header">
+    <div class="ch-num">3장</div>
+    <div class="ch-title">인간에 불과해</div>
+    <div class="ch-page">p.87~124</div>
+    <div class="ch-rule"></div>
+  </div>
+
+  <div class="sec-label lbl-story">서사 요약</div>
+  <div class="story">
+    <p>경무관 진급을 원하는 제임스의 지휘 능력 평가를 담당한다. 화재 훈련 시나리오에서 제임스는 테러 가능성에 과도하게 집중해 확증 편향에 빠지고, 팀과 분리되어 결정적 정보들을 놓친다. 첫 시험에 실패했다가 훈련을 거듭한 끝에 결국 통과한다. 저자 자신도 15세에 노숙자가 된 경험을 고백하며, 소방관으로 일하면서 독학으로 심리학과 신경과학을 공부해 7년 과정의 박사과정을 3년 만에 완료한 과정을 서술한다.</p>
+  </div>
+
+  <div class="sec-label lbl-theory">핵심 이론 및 개념</div>
+
+  <div class="concept">
+    <h4>심적 모형<span class="en">Mental Model</span></h4>
+    <p>특정 시나리오에 완전히 부합하거나 그와 관계되는 정보를 모아둔 머릿속의 파일이다. 불완전한 정보만을 가지고 결정을 내려야 할 때 처한 상황과 관계있고 바로 접근할 수 있는 기억을 활용하는 것은 꼭 필요한 일이다.</p>
+    <div class="hl">새로운 정보가 들어오면 머릿속에 그리는 그림을 바꿀 필요가 있다.</div>
+  </div>
+
+  <div class="concept">
+    <h4>확증 편향<span class="en">Confirmation Bias</span></h4>
+    <p>확증 편향을 가질 경우 자신의 관점을 확인해주는 정보만을 받아들이게 된다. 터널 시야에 갇히면 상황의 한 부분에만 집중하고 전체를 보지 못한다. 예를 들어, 모든 여성이 운전에 서툴다고 생각하는 사람이 있다고 해보자. 그는 서툰 여성 운전자만 눈에 들어온다. 같은 도로상에서 잘 운전하고 있는 다른 여성들과 서툰 남성들은? 자신의 편견을 확인해줄 증거만 찾기 때문에 그런 것만 눈에 보이는 것이다.</p>
+  </div>
+
+  <div class="concept">
+    <h4>상황 인식<span class="en">Situational Awareness</span></h4>
+    <p>자기 주변에서 일어나는 일에 대한 이해, 그리고 상황이 앞으로 어떻게 발전할 것이라는 예상을 포함한다. 지휘관이 내리는 모든 결정은 이 상황 인식에 바탕을 두고 있다. 특정 상황에 대한 추정으로 빈칸을 메우는 것이 필요하지만, 동시에 거기에 대한 의문을 끊임없이 제기하는 것도 매우 중요하다.</p>
+  </div>
+
+  <div class="concept">
+    <h4>스트레스와 뇌의 정보처리 — 물병 비유</h4>
+    <p>우리 마음이 물이 가득 찬 물병이라 생각해보자. 스트레스를 받으면서 진흙이 물병 안으로 들어간다. 처음에는 물의 색이 변해서 이성적 판단에 영향을 준다. 진흙이 더 많이 들어가면서 물이 넘쳐버린다. 물은 정보 처리와 사고 과정에 사용되는 유용한 공간을 뜻하는데, 스트레스에 반응하면서 진흙에 자리를 내주고 물이 넘쳐버리는 것이다. 그 결과 인적 오류가 발생한다.</p>
+    <div class="hl">자신이 정보를 처리하는 능력이 무한하지 않다는 사실을 인정하는 것이 중요하다. 스트레스를 더 받을수록 정보 처리 능력이 줄어든다.</div>
+  </div>
+
+  <div class="concept">
+    <h4>의사 결정의 함정<span class="en">Decision Trap</span></h4>
+    <p>결정 과정에 끼어드는 오류들로, 결정 과정에 영향을 주는 추정, 편견, 오해 등을 포함한다. 이것들은 비상 상황이나 일상생활에서 우리가 어떻게 행동하는지에 영향을 끼친다. '의사 결정의 함정'이 위험한 이유는 그것이 거의 보이지 않기 때문이다.</p>
+  </div>
+
+  <div class="concept">
+    <h4>2005년 7/7 런던 폭탄 테러 사례</h4>
+    <p>52명이 사망한 런던 지하철 폭탄 테러에서 검시관은 킹스크로스 현장에 도착한 구조 대원들이 맞닥뜨린 딜레마 때문에 대응이 29분 늦어졌다고 지적했다. 첫 구조대가 도착한 것은 오전 9시 13분, 지침에 따라 추가 인원이 와야 진입할 수 있었고, 추가 인원은 9시 42분에야 도착했다. 검시관은 '되도록 빨리 뛰어들고 싶은 인간적 본능과 위험을 적절하게 판단하는 것 사이에서 균형을 찾아야 할 필요성'을 제기했다.</p>
+    <div class="hl">규칙으로 정해놓은 절차는 난간 역할을 해야지 수갑 역할을 해서는 안 된다.</div>
+  </div>
+
+  <div class="concept">
+    <h4>조건반사 / 도구적 / PIT 학습</h4>
+    <p><strong>조건반사적 학습(Pavlovian Learning)</strong>은 특정 신호가 무의식적으로 반사적 행동으로 이어지는 학습이다. 소방차가 급제동을 걸며 멈추는 소리에 심장 박동이 빨라지는 것이 그 예다.</p>
+    <p><strong>도구적 학습(Instrumental Learning)</strong>은 자신의 특정 행동이 바람직한 보상을 초래한다는 것을 깨닫는 의도적·계획적 학습이다. 물을 강약으로 번갈아 뿌려 플래시오버를 방지하는 법을 터득하는 것이 이에 해당한다.</p>
+    <p><strong>조건반사-도구적 전이(PIT)</strong>는 주변 환경이 과거 경험과 연결된 신호로 작용해서 그 경험을 가능케 했던 행동을 갈망하도록 만드는 과정이다. 경험이 많을수록 직관의 질이 높아지는 이유가 여기에 있다.</p>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- 4장 -->
+<section id="ch4" class="chapter">
+  <div class="ch-header">
+    <div class="ch-num">4장</div>
+    <div class="ch-title">퍼즐</div>
+    <div class="ch-page">p.125~163</div>
+    <div class="ch-rule"></div>
+  </div>
+
+  <div class="sec-label lbl-story">서사 요약</div>
+  <div class="story">
+    <p>11월 늦은 밤, 코벨사 산업단지 화재 신고에 출동한다. 출동 중 스마트폰으로 현장을 검색하고, 낡은 창고 건물에 샌드위치 패널이 사용됐을 가능성이 높다는 추정을 세운다. 샌드위치 패널은 노출되지 않은 채 불길이 번지고 순식간에 건물이 무너질 수 있어 위험하다. 현장에서 전임 지휘관에게 지휘권을 이전받고, 동쪽 벽돌 벽을 방화대로 활용하는 전략을 세운다. 자정 무렵 바람이 방향을 바꾸고 차량 정비소 폭발 위험이 커진다. 밤새 진압 끝에 정비소와 동쪽 건물을 지켜내고, 건물 주인이 무릎을 꿇고 주저앉는다.</p>
+  </div>
+
+  <div class="sec-label lbl-theory">핵심 이론 및 개념</div>
+
+  <div class="concept">
+    <h4>퍼즐 — 상황 인식의 비유</h4>
+    <p>재난 현장에서 지휘관이 맞닥뜨리는 상황은 조각들이 흩어진 퍼즐과 같다. "상황이 어떻습니까?" "인명 구조도 필요한 상황입니까?" "건물의 어느 정도가 불에 타고 있지요?" — 정보 하나하나가 퍼즐 그림의 조각들이다.</p>
+    <div class="hl">퍼즐을 완성해 가는 과정이 곧 상황 인식이다. 그리고 그 그림은 지금 현재를 분석하는 데 그치지 않고 미래 상황까지 예측할 수 있어야 한다.</div>
+  </div>
+
+  <div class="concept">
+    <h4>공유된 상황 인식<span class="en">Shared Situational Awareness</span></h4>
+    <p>상황 조정실, 현장 대원들, 전략 조정 그룹의 지휘관들 모두가 같은 퍼즐 그림을 기반으로 일해야 한다. 같은 정보를 봐도 저마다 자신의 경험과 훈련, 지식의 렌즈를 통해 받아들이기 때문에 전혀 다른 그림이 나올 수 있다. 아이 두 명에게 똑같은 레고 블록을 한 상자씩 주면 각자 다른 결과물을 만드는 것처럼.</p>
+  </div>
+
+  <div class="concept">
+    <h4>초동 대응 지휘관의 상황 인식 문제</h4>
+    <p>연구 결과, 지휘관들, 특히 초동 대응 지휘관들은 '지금, 여기'에서 벌어지는 일들을 처리하는 데 바빠서 미래를 생각할 만한 시간이나 여유가 없다. 퍼즐 조각 하나하나가 손에 들어올 때마다 그 조각 자체에 대응하는 데 바빠서 큰 퍼즐 안에서 그 조각이 어디에 어떤 의미로 들어가는지를 생각하지 못한다.</p>
+    <p>롭 허니 교수와 함께 개발한 기법은 지휘관들이 결정을 내리려고 하는 순간에 어떤 상황을 예측하면서 그 결정을 내리는지를 의식적으로 검토해보도록 독려하는 것이다. 앞일을 예측해보도록 자기 자신을 의식적으로 자극하는 것만으로도 상황 인식력을 극적으로 향상시킬 수 있다.</p>
+  </div>
+
+  <div class="concept">
+    <h4>정보 위임의 중요성</h4>
+    <p>모든 정보를 직접 받으면 들어오는 정보의 양이 너무 많기 때문에 상황 보고를 받는 일에 압도되어 막상 대응을 할 수 있는 시간이 거의 없어진다. 특정 임무나 영역을 위임하는 것이 매우 중요하다.</p>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- 5장 -->
+<section id="ch5" class="chapter">
+  <div class="ch-header">
+    <div class="ch-num">5장</div>
+    <div class="ch-title">자신의 직감을 믿어라</div>
+    <div class="ch-page">p.165~195</div>
+    <div class="ch-rule"></div>
+  </div>
+  <div class="epigraph">
+    <p>"직관적인 사고는 신의 선물이고, 이성적인 사고는 충실한 종이다. 우리는 충실한 종은 공경하고 신이 준 선물은 망각한 사회를 만들고 말았다."</p>
+    <cite>— 밥 샘플스</cite>
+  </div>
+
+  <div class="sec-label lbl-story">서사 요약</div>
+  <div class="story">
+    <p>4대 차량이 충돌한 교통사고 현장에 출동한다. 첫째·둘째 차량에는 생존자가 없고, 셋째 해치백에는 5명, 넷째 SUV에는 가족이 타고 있었는데 아버지는 즉사, 아이 두 명이 갇혔다. 저자는 목격자를 활용해 패닉에 빠진 어머니를 안정시키고, 해치백 뒷좌석의 의식 불명 남성(기흉 가능성)을 먼저 구출하기로 결정한다. 골든아워 원칙을 준수하며 모든 부상자를 이송하는 데 성공하고, 해치백 운전자가 기흉으로 질식해가고 있었다는 사실이 나중에 확인된다. 이 사건에서 내린 결정들은 대부분 빠르고 직관적인 것이었다.</p>
+  </div>
+
+  <div class="sec-label lbl-theory">핵심 이론 및 개념</div>
+
+  <div class="concept">
+    <h4>의사 결정의 두 가지 경로</h4>
+    <p><strong>분석적(이성적) 결정</strong>은 뇌의 신피질, 즉 생각하는 영역과 연결되어 있다. <strong>직관적 결정</strong>은 변연계와 같이 진화학적 관점에서 더 오래되고 더 감정적인 뇌의 영역과 관련 있다. 양쪽 모두 저마다의 유용한 기능이 있고, 우리가 보이는 반응은 지금 처해 있는 상황, 이전의 경험, 기억, 그 순간 마주한 특정 압박감과 그것에 대한 대처 능력 등 다양한 요인에 기반한다.</p>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-n">80%</div><div class="stat-l">지휘관이 직관으로 결정하는 비율</div></div>
+    <div class="stat"><div class="stat-n">20%</div><div class="stat-l">분석적·계획적으로 내리는 결정</div></div>
+  </div>
+
+  <div class="concept">
+    <h4>직관(Intuition)의 정의와 근거</h4>
+    <p>직관이란 대부분 이전의 경험에 바탕을 둔 본능적인 결정이다. 우리의 뇌가 잠재의식 안에 여러 가지 퍼즐 조각들을 모아두고 있다가 필요할 때 적절한 정보를 엮어서 뽑아낸 결과다. 수십 건의 차량 충돌 현장을 목격해온 경험에서 저장된 기억과 지식들이 특정 신호들을 활성화해서 관련된 행동들을 촉발한다.</p>
+    <p>기존 의사결정 모델은 지휘관의 의사 결정이 모두 분석적이라고 추정했다. 하지만 그 기준이 뇌의 작동 경로를 제대로 반영하지 못하면, 그 기준을 적용받는 소방관들은 자신이 뭔가 옳지 않은 일을 하고 있거나 일을 잘 못하고 있다고 느낄 수 있다.</p>
+  </div>
+
+  <div class="concept">
+    <h4>결정 제어 프로세스<span class="en">Decision Control Process</span></h4>
+    <p>두뇌의 자연스러운 작동 과정을 인정하고 실제로 두뇌가 어떻게 돌아가는지를 반영한 사고틀이다. 어떤 결정을 내렸을 때, 그것이 분석적이든 직관적이든, 그 결정을 행동으로 옮기기 전에 스스로 세 가지 질문을 빠르게 던져보는 것이다.</p>
+    <div class="process">
+      <div class="process-title">결정 제어 3단계</div>
+      <div class="p-step">
+        <div class="p-circle">1</div>
+        <div class="p-text"><strong>목표</strong> — 이 결정으로 내가 달성하고자 하는 것은 무엇인가?</div>
+      </div>
+      <div class="p-step">
+        <div class="p-circle">2</div>
+        <div class="p-text"><strong>예측</strong> — 이 결정으로 어떤 결과를 얻을 것이라 예측하는가?</div>
+      </div>
+      <div class="p-step">
+        <div class="p-circle">3</div>
+        <div class="p-text"><strong>위험 vs. 이득</strong> — 이득이 위험을 얼마나 능가하는가?</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h4>결정 제어 프로세스의 연구 결과</h4>
+    <div class="stats">
+      <div class="stat"><div class="stat-n">5배</div><div class="stat-l">최고 수준 상황 인식 달성 확률</div></div>
+      <div class="stat"><div class="stat-n">0</div><div class="stat-l">의사 결정 속도 지연 없음</div></div>
+    </div>
+    <p>이 원칙은 '긴급 구조 기관 간 협업 원칙(JESIP)'에도 적용되었고, 홍콩·오스트레일리아·유럽·콜롬비아·미국의 소방 구조대에서 관심을 보였으며, 군 조직과 의료 기관에서도 관심을 보였다.</p>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- 6장 -->
+<section id="ch6" class="chapter">
+  <div class="ch-header">
+    <div class="ch-num">6장</div>
+    <div class="ch-title">그림자로 평가받기</div>
+    <div class="ch-page">p.197~237</div>
+    <div class="ch-rule"></div>
+  </div>
+  <div class="epigraph">
+    <p>"좋은 평판을 쌓으려면 수많은 선행을 행해야 하지만, 평판이 무너지는 데는 단 한 번의 악행이면 충분하다."</p>
+    <cite>— 벤저민 프랭클린</cite>
+  </div>
+
+  <div class="sec-label lbl-story">서사 요약</div>
+  <div class="story">
+    <p>화학물질을 실은 화물 열차가 탈선했다. 12량의 화차가 찌부러진 채 누워 있고 독성 액체들이 증발하고 있으며 기관사가 갇혀 있다. 저자는 내성적이고 평판이 좋지 않은 마틴을 작전 지휘관으로 임명한다. 주변의 반대를 단호하게 차단하고 마틴을 현장에 투입하자, 마틴은 압축공기 램프로 기관사의 다리를 누르고 있는 대시보드를 밀어내는 획기적인 전략을 제안해 기관사를 구출한다. 저자는 18세에 그 소방서 역사상 첫 여성으로 입대했고, '스플릿 아스'라는 비하 별명과 각종 괴롭힘을 당했지만, 그 경험이 오히려 지휘관으로서의 태도를 만들었다.</p>
+  </div>
+
+  <div class="sec-label lbl-theory">핵심 이론 및 개념</div>
+
+  <div class="concept">
+    <h4>평판 — 그림자</h4>
+    <p>나의 평판은 사건 현장에 항상 나보다 먼저 도착한다. 사람들은 내가 어떻게 반응할지 예측하고, 내 행동과 내 작업 방식을 예측한다.</p>
+    <div class="hl">자신감은 자신감을 낳고, 공황은 공황을 낳는다. 불안한 지휘관의 보디랭귀지에서 '나도 잘 모르겠어'라는 메시지가 읽히면 그 불안감은 빠르게 전염된다.</div>
+  </div>
+
+  <div class="concept">
+    <h4>팀 심리 안전<span class="en">Psychological Safety</span></h4>
+    <p>팀원들이 불안해하거나, 긴장하거나, 사기가 떨어졌거나, 의견을 밝히는 것을 두려워한다면 지휘관의 임무를 충실히 해내는 데 실패한 것이다. 이것은 지휘 스타일과는 하등의 상관이 없다. 지휘관으로서 자신이 내보내는 메시지의 작은 뉘앙스까지 책임질 줄 알아야 한다.</p>
+  </div>
+
+  <div class="concept">
+    <h4>CRM — 승무원 자원 관리<span class="en">Crew Resource Management</span></h4>
+    <p>항공 산업에서는 비행기의 조종석 녹음을 분석한 결과, 팀원들이 중요한 정보를 전달하기 위해 애썼지만 권력 구조 때문에 명확히 전달되지 않아 비행기가 추락하고 사람들이 목숨을 잃었다는 증거가 많이 발견됐다. 이를 연구한 팀에서는 CRM이라는 혁신적인 접근법을 제안했다.</p>
+    <div class="hl">권위를 가진 사람을 존중하는 태도를 잃지 않으면서도 의문을 제기할 수 있는 문화를 만드는 것이 주요 목표였다. CRM은 이제 전 세계 항공계의 표준 방침 중 하나다.</div>
+    <div class="iq">항목 별로 정리되어 머릿속에 떠오르는 지침 사항만으로는 불을 끌 수가 없다. 그 모든 것은 경험을 거쳐야만 생명력이 생기는 것이다.</div>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- 7장 -->
+<section id="ch7" class="chapter">
+  <div class="ch-header">
+    <div class="ch-num">7장</div>
+    <div class="ch-title">정신적 준비</div>
+    <div class="ch-page">p.239~270</div>
+    <div class="ch-rule"></div>
+  </div>
+  <div class="epigraph">
+    <p>"어렵게 훈련하면 쉽게 싸울 수 있다."</p>
+    <cite>— 알렉산드르 수보로프</cite>
+  </div>
+
+  <div class="sec-label lbl-story">서사 요약</div>
+  <div class="story">
+    <p>테러 공격 대응 훈련 현장. 젊은 엄마와 아기에게 기관총을 겨누고 있는 복면 경찰관, 쇼핑센터 안의 테러리스트. 나라면 어떻게 할 것인가? 지난 10년 사이 소방관 출동 건수가 50퍼센트 감소했지만, 대응해야 하는 사건 유형의 범위는 전보다 훨씬 넓어졌다. 지금의 지휘관들은 선배들이 현장에서 얻을 수 있었던 경험의 절반밖에 얻지 못한다. 그러나 불길의 세기는 절반으로 줄어들지 않는다. 런던 워털루 역 통합 대응 훈련(2016)은 영국 소방 역사상 가장 규모가 크고 복잡한 훈련이었다. EU에서 100만 유로를 지원받았고, 4일 동안 2000명이 넘는 배우들이 부상자 역을 해냈다.</p>
+  </div>
+
+  <div class="sec-label lbl-theory">핵심 이론 및 개념</div>
+
+  <div class="concept">
+    <h4>맥락(Context)의 중요성</h4>
+    <p>실제로는 겪을 가능성이 없는 시나리오를 사용해서 기술을 갈고닦아봐야 별 소용이 없다. 상황이 다르면 필요한 기술도 달라진다. TED 강연을 준비하면서 저자는 안전한 환경에서만 연습을 했다. 한 번도 압박을 느끼는 환경에서 연습해본 적이 없었다. 면접이나 중요한 프레젠테이션을 해야 할 사람은 적어도 조금이라도 자신을 긴장하게 만드는 사람들 앞에서 연습을 해야 한다.</p>
+    <div class="hl">자신이 실력을 발휘해야 하는 상황과 같은 조건에서 연습을 해야 한다.</div>
+  </div>
+
+  <div class="concept">
+    <h4>세 가지 훈련법 비교</h4>
+    <div class="process">
+      <div class="process-title">훈련 방법 비교</div>
+      <div class="p-step">
+        <div class="p-circle">1</div>
+        <div class="p-text"><strong>VR 훈련</strong> — 몰입감은 있지만 현실성이 가장 떨어진다. 지휘관이 혼자 가상 인물을 상대로 훈련해야 한다는 것이 가장 큰 단점이다.</div>
+      </div>
+      <div class="p-step">
+        <div class="p-circle">2</div>
+        <div class="p-text"><strong>지상 훈련</strong> — 실제 대원들을 지휘할 수 있어 VR보다 현실감이 높다. 그러나 실제 사고에서 경험하게 되는 불확실성을 만들어내는 것은 불가능하다.</div>
+      </div>
+      <div class="p-step">
+        <div class="p-circle">3</div>
+        <div class="p-text"><strong>라이브 번(Live Burn)</strong> — 버려진 건물에 실제로 불을 내고 훈련한다. 가장 현실적이다. 건물 안에 아이가 비명을 지르며 우는 소리를 녹음한 장치를 넣어 긴장감을 높인다.</div>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-n">5배</div><div class="stat-l">결정 제어 프로세스 적용 시 상황 인식 달성 확률</div></div>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h4>하이드라(Hydra) 시스템</h4>
+    <p>조너선 크레고가 정교한 컴퓨터 프로그램과 훈련 시나리오를 접목해 개발했다. 여러 대의 컴퓨터가 서로 다른 방에 설치되고 중앙 컴퓨터인 '브레인'에 연결된다. 다수의 지휘관들이 함께 브리핑을 듣고, 토론을 거쳐 합의가 나오면 각 팀이 컴퓨터에 '결정 기록서'를 입력한다. 영국에서 활동하는 긴급 구조 대원이라면 누구나 무료로 이용할 수 있도록 개방했다.</p>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- 8장 -->
+<section id="ch8" class="chapter">
+  <div class="ch-header">
+    <div class="ch-num">8장</div>
+    <div class="ch-title">인간됨의 대가</div>
+    <div class="ch-page">p.273~298</div>
+    <div class="ch-rule"></div>
+  </div>
+  <div class="epigraph">
+    <p>"사람이 과거를 내려놓지 못하는 것이 아니라, 과거가 사람을 내려놓지 못하는 것이다."</p>
+    <cite>— 미상</cite>
+  </div>
+
+  <div class="sec-label lbl-story">서사 요약</div>
+  <div class="story">
+    <p>자정이 넘어 고속도로 도로변에 선다. 트럭이 중앙 분리대를 넘어 신혼여행에서 돌아오는 부부의 차를 정면으로 받았다. 아내를 구출하고 돌아보자 남편의 시신이 길 한가운데 누워 있다. 그 장면이 뇌리를 떠나지 않았다. 몇 주 동안 잠을 제대로 자지 못하고 우울한 기분이 이어졌다. 나중에 그 여성이 사망했다는 소식을 들었을 때, 이상하게도 그녀가 그 끔찍한 장면을 계속 떠올리며 여생을 살아가지 않아도 된다는 사실에 안도감을 느꼈다.</p>
+    <p>론(Ron)은 불에 타 숨을 거둔 아기를 안고 나온 뒤 9개월 휴직을 해야 했다. 지퍼를 올리기 전 아기의 예쁜 얼굴에서 그을음을 닦은 것도 론이었다.</p>
+  </div>
+
+  <div class="sec-label lbl-theory">핵심 이론 및 개념</div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-n">90%</div><div class="stat-l">긴급 구조 대원 정신 건강 우려</div></div>
+    <div class="stat"><div class="stat-n">71%</div><div class="stat-l">직장에서 정신 건강 이야기하기 불편</div></div>
+  </div>
+
+  <div class="concept">
+    <h4>PTSD — 외상 후 스트레스 장애</h4>
+    <p>성인 5명 중 1명은 PTSD 증상을 경험하고, 20명 중 1명은 실제로 이 질환을 앓는다. 심신을 약화시킬 만큼 강한 감정, 과민 반응, 플래시백, 악몽 등의 증상이 나타나고, 경우에 따라서는 구토증, 발한, 심계항진 등의 육체적 증상도 나타난다. 예상치 못한 증상 중 하나가 손발이 차가워지는 현상이다. 뇌는 자신이 위협에 처해 있다고 생각하고 혈액을 생명 유지에 필요한 중요 기관으로 더 많이 보내기 때문이다.</p>
+  </div>
+
+  <div class="concept">
+    <h4>'해결사' 정체성과 취약성 인정의 어려움</h4>
+    <p>우리는 스스로를 '보호자'로 생각하고, 그것은 정체성의 중요한 요소로 자리잡는다. 이 때문에 스스로가 취약하다는 사실을 인정하기가 매우 힘들고, 다른 사람들에게 그것을 인정하는 일은 더더욱 힘들다.</p>
+    <div class="hl">웃음 자체가 스트레스 호르몬을 감소시키고 엔도르핀의 분비를 촉발한다는 연구 결과들이 나와 있다. 팀원들 사이의 동지애는 가장 어두운 순간에 빛을 찾는 데 필요한 매우 중요한 요소다.</div>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- 9장 -->
+<section id="ch9" class="chapter">
+  <div class="ch-header">
+    <div class="ch-num">9장</div>
+    <div class="ch-title">두뇌와 행동</div>
+    <div class="ch-page">p.299~330</div>
+    <div class="ch-rule"></div>
+  </div>
+  <div class="epigraph">
+    <p>"영혼의 유리창"</p>
+    <cite>— 영어 속담</cite>
+  </div>
+
+  <div class="sec-label lbl-story">서사 요약</div>
+  <div class="story">
+    <p>대형 창고 화재 현장에 멘토 자격으로 도착한다. 2백만 파운드 상당의 전자제품 물류 창고, 트럭 9대 중 6대와 건물 상당 부분이 불타고 있고 실종자는 두 명이다. 1구역 지휘관 존은 트럭에서 디젤 연료가 누출되는 것을 발견하자 나의 허락을 기다리지 않고 즉각 지시를 내린다. 직관적 의사결정의 모범적인 사례다. 반면 사건 지휘관 레스는 너무 많은 정보가 한꺼번에 들어와 과부하 상태에 빠졌다. 저자는 꼭 필요한 사람만 남기고 나가게 해 레스에게 숨 돌릴 공간을 만들어 준다. 집에 돌아오니 새벽 6시. 딸 가브리엘라의 이마에 입을 맞추자 아이가 몸을 뒤척이며 말한다. "엄마, 냄새 고약해."</p>
+    <div class="iq">우리의 매일이 누군가에게는 최악의 날이다. 나는 그 사실을 절대 잊지 않을 것이다.</div>
+  </div>
+
+  <div class="sec-label lbl-theory">핵심 이론 및 개념</div>
+
+  <div class="concept">
+    <h4>THINCs — 사건 지휘 기술 행동 표지</h4>
+    <p>저자와 필 버틀러, 롭 허니 교수가 영국 전역 지휘관 80여 명을 인터뷰해 개발했다. 영국 소방대장 위원회에서 채택됐다.</p>
+    <div class="thincs">
+      <div class="tc-item">
+        <div class="tc-num">①</div>
+        <div class="tc-body"><div class="tc-title">리더십</div><div class="tc-subs">기준 정하기 · 팀원 지원 · 리더십 스타일 · 팀원 안전 보장</div></div>
+      </div>
+      <div class="tc-item">
+        <div class="tc-num">②</div>
+        <div class="tc-body"><div class="tc-title">의사 결정</div><div class="tc-subs">직관적 결정 · 분석적 결정 · 계획 수립</div></div>
+      </div>
+      <div class="tc-item">
+        <div class="tc-num">③</div>
+        <div class="tc-body"><div class="tc-title">의사소통</div><div class="tc-subs">듣기 · 의사소통 스타일 · 상황 보고</div></div>
+      </div>
+      <div class="tc-item">
+        <div class="tc-num">④</div>
+        <div class="tc-body"><div class="tc-title">회복 탄력성</div><div class="tc-subs">생각할 시간 벌기 · 스트레스·피로 관리 · 자신감</div></div>
+      </div>
+      <div class="tc-item">
+        <div class="tc-num">⑤</div>
+        <div class="tc-body"><div class="tc-title">상황 인식력</div><div class="tc-subs">정보 수집 · 정보 이해 · 상황 전개 예측</div></div>
+      </div>
+      <div class="tc-item">
+        <div class="tc-num">⑥</div>
+        <div class="tc-body"><div class="tc-title">팀워크</div><div class="tc-subs">협동 · 팀 결성 · 인간 중심</div></div>
+      </div>
+    </div>
+    <div class="hl">리더십, 의사 결정, 상황 인식력, 의사소통 등은 타고난 능력이 아니라 약간의 연습과 많은 노력을 통해 얻을 수 있는 기술이다.</div>
+  </div>
+
+  <div class="concept">
+    <h4>의사소통의 신경과학 — 신경 동조화<span class="en">Neural Entrainment</span></h4>
+    <p>프린스턴의 우리 하슨 교수는 화자와 청자가 효과적인 의사소통을 할 때 '신경 동조화(neural entrainment)'가 일어난다는 사실을 발견했다. 음파가 화자와 청자 양쪽 모두에서 유사한 두뇌 활동을 촉발한다는 것이다. 과도한 스트레스를 받으면 의사소통도 평소보다 힘들어지고, 자기가 말하려는 바를 명확하게 전달하기도 어려워진다.</p>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- 10장 -->
+<section id="ch10" class="chapter">
+  <div class="ch-header">
+    <div class="ch-num">10장</div>
+    <div class="ch-title">다 끝난 뒤에 깨닫는 것들</div>
+    <div class="ch-page">p.331~362</div>
+    <div class="ch-rule"></div>
+  </div>
+  <div class="epigraph">
+    <p>"때늦은 지혜도 좋지만, 선견지명은 더 좋다."</p>
+    <cite>— 에반 에저 Evan Esar</cite>
+  </div>
+
+  <div class="sec-label lbl-story">서사 요약</div>
+  <div class="story">
+    <p>인쇄소 대형 화재 사후 검토 회의. 네 명의 사건 총지휘관이 10시간에 걸쳐 지휘했다. 회의에서 토니는 자신이 도착했을 때 건물 안에 간이호스가 들어가 있었다고 주장하며 마크의 초기 진압이 충분히 공격적이지 못했다고 비판한다. 마크는 45mm 관창을 사용했다고 맞선다. 두 사람의 기억이 충돌한다. 저자가 화재 조사관의 사진 두 장을 꺼낸다. 첫 번째 사진에는 간이호스가 없고 45mm 관창만 보인다. 두 번째 사진(1시간 반 후)에야 간이호스가 보인다. 토니는 결국 인정한다. 침묵을 지키던 스탠은 사실 45mm 관창 진압을 지시한 장본인이었지만, 권력 구조 앞에서 끝내 말하지 못했다.</p>
+  </div>
+
+  <div class="sec-label lbl-theory">핵심 이론 및 개념</div>
+
+  <div class="concept">
+    <h4>기억의 취약성 — 로프터스 연구</h4>
+    <p>엘리자베스 로프터스는 어떤 사건을 자기 눈으로 본 목격자일지라도 차후에 그 사건이 어떤 식으로 묘사되는지에 영향을 받는다는 사실을 증명했다. 로프터스의 디즈니랜드 실험에서 연구에 참여한 어린이들 중 절반 이상이 지어낸 이야기에 기초한 기억을 만들어냈고, 진실이 공개된 후에도 몇몇은 지어낸 이야기가 실제로 일어났다고 고집했다.</p>
+    <div class="hl">기억은 고정된 것이 아니라 변화할 수 있다. 사후 검토에서 기억이 서로 다른 것은 거짓말이 아니라, 스트레스가 많은 환경에서 두뇌가 정보를 처리하는 방식의 결과다.</div>
+  </div>
+
+  <div class="concept">
+    <h4>'1만 볼트 보고 회의'</h4>
+    <p>조너선 크레고가 개발한 기발한 사후 검토 시스템이다. 훈련받은 중재자가 회의를 주관하고 참가자들은 완전히 익명으로 답하고 발언할 수 있도록 한다. 권력, 사회적 관계, 보복에 대한 두려움에 신경 쓰지 않을 수 있는 환경을 만들고, 가장 작은 목소리에서부터 가장 큰 목소리까지 모두 똑같은 크기로 들리도록 한 것이다.</p>
+  </div>
+
+  <div class="concept">
+    <h4>지휘실에서 나와 직접 눈으로 확인하는 것의 중요성</h4>
+    <p>현장에서 떨어진 사건 지휘실에 계속 머물러 있으면서 다른 사람들이 전해주는 말만 오래 듣고 있으면 현실감을 잃을 수밖에 없다. 팀원들이 맞닥뜨리고 있는 어렵고 거친 현실을 경험하지 않고 있기 때문이다.</p>
+    <div class="hl">자신의 목숨을 지휘관의 손에 맡긴 수많은 사람들을 위해 일어나서 밖으로 나와 직접 눈으로 확인해야만 한다.</div>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- 나가는 말 -->
+<section id="outro" class="chapter">
+  <div class="ch-header">
+    <div class="ch-num">나가는 말</div>
+    <div class="ch-title">공감으로 시작해 공감으로 끝맺다</div>
+    <div class="ch-page">p.363~368</div>
+    <div class="ch-rule"></div>
+  </div>
+
+  <div class="story">
+    <p>내가 배운 것 중 가장 중요한 것은 공감의 중요함이었다. 체격이 좋든 좋지 않든, 머리가 좋든 힘이 좋든 상관이 없고, 성별, 인종, 종교도 관계없다. 자기가 상상했던 한계를 깨고 좀더 앞으로 나아가게 만드는 것은 바로 공감이다.</p>
+    <p>세상에서 가장 강한 의지를 가지고, 사용되고 있는 모든 기법을 동원한다 하더라도 현실에서 인적 오류를 완전히 없앨 수는 없다. '모든 것이 뜨겁게 달아오른 그 순간(the heat of the moment)'에는 사후의 시각으로만 볼 수 있는 명확성을 가지고 사고하기가 쉽지 않다.</p>
+    <div class="iq">우리를 비판하고, 우리에게 책임을 묻고, 효율적이며 효과적인 소방 구조 서비스를 요구해도 좋다. 그러나 동시에 잠시라도 우리의 입장이 되어보길 바란다. 날이면 날마다 자책하는 것은 바로 우리 자신이라는 사실을 잊지 말아주길 부탁드린다.</div>
+    <p>나는 연구도 계속하고 소방관 일도 계속할 생각이다. 소방직은 내 천직이고, 내 뼈에 새겨진 일이다.</p>
+  </div>
+</section>
+
+<a class="back-top" href="#cover">↑ 맨 위로</a>
+
+</div>
+
+<script>
+function toggleMenu() {
+  const d = document.getElementById('toc-drawer');
+  const b = document.getElementById('menu-btn');
+  d.classList.toggle('open');
+  b.textContent = d.classList.contains('open') ? '닫기 ✕' : '목차 ▾';
+}
+function closeMenu() {
+  document.getElementById('toc-drawer').classList.remove('open');
+  document.getElementById('menu-btn').textContent = '목차 ▾';
+}
+document.addEventListener('click', function(e) {
+  const nav = document.getElementById('topnav');
+  if (!nav.contains(e.target)) closeMenu();
+});
+
+const sections = [...document.querySelectorAll('.chapter, #cover')];
+const links = [...document.querySelectorAll('.toc-link')];
+window.addEventListener('scroll', () => {
+  let cur = '';
+  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 90) cur = s.id; });
+  links.forEach(a => {
+    const h = a.getAttribute('href').substring(1);
+    a.classList.toggle('cur', h === cur);
+  });
+}, { passive: true });
+</script>
+</body>
+</html>

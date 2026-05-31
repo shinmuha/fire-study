@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>소방현장지휘 — 박진찬</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f6f2;
+  --card: #fff;
+  --text: #1a1812;
+  --sub: #3a3530;
+  --light: #7a746a;
+  --border: #ddd5c4;
+  --nav-bg: #1c1a16;
+  --nav-accent: #d4a853;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 17px;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* NAV */
+#topnav {
+  background: var(--nav-bg);
+  position: sticky; top: 0; z-index: 200;
+}
+.nav-inner {
+  display: flex; align-items: center;
+  padding: 13px 16px; gap: 10px;
+}
+.nav-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 15px; color: var(--nav-accent);
+  font-weight: 700; flex: 1;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+#menu-btn {
+  background: none; border: 1px solid #444;
+  color: #ccc; padding: 7px 12px; border-radius: 6px;
+  font-size: 13px; cursor: pointer;
+  font-family: 'Noto Sans KR', sans-serif;
+  white-space: nowrap;
+}
+#toc-drawer {
+  display: none; background: #111;
+  padding: 0 0 16px;
+  border-top: 1px solid #333;
+  max-height: 70vh; overflow-y: auto;
+}
+#toc-drawer.open { display: block; }
+.toc-link {
+  display: block; padding: 11px 20px;
+  color: #bbb; text-decoration: none; font-size: 15px;
+  border-left: 3px solid transparent;
+}
+.toc-link:active { background: #222; }
+.toc-link.cur { color: var(--nav-accent); border-left-color: var(--nav-accent); }
+
+/* WRAP */
+.wrap { max-width: 720px; margin: 0 auto; padding: 0 16px 80px; }
+
+/* COVER */
+.cover {
+  padding: 36px 0 28px;
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 36px;
+}
+.cover-label { font-size: 12px; letter-spacing: 0.12em; color: var(--light); text-transform: uppercase; margin-bottom: 8px; }
+.cover h1 {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 30px; font-weight: 700; line-height: 1.3; margin-bottom: 6px;
+}
+.cover-sub { font-size: 16px; color: var(--sub); margin-bottom: 8px; }
+.cover-note {
+  background: #f0ebe0; border-left: 3px solid var(--nav-accent);
+  border-radius: 0 8px 8px 0; padding: 11px 14px;
+  font-size: 14px; color: var(--light); line-height: 1.6; margin-top: 16px;
+}
+
+/* PART */
+.part-section { margin-bottom: 56px; scroll-margin-top: 68px; }
+.part-header {
+  background: var(--part-color, #333);
+  border-radius: 12px; padding: 20px 20px;
+  margin-bottom: 24px; color: #fff;
+}
+.part-num {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.14em;
+  text-transform: uppercase; opacity: 0.75; margin-bottom: 4px;
+}
+.part-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 24px; font-weight: 700; line-height: 1.3;
+}
+.part-body { }
+
+/* HEADINGS */
+.part-body h2 {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 20px; font-weight: 700;
+  color: var(--part-color, #333);
+  margin: 28px 0 12px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--part-color, #ccc);
+  line-height: 1.4;
+}
+.part-body h3 {
+  font-size: 17px; font-weight: 700;
+  color: var(--text);
+  margin: 20px 0 10px;
+  padding-left: 10px;
+  border-left: 3px solid var(--part-color, #ccc);
+  line-height: 1.5;
+}
+.part-body h4 {
+  font-size: 16px; font-weight: 700;
+  color: var(--sub);
+  margin: 16px 0 8px;
+}
+
+/* PARA */
+.part-body p {
+  font-size: 17px; line-height: 1.9;
+  color: var(--sub); margin-bottom: 12px;
+}
+.part-body strong { color: var(--text); font-weight: 700; }
+
+/* TABLE */
+.tbl-label {
+  font-size: 13px; font-weight: 700;
+  color: var(--part-color, #555);
+  margin: 18px 0 6px;
+  font-style: italic;
+}
+.tbl-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 18px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 480px;
+  font-size: 14px;
+  background: var(--card);
+}
+th {
+  background: var(--part-color, #444);
+  color: #fff;
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+td {
+  padding: 9px 12px;
+  border-bottom: 1px solid #eee;
+  vertical-align: top;
+  line-height: 1.65;
+  color: var(--sub);
+  font-size: 14px;
+}
+tr:last-child td { border-bottom: none; }
+tr:nth-child(even) td { background: #faf8f4; }
+
+/* SEP */
+.sep {
+  border: none; border-top: 1px solid var(--border);
+  margin: 48px 0;
+}
+.back-top {
+  display: block; text-align: center; margin-top: 40px;
+  padding: 14px; background: var(--nav-bg);
+  border-radius: 10px; color: var(--nav-accent);
+  text-decoration: none; font-size: 15px; font-weight: 500;
+}
+
+/* SCROLL HINT */
+.tbl-hint {
+  font-size: 12px; color: #aaa; margin-bottom: 4px;
+  text-align: right;
+}
+</style>
+</head>
+<body>
+<div id="topnav">
+  <div class="nav-inner">
+    <div class="nav-title">소방현장지휘 — 박진찬</div>
+    <button id="menu-btn" onclick="toggleMenu()">목차 ▾</button>
+  </div>
+  <div id="toc-drawer">
+    <a class="toc-link" href="#gosiwon" onclick="closeMenu()">PART 2-2 — 고시원화재 현장지휘</a>
+<a class="toc-link" href="#gongsa" onclick="closeMenu()">PART 2-3 — 공사장화재 현장지휘</a>
+<a class="toc-link" href="#nrb" onclick="closeMenu()">PART 2-1 — 노래방화재 현장지휘</a>
+<a class="toc-link" href="#villa" onclick="closeMenu()">PART 2-4 — 빌라화재 현장지휘</a>
+<a class="toc-link" href="#apt" onclick="closeMenu()">PART 2-5 — 아파트화재 현장지휘</a>
+
+  </div>
+</div>
+
+<div class="wrap">
+
+<div class="cover">
+  <div class="cover-label">부산소방학교 지휘역량강화센터(ICTC)</div>
+  <h1>소방현장지휘</h1>
+  <div class="cover-sub">박진찬 · 화재유형별 현장지휘 전술</div>
+  <div class="cover-note">PART 2-1 노래방 · PART 2-2 고시원 · PART 2-3 공사장 · PART 2-4 빌라 · PART 2-5 아파트</div>
+</div>
+
+
+<section id="gosiwon" class="part-section" style="--part-color:#c0392b">
+  <div class="part-header">
+    <div class="part-num">PART 2-2</div>
+    <div class="part-title">고시원화재 현장지휘</div>
+  </div>
+  <div class="part-body">
+    <p><strong>PART 2-2  고시원화재 현장지휘</strong></p>
+<p>부산소방학교 지휘역량강화센터(ICTC)</p>
+<h2>01  실제사례</h2>
+<p><strong>사례 1. 서울 종로구 고시원 화재 (2018)</strong></p>
+<p>국일고시원 화재. 3층 복도에서 발화, 단일 복도·목조 칸막이·무창 구조로 연기·불꽃이 급속 확산. 사망 7명·부상 11명. 방문·복도에 잠금장치·방범창이 피난을 차단했고, 화재경보 미작동 및 야간 발화가 인명 피해를 키움. 밀집·무창 구조에서 연기 독성이 치명적임을 보여준 사례.</p>
+<p><strong>사례 2. 부산 동구 고시원 화재 (2024)</strong></p>
+<p>심야 시간대 3층 고시원 복도 발화. 협소 복도와 방범창 부착 방이 많아 대피 동선이 사실상 단일 계단에 집중. 소방차 12대·대원 40여명 투입, 인명검색 전층 실시. 방문 개방 상태였던 방에서 연기 급확산이 확인되어 "문 닫기(Door Closed)"의 중요성이 재확인됨.</p>
+<h2>Chapter 1.  사고발생 (Incident Occurrence)</h2>
+<p>고시원은 다수의 소규모 방이 단일 복도·계단을 공유하는 밀집 거주 시설이다. 화재 발생 즉시 복도를 통한 연기·화염 확산이 일어나며, 야간 거주자 전원이 잠든 상태에서 경보 없이 화재가 진행될 경우 대규모 인명 피해가 발생한다. 신고는 "연기 냄새" 또는 경보음으로 접수되는 경우가 많고, 접수 단계에서 층수·방 번호·요구조자 수가 불명확한 경우가 많다.</p>
+<div class="tbl-label">Table 2-2-1. 고시원 화재 주요 위험 요소</div>
+<div class="tbl-wrap"><table><tr><th><strong>위험 요소</strong></th><th><strong>세부 내용</strong></th><th><strong>전술적 시사점</strong></th></tr><tr><td><strong>단일 복도·계단</strong></td><td>진입·대피 경로 공유, 연기 차단 어려움</td><td>계단확보 소방호스 선개설, 복도 문 제어(Door Control) 필수</td></tr><tr><td><strong>무창 구조·방범창</strong></td><td>창문 없거나 방범창 고정, 외부 구조 제한</td><td>강제 진입 공구 휴대, 방범창 절단 선행</td></tr><tr><td><strong>목조·경량 칸막이</strong></td><td>얇은 합판·석고보드 칸막이, 연소 빠름</td><td>TIC로 인접 방 잔열 확인, 2차 인명검색 강화</td></tr><tr><td><strong>야간 거주자</strong></td><td>수면 중 자력 대피 어려움</td><td>전층 인명검색 우선, 경보 및 대피 방송 즉시 가동</td></tr><tr><td><strong>미설치·오작동 감지기</strong></td><td>화재 조기 인지 지연</td><td>도착 즉시 경보 강제 가동, 관리자로부터 인원 명부 확보</td></tr><tr><td><strong>좁은 복도(1~1.2m)</strong></td><td>소방호스 전개·대원 이동 제한</td><td>40mm 소구경 호스 사용, 1선 전개 후 순차 확장</td></tr></table></div>
+<h2>Chapter 2.  현장출동 (En Route to the Scene)</h2>
+<h3>1. 정확한 위치 및 규모 확인</h3>
+<p>출동 중 현장지휘관(IC)은 소방활동정보카드·소방안전지도·출동지령서·무전을 교차 확인해 고시원의 정확한 주소·층수(지상/지하)·입지(상가 내·독립건물)를 파악한다. 고시원은 상가 건물 내 혼재하는 경우가 많아 방 번호 체계와 출입구 위치가 일반 주거와 다르다.</p>
+<div class="tbl-label">Table 2-2-2. 위치·규모 사전 확인 체크리스트(Pre-Arrival Checks)</div>
+<div class="tbl-wrap"><table><tr><th><strong>항목 기준</strong></th><th><strong>내용</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td><strong>주소·접근</strong></td><td>정확 주소, 골목명, 랜드마크, 주출입구 방향</td><td>오인 출동 방지, 최단 접근·부서 위치 선정</td></tr><tr><td><strong>동/규모</strong></td><td>층수(지상/지하), 방 개수, 층별 방 배치</td><td>인명구조 우선층(화점층·직상층) 지정</td></tr><tr><td><strong>수직동선</strong></td><td>계단실 수·위치, 엘리베이터 유무</td><td>계단실 확보·문 제어(Door Control) 계획 수립</td></tr><tr><td><strong>수평동선</strong></td><td>복도 형식(편복도), 비상구·피난사다리</td><td>인명검색 경로·구조 우회 동선 확정</td></tr><tr><td><strong>차량 접근</strong></td><td>골목 폭, 불법 주정차, 전개 공간</td><td>대기단계(Staging Area)·사다리 전개 구역 확보</td></tr><tr><td><strong>급수자원</strong></td><td>소화전 위치·가용성, 중계급수 필요성</td><td>연속 방수·예비 급수선 계획</td></tr><tr><td><strong>점유/거주</strong></td><td>야간 점유 밀도, 방범창·잠금장치 세대 위치</td><td>구조장비(방범창 절단기) 우선 배치</td></tr></table></div>
+<h3>2. 출동대 및 경로 파악</h3>
+<p>현장지휘관(IC)은 출동 중인 소방력과 차량 종류를 확인한다. 고시원은 협소 골목에 위치한 경우가 많으므로 접근 가능 차량의 진입 순서를 미리 조정한다.</p>
+<div class="tbl-label">Table 2-2-3. 출동 경로·사이징 의사결정(En-route Routing &amp; Sizing Decisions)</div>
+<div class="tbl-wrap"><table><tr><th><strong>조건</strong></th><th><strong>판단</strong></th><th><strong>조치</strong></th></tr><tr><td><strong>골목 협소·불법 주정차</strong></td><td>대형차 접근 곤란</td><td>소형펌프차 우선 진입, 대형차 외곽 대기(Staging Area)</td></tr><tr><td><strong>야간 조도 부족</strong></td><td>동·호 식별 곤란</td><td>조명(Spot Light) 활용, 상황실로 출입구 위치 재확인</td></tr><tr><td><strong>소화전 위치·압력 불확실</strong></td><td>급수 연속성 불명</td><td>소화전 시험 개방, 필요시 중계급수(Relay Pumping)</td></tr><tr><td><strong>고시원 위치(상가 내 혼재)</strong></td><td>출입구·층 구분 혼선</td><td>관리자 현장 대기 요청, 상황실 통해 고시원 직통 연락처 확보</td></tr></table></div>
+<h3>3. 특수차량 진입 확인 및 추가 장비 요청</h3>
+<p>고시원이 입지한 건물이 저층(3~5층)이라도 골목이 협소하면 사다리차 진입이 어렵다. 방범창 절단기·강제 진입 공구·소구경(40mm) 호스릴을 우선 탑재하여 출동한다.</p>
+<div class="tbl-label">Table 2-2-4. 특수 장비 요청 기준(Special Equipment Criteria)</div>
+<div class="tbl-wrap"><table><tr><th><strong>항목</strong></th><th><strong>기준/내용</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td><strong>방범창 절단기</strong></td><td>방이 외부 구조 불가한 경우 선제 탑재</td><td>창 없는 무창방·방범창 방 우선 파악</td></tr><tr><td><strong>40mm 소구경 호스</strong></td><td>협소 복도 전개 시 필수</td><td>65mm 대신 40mm 사용, 방수량 300 L/min 기준</td></tr><tr><td><strong>열화상카메라(TIC)</strong></td><td>연기 속 인명검색 핵심 도구</td><td>2인 1조 진입 시 선두 대원 상시 휴대</td></tr><tr><td><strong>유도 로프(Guideline)</strong></td><td>무창·농연 환경 길찾기</td><td>진입 전 입구 고정, 철수 시 로프 따라 탈출</td></tr></table></div>
+<h3>4. 유관기관 요청 (Requests to Cooperating Agencies)</h3>
+<div class="tbl-label">Table 2-2-5. 유관기관별 즉시요청사항(Cooperating-Agency Immediate Requests)</div>
+<div class="tbl-wrap"><table><tr><th><strong>유관기관</strong></th><th><strong>요청사항(예)</strong></th><th><strong>전술시사점</strong></th></tr><tr><td><strong>경찰</strong></td><td>골목 통제, 주민·차량 접근 차단, 교차로 교통 통제</td><td>진입·회차 동선 확보, 병목 해소</td></tr><tr><td><strong>한전</strong></td><td>동/라인 전원 차단, 누전·감전 위험 확인</td><td>내부 진입 안전 확보, 2차 전기 위험 차단</td></tr><tr><td><strong>가스</strong></td><td>가스 공급 차단, 집합 계량기·배관 누설 점검</td><td>폭발·재발화 위험 저감</td></tr><tr><td><strong>구급/의료</strong></td><td>구급대 보강, 인근 응급실 대기 통보</td><td>연기흡입·화상 환자 우선 이송·병원 분산</td></tr><tr><td><strong>지자체</strong></td><td>임시 대피소 개소, 취약계층 보호 인력 배치</td><td>대피자 집결·관리, 현장 소방력 집중 가능</td></tr><tr><td><strong>수도사업소</strong></td><td>소화전 유량·압력 증강, 급수 장애 긴급 대응</td><td>동시 방수 안정화, 중계급수 계획 보완</td></tr></table></div>
+<h2>Chapter 3.  현장도착 (On-Scene Arrival)</h2>
+<h3>1. 선착대장 초기 보고 청취</h3>
+<p>현장지휘관(IC)은 선착대장으로부터 초기 상황 보고를 무전으로 즉시 청취한다. 이 보고를 통해 화재 층수·방 번호, 복도·출입문 개방·폐쇄 상태, 인접 방으로의 연기 확산 여부, 현재 수행 중인 조치, 추가 필요 자원을 파악한다.</p>
+<div class="tbl-label">Table 2-2-6. 선착대장 표준 보고 항목(Initial Radio Report)</div>
+<div class="tbl-wrap"><table><tr><th><strong>항목</strong></th><th><strong>예시 보고(내용)</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td><strong>위치·방면·층</strong></td><td>A방면 정면 도착, 3층 복도 화점 추정</td><td>현장지휘소(ICP)·대기구역 배치, 방-층 포맷 통일</td></tr><tr><td><strong>연기·화염 상태</strong></td><td>3층 복도 농연, 방문 틈 화염 분출</td><td>복도 차단 소방호스 우선 전개, 통제 배연 시점 설정</td></tr><tr><td><strong>인명·대피 현황</strong></td><td>대피 미완료 다수, 2층 요구조자 추정</td><td>구조 우선 구역 지정, RIT 대기, PAR 즉시 가동</td></tr><tr><td><strong>복도·문 상태</strong></td><td>복도 연기 가득, 방문 대부분 닫힘</td><td>문 제어(Door Control) 담당 지정, 닫힌 문 유지</td></tr><tr><td><strong>연소 확대</strong></td><td>인접 방 연기 유입 시작</td><td>연소확대 방지 소방호스 전개, 복도 차단</td></tr><tr><td><strong>접근·장애물</strong></td><td>골목 이중 주차, 방범창 부착 방 다수</td><td>대형차 외곽 대기(Staging Area), 절단기 우선 준비</td></tr><tr><td><strong>급수·설비</strong></td><td>동측 소화전 1기 가용, 가스·전력 차단 미확인</td><td>급수 계획 확정, 차단 요청 준비</td></tr></table></div>
+<h3>2. 최초 상황평가 (Initial Size-Up)</h3>
+<p>현장지휘관(IC)은 주변 안전을 확보한 뒤 건물 외부에서 화재 규모와 진행 상황을 신속히 파악한다. 층수, 화점 위치, 요구조자 존재 여부, 복도 연기 상황, 방범창 부착 여부를 종합 관찰한다.</p>
+<div class="tbl-label">Table 2-2-7. 최초 상황평가 체크리스트(Initial Size-Up Checklist)</div>
+<div class="tbl-wrap"><table><tr><th><strong>항목</strong></th><th><strong>확인 포인트</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td><strong>외부 관찰</strong></td><td>연기 색·양·속도, 창·복도 화염 분출, 방범창 상태</td><td>외벽 냉각·연소 확대 방지 우선, 풍상측 진입 회피</td></tr><tr><td><strong>접근 안전</strong></td><td>골목 폭·이중 주차·상부 장애물(전선)</td><td>현장지휘소(ICP)·대기지점 지정, 활동제한구역 설정</td></tr><tr><td><strong>인명 상황</strong></td><td>대피 현황, 미확인 인원, 마지막 목격 방 번호</td><td>구조 우선 구역 지정, 계단/복도 방어선 1선 전개, RIT 대기</td></tr><tr><td><strong>내부 정보</strong></td><td>복도 연기 이동, 방문 상태(닫힘/개방), 가시성</td><td>문 제어(Door Control) 우선, TIC 활용 인명검색</td></tr><tr><td><strong>연소 확대</strong></td><td>복도·인접 방 수평 확산</td><td>연소 확대 차단 소방호스 선 배치, 복도 문 제어</td></tr><tr><td><strong>용수·압력</strong></td><td>소화전 위치·유량·압력, 연결송수관 가용</td><td>중계급수 검토, 펌프압 관리, CAN 보고</td></tr></table></div>
+<h3>3. 방면 지정 (Side Designation)</h3>
+<p>화재 대상 고시원 건물의 방면을 지정한다. A방면(정면), B방면(좌측), C방면(후면), D방면(우측) 순으로 통일하여 무전으로 전파한다.</p>
+<div class="tbl-label">Table 2-2-8. 방면 지정 가이드(Side Designation Guide)</div>
+<div class="tbl-wrap"><table><tr><th><strong>구분</strong></th><th><strong>기준</strong></th><th><strong>예시 지시(무전)</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td><strong>A방면</strong></td><td>주 출입구·계단이 있는 정면</td><td>현장지휘소(ICP) A방면 설치, 계단 확보 소방호스 1선 전개</td><td>현장지휘소(ICP)·대기지점으로 사용</td></tr><tr><td><strong>B방면</strong></td><td>A 기준 좌측 측면</td><td>B방면 창 연기 증가, 배연 대기</td><td>대체 진입·배면 포인트</td></tr><tr><td><strong>C방면</strong></td><td>건물 후면</td><td>C방면 접근 곤란, 외벽 냉각 우선</td><td>연소 확대 방지·감시 배치</td></tr><tr><td><strong>D방면</strong></td><td>A 기준 우측 측면</td><td>D방면 사다리 전개, 창문 구조</td><td>창문 구조·수평 전개 담당</td></tr></table></div>
+<h3>4. 360° 상황평가 (360° Size-Up)</h3>
+<div class="tbl-label">Table 2-2-9. 360° 상황평가 체크리스트</div>
+<div class="tbl-wrap"><table><tr><th><strong>구역</strong></th><th><strong>확인 항목</strong></th><th><strong>관측 포인트</strong></th><th><strong>즉시 조치</strong></th></tr><tr><td><strong>후면(C)</strong></td><td>창·출입부, 연기·화염, 구조 신호</td><td>연기 색·양, 방범창 상태, 미대피자 신호</td><td>후면 차단선 설정, 대체 진입 포인트 지정</td></tr><tr><td><strong>측면(B/D)</strong></td><td>외벽 온도·틈새, 연기 누출</td><td>경계벽 과열·균열, 전선 접촉 위험</td><td>연소 확대 차단선 배치, 측면 배연 포인트</td></tr><tr><td><strong>상부(옥상)</strong></td><td>옥상문·배기구 연기 여부</td><td>옥상문 연기 유출, 덕트 과열</td><td>상부 감시·배기 배치, 출입 통제</td></tr><tr><td><strong>공통</strong></td><td>수직/수평 확산 경로</td><td>계단실·환기구 연기 흐름</td><td>계단 확보 소방호스 전개, 문 제어(Door Control)</td></tr><tr><td><strong>안전</strong></td><td>낙하물·협소 공간</td><td>전선·차양·적치물</td><td>안전 통제선 확장, 투입 전 위험 브리핑</td></tr></table></div>
+<h3>5. 연기 및 화염 상태 파악 (Reading Smoke &amp; Flame Conditions)</h3>
+<div class="tbl-label">Table 2-2-10. 연기·화염 판독 매트릭스(Smoke/Flame Reading Matrix)</div>
+<div class="tbl-wrap"><table><tr><th><strong>관측</strong></th><th><strong>내용</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td><strong>짙은 검은 연기(고온·난류)</strong></td><td>내장재·가연물 연소, 고열·독성 증가</td><td>상층 대피 우선, 전환 공격 검토, 계단 확보+문 제어 즉시</td></tr><tr><td><strong>회색/갈색 연기(간헐 분출)</strong></td><td>환기 제한 연소, 백드래프트 전조 가능</td><td>개구부 무분별 개방 금지, 통제 배연 시점 현장지휘관(IC) 승인</td></tr><tr><td><strong>복도 양압 분출</strong></td><td>화점층 과압·연소 가속</td><td>화점층 A방면 진입 어려움, 외벽 냉각 우선</td></tr><tr><td><strong>무창부에서 연기만 다량</strong></td><td>무염 연소·열 축적, 시야 제로</td><td>TIC 활용 인명검색, 표식 테이프 운용</td></tr><tr><td><strong>방문 틈 화염 분출</strong></td><td>화점 방 내부 고온 연소</td><td>해당 방 직접 방수 전 복도 확보, 소방호스 2선 준비</td></tr></table></div>
+<h2>Chapter 4.  현장대응 (On-Scene Operations)</h2>
+<h3>전반부 대응 (Primary Phase Operations)</h3>
+<h3>1. 지휘권 인수 및 선언 (Assume and Announce Command)</h3>
+<p>고시원 화재는 단일 복도 구조와 높은 주거 밀도, 야간 발화 시 자력 대피 불능자 다수가 특징이므로, 현장지휘관(IC)은 현장 도착 즉시 선착대장으로부터 대면 보고로 지휘권을 인계받고, 무전으로 지휘권 선언을 실시한다.</p>
+<div class="tbl-label">Table 2-2-11. 지휘권 인수·선언 절차</div>
+<div class="tbl-wrap"><table><tr><th><strong>단계</strong></th><th><strong>핵심내용</strong></th><th><strong>지휘내용</strong></th></tr><tr><td><strong>도착 보고</strong></td><td>선착대가 초기 위험 요소 무전 보고</td><td>현장지휘관(IC)이 보고를 수신·요약 재송신</td></tr><tr><td><strong>대면 보고</strong></td><td>선착대장이 화점·인명·진입 가능성·자원 현황을 CAN 보고 형식으로 대면 보고</td><td>화점 방 번호, 복도 상태, 소방시설 작동 가능 여부 확인</td></tr><tr><td><strong>지휘권 인수</strong></td><td>현장지휘관(IC)이 지휘권 인수 의사 표명</td><td>현장지휘소(ICP)와 대기구역(Staging Area) 위치 지정</td></tr><tr><td><strong>지휘권 선언</strong></td><td>전 채널에 지휘권 확립 메시지 송출</td><td>전 대원에게 현장지휘소 위치, 보고 채널, 임무 분배 원칙 공지</td></tr><tr><td><strong>일원화 전환</strong></td><td>모든 보고·지시를 IC 중심 단일 체계로 전환</td><td>방-층 중심으로 대원 임무 지정, CAN 보고로 간략 보고</td></tr></table></div>
+<h3>2. 전략 결정 및 팀별 임무 지시</h3>
+<div class="tbl-label">Table 2-2-12. 전략 선택 기준(Strategy Decision Criteria)</div>
+<div class="tbl-wrap"><table><tr><th><strong>전략</strong></th><th><strong>적용 조건</strong></th><th><strong>핵심 전술</strong></th></tr><tr><td><strong>내부 공격 진압(Offensive)</strong></td><td>생존 징후 확인, 복도 가시성 확보, 계단 보호 가능</td><td>2인 1조 SCBA 진입, 화점 방 직접 방수, 복도 차단 소방호스 유지</td></tr><tr><td><strong>외부 방어 진압(Defensive)</strong></td><td>복도 전층 연소·건물 붕괴 징후·요구조자 없음 확인</td><td>외부 방수, 연소 확대 방지, 대피 완료 인원 집결지 관리</td></tr><tr><td><strong>전환 전략(Transitional)</strong></td><td>초기 내부 진압 → 붕괴 징후 발생 시</td><td>즉각 철수 신호, 외부 전환, 재진입 기준 설정</td></tr></table></div>
+<h3>3. 인명구조 전술</h3>
+<p>고시원 인명구조의 핵심은 전층 신속 검색과 방범창 방 우선 처리다. 인원 명부를 관리자로부터 즉시 확보하고, 미확인 방을 기준으로 우선검색 순서를 설정한다.</p>
+<div class="tbl-label">Table 2-2-13. 인명검색 우선순위</div>
+<div class="tbl-wrap"><table><tr><th><strong>우선순위</strong></th><th><strong>대상</strong></th><th><strong>방법</strong></th></tr><tr><td><strong>1순위</strong></td><td>화점 인접 방·직상층 방</td><td>TIC 활용 2인 1조, 방문 닫힘 유지하며 열화상 확인 후 개방</td></tr><tr><td><strong>2순위</strong></td><td>방범창 부착 방·무창 방</td><td>방범창 절단기 사용, 외부 동시 진입</td></tr><tr><td><strong>3순위</strong></td><td>문 개방 상태 방</td><td>연기 흡입 요구조자 우선 처치 후 이송</td></tr><tr><td><strong>4순위</strong></td><td>복도 말단·계단 인접 방</td><td>농연 속 유도 로프 활용 검색</td></tr></table></div>
+<h3>4. RECEO 프레임워크 적용</h3>
+<div class="tbl-label">Table 2-2-14. 고시원 화재 RECEO 적용</div>
+<div class="tbl-wrap"><table><tr><th><strong>우선순위</strong></th><th><strong>RECEO 항목</strong></th><th><strong>고시원 특화 적용</strong></th></tr><tr><td><strong>1순위</strong></td><td>R – Rescue (인명구조)</td><td>전층 신속 검색, 방범창 방 절단 우선, TIC 활용</td></tr><tr><td><strong>2순위</strong></td><td>E – Exposures (노출 방호)</td><td>인접 방·상층 방 연소 확대 방지 소방호스 선개설</td></tr><tr><td><strong>3순위</strong></td><td>C – Confinement (확산 차단)</td><td>복도 차단 소방호스, 방문 닫힘 유지로 구획화</td></tr><tr><td><strong>4순위</strong></td><td>E – Extinguishment (화재 진압)</td><td>화점 방 직접 방수(40mm, 300 L/min), 복도 소화</td></tr><tr><td><strong>5순위</strong></td><td>O – Overhaul (잔불 정리)</td><td>칸막이 내부·천장 TIC 스캔, 잔열 국소 냉각</td></tr></table></div>
+<h3>5. 배연(Ventilation) 계획</h3>
+<p>고시원은 무창 구조·단일 복도 특성으로 배연이 매우 제한적이다. 복도를 통한 배연은 화염 확산 경로가 될 수 있으므로, 배연 시점은 화점 방 직접 방수 개시 이후 현장지휘관(IC)의 승인하에 실시한다.</p>
+<div class="tbl-label">Table 2-2-15. 고시원 배연 전략</div>
+<div class="tbl-wrap"><table><tr><th><strong>배연 방법</strong></th><th><strong>적용 조건</strong></th><th><strong>주의사항</strong></th></tr><tr><td><strong>자연 배연(창 개방)</strong></td><td>화점 방 창 또는 복도 끝 창 개방</td><td>방범창 절단 선행 필요, 배출구 선 확보 후 유입구 최소화</td></tr><tr><td><strong>강제 배연(PPV Fan)</strong></td><td>하부 신선 공기 공급 가능한 경우</td><td>화점층 위 개구부 미확인 시 PPV 사용 금지, 화재 확대 위험</td></tr><tr><td><strong>계단실 활용</strong></td><td>계단실 상부 배출구 확보 가능 시</td><td>굴뚝 효과 주의, 상층 연소 확대 방지 경계 관창 병행</td></tr><tr><td><strong>배연 금지</strong></td><td>가스 누출 의심·방범창 미개방 상태</td><td>급격한 기류 변화로 화염 확산 위험</td></tr></table></div>
+<h3>6. 무전 채널 관리</h3>
+<div class="tbl-label">Table 2-2-16. 채널 운영 계획</div>
+<div class="tbl-wrap"><table><tr><th><strong>채널</strong></th><th><strong>사용 주체</strong></th><th><strong>내용</strong></th></tr><tr><td><strong>지휘채널(Ch.1)</strong></td><td>IC ↔ 섹터지휘관</td><td>전술·전략·자원 배분·단계 변경</td></tr><tr><td><strong>진압채널(Ch.2)</strong></td><td>진압섹터장 ↔ 진압대원</td><td>화점 상황·방수 개시·철수</td></tr><tr><td><strong>구조채널(Ch.3)</strong></td><td>구조섹터장 ↔ 구조대원</td><td>인원 확인·구조 진행·이송</td></tr><tr><td><strong>비상채널(Mayday)</strong></td><td>전 대원</td><td>긴급 조난·붕괴·가스폭발 신호</td></tr></table></div>
+<h3>후반부 대응 (Late-Phase Operations)</h3>
+<h3>상황판단회의 후 완진선언</h3>
+<p>현장지휘관(IC)은 화점 억제 후 2차 인명검색(Secondary Search)을 실시해 전 층·전 구역의 잔류 인원 유무를 확인한다. 겉보기로 진압이 완료된 것처럼 보여도 즉시 완진을 선언하지 않고, 단위지휘관들과 함께 현장을 직접 순회하며 최종 상태를 점검한다. 고시원은 협소 복도·밀집 소구획 특성으로 숨은 불씨·잔열 가능성이 높다. 현장지휘관(IC)은 각 방·복도를 일일이 확인하고, 필요 시 문·천장 개방으로 내부까지 세밀 점검한다. 탄화 잔해 하부 불씨나 잔불 정리 미흡이 확인되면 예비 소방호스라인을 배치해 추가 냉각·방수를 한다. 열화상카메라(TIC)로 벽체·천장·관통부의 잔열을 확인하고, 열원 발견 시 즉시 국소 냉각 주수를 지시한다. 복도 천장 틈·벽 내부까지 잔불 제거가 완료되고 "온도 정상"이 확인되면, IC는 단위지휘관들과 상황판단회의를 열어 구역별 보고를 종합 검토한다. 위험 요소와 인명 피해가 모두 해소되었다고 판단되면 현장지휘관(IC)은 무전으로 "○○고시원 화재는 현 시간부로 완진(Final Extinguishment)"이라고 공식 선언한다.</p>
+<div class="tbl-label">Table 2-2-24. 완진 전 점검 리스트(Pre-FED Checklist)</div>
+<div class="tbl-wrap"><table><tr><th><strong>항목</strong></th><th><strong>점검 기준/내용</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td><strong>2차 인명검색(Secondary Search)</strong></td><td>방·복도·공용부(샤워실·주방) 전수 확인, 잠금·창살(방범창) 해제 구역 재확인</td><td>인명검색 완료(ALL CLEAR) 확인 전 완진 금지, 우선순위 구역(화점 인접·무창 방)부터 역순 점검</td></tr><tr><td><strong>열화상카메라 잔열 확인(TIC Survey)</strong></td><td>TIC로 벽체·천장·관통부(콘센트·배관 박스)·문틀 상부 스캔</td><td>고온 지점 표식 후 즉시 국소 냉각, 재측정으로 온도 정상화 확인</td></tr><tr><td><strong>잔불 정리(Overhaul)</strong></td><td>탄화·그을림 집중 구역 개방·파쇄 후 내부 화점 제거</td><td>은폐 연소 제거 핵심, 미세분무/안개방수로 증기 최소화</td></tr><tr><td><strong>가스·전기 안전(Isolation)</strong></td><td>LPG 용기·배관 밸브 차단, 분전반 전원 차단 상태 확인</td><td>재 점화·감전 방지, 재 통전 금지·잠금 표식 조치</td></tr><tr><td><strong>배연·연기 잔류(Ventilation)</strong></td><td>구역별 순차 배연 완료, 복도·계단 플로우패스(Flow Path) 통제 유지</td><td>급격한 배연 금지, 배연 후 TIC 재확인 필수</td></tr><tr><td><strong>구조 안정성(Structural Hazards)</strong></td><td>천장 처짐·벽체 박리·유리 비산·창살 절단부 낙하 위험 점검</td><td>위험 구역 활동제한구역 지정 후 해제 기준 기록</td></tr><tr><td><strong>오염·위해요소(Contamination)</strong></td><td>유해가스(HCN/CO) 측정, 그을음 정리 계획 수립</td><td>재 출동 예방, 필요 시 PPE 수준 유지·배연 강화</td></tr><tr><td><strong>자원·기록(Resources/Docs)</strong></td><td>소방호스라인·장비 회수 계획, 사진·TIC 캡처·무전 로그 정리</td><td>사후 조사·보고 근거 확보, 잔여 대기 전력 지정</td></tr><tr><td><strong>구역별 종합보고(Brief-back)</strong></td><td>단위지휘관의 현재상황·조치·필요사항(CAN) 보고 취합, 완진선언(FED) 조건 확인</td><td>완진선언 여부를 객관적으로 판단</td></tr></table></div>
+  </div>
+</section>
+<hr class="sep">
+
+<section id="gongsa" class="part-section" style="--part-color:#1a6b3a">
+  <div class="part-header">
+    <div class="part-num">PART 2-3</div>
+    <div class="part-title">공사장화재 현장지휘</div>
+  </div>
+  <div class="part-body">
+    <p><strong>Part 2-3 공사장 화재 현장지휘</strong></p>
+<p>건설현장 화재 대응 전술 및 ICS 운영</p>
+<h2>1. 공사장 화재의 특성 및 위험 요소</h2>
+<h3>1.1 건설현장의 구조적 특성</h3>
+<p>공사장은 완공 건물과 달리 방화 구획이 미완성되고, 임시 가설물(비계·방진시트·우레탄폼 단열재)이 대량 적치된 환경이다. 이로 인해 화재는 수직·수평으로 급격히 확산되며, 기존 진입로·계단이 미완성이거나 가설 자재로 차단되어 접근성이 극도로 제한된다.</p>
+<div class="tbl-label">Table 2-3-1. 공사장 화재 주요 위험 요소</div>
+<div class="tbl-wrap"><table><tr><th><strong>위험 요소</strong></th><th><strong>세부 내용</strong></th><th><strong>전술적 시사점</strong></th></tr><tr><td><strong>비계(Scaffold)·가설구조물</strong></td><td>철재 프레임+방진시트(PE·방화), 화재 시 낙하·붕괴 위험</td><td>붕괴 위험구역 선정 및 활동제한구역(EZ) 지정 필수</td></tr><tr><td><strong>가연성 단열재(우레탄폼·EPS)</strong></td><td>연소속도 빠름, 유독가스(HCN·CO) 대량 발생</td><td>개인보호장비(SCBA) 착용 의무, 풍향 고려한 진입로 선정</td></tr><tr><td><strong>LPG·아세틸렌 가스용기</strong></td><td>용접·절단 작업용 가스통 현장 내 다수 존재</td><td>노출 가스용기 파악·냉각·대피 선행, 폭발 범위 고려한 배제구역 설정</td></tr><tr><td><strong>코어샤프트(Core Shaft)</strong></td><td>엘리베이터 피트·계단실 미완성, 굴뚝효과(Stack Effect) 강화</td><td>연기·화염 수직 급확산 경로, 배연 계획 신중</td></tr><tr><td><strong>가설전력(임시 전기설비)</strong></td><td>분전반·케이블 트레이 노출, 감전·인화 위험</td><td>전기 차단 선행, 분전반 위치 현장 관계자에게 즉시 확인</td></tr><tr><td><strong>근로자 산발적 분포</strong></td><td>층별·구역별 흩어진 근로자, 대피 유도 어려움</td><td>작업반장 통해 인원 파악, 미확인 구역 우선 검색</td></tr><tr><td><strong>작업 공종별 화학물질</strong></td><td>방수재·도료·접착제·용제류 적치</td><td>화학물질 MSDS 확인, 폼 소화약제 또는 불활성가스 병행 사용 고려</td></tr></table></div>
+<h3>1.2 공사장 화재의 확산 패턴</h3>
+<p>공사장 화재는 ① 외부 비계·방진시트 타고 수직 확산 → ② 개구 층간(슬래브 개구부) 통해 수평 확산 → ③ 코어샤프트 굴뚝효과로 전층 급확산의 3단계 경로를 따른다. 바람에 의한 방진시트 비화(飛火)로 인접 건물 노출화재 위험도 항시 고려해야 한다.</p>
+<h2>2. 출동 중 정보 수집 및 3교신</h2>
+<h3>2.1 출동 중 3교신 절차 (3-1-3 프레임워크)</h3>
+<div class="tbl-label">Table 2-3-2. 출동 중 3교신 내용</div>
+<div class="tbl-wrap"><table><tr><th><strong>교신 순서</strong></th><th><strong>대상</strong></th><th><strong>주요 내용</strong></th></tr><tr><td><strong>① 제1교신</strong></td><td>종합상황실(지령센터)</td><td>현장 주소 재확인 / 공사장 층수·공종·진행 단계(골조/마감) / 가스·위험물 유무 / 현장 관계자(현장소장) 연락처 / 선착대 도착 예상시간</td></tr><tr><td><strong>② 제2교신</strong></td><td>후속 출동대</td><td>예상 화점층 및 현장 상황 공유 / 예비 급수 확보 지점 지정 / 가스용기·위험물 경고 / 역할 분담(구조·진압·급수) 사전 협의</td></tr><tr><td><strong>③ 제3교신</strong></td><td>자대 대원</td><td>SCBA 착용 준비 / 진입 루트 예상(계단·비계 외부계단) / 가스·전기 차단 임무 분담 / 폼 소화약제 준비 여부 확인</td></tr></table></div>
+<h3>2.2 공사장 관련 사전 확인 사항</h3>
+<p>- 공사 단계: 골조공사(Structural)·마감공사(Finishing)·설비공사(MEP)에 따라 가연물 및 진입 여건 상이</p>
+<p>- 층수 및 지하층 유무: 지하 주차장·물탱크실 진입 시 수직 공간 위험</p>
+<p>- 사용 가스: LPG·아세틸렌·산소 용기 위치</p>
+<p>- 작업인원 규모 및 작업반장(현장소장) 연락처</p>
+<p>- 인접 건물과의 이격 거리: 비화 위험성 판단</p>
+<h2>3. 현장 도착: 지휘권 선언 및 초기상황보고</h2>
+<h3>3.1 지휘권 선언</h3>
+<p>현장 도착 즉시 "○○공사장 화재, ○○이 지휘권 인수합니다(Command ○○ is established)"를 무전으로 선언한다. 선착대 지휘관이 이미 지휘권을 행사 중인 경우 현재상황·조치·필요사항(CAN)을 보고받은 후 공식 인수한다.</p>
+<h3>3.2 현장 도착 후 3행동</h3>
+<div class="tbl-label">Table 2-3-3. 현장 도착 즉시 3행동</div>
+<div class="tbl-wrap"><table><tr><th><strong>행동</strong></th><th><strong>내용</strong></th><th><strong>공사장 특이사항</strong></th></tr><tr><td><strong>① 요구조자 확인</strong></td><td>진입구 주변 부상자·탈출 근로자 파악 / 미대피 인원 층 및 수 파악</td><td>현장소장·작업반장 통해 인원 명부 즉시 확보, 인원 미확인 층 구조대 우선 투입</td></tr><tr><td><strong>② 초기상황보고</strong></td><td>지령센터에 화점·규모·연소 범위·인명 상황 보고 / 대응단계 선언</td><td>"○○공사장 ○층 화재, 외벽 비계 연소 확대 중, 요구조자 ○명 추정, 2단계 선언"</td></tr><tr><td><strong>③ 전술전략 선언</strong></td><td>전술 목표·진압 전략·지휘 유형·섹터 구성 무전 선언</td><td>단순지휘(Exterior Attack) or 공격지휘(Interior Attack) 여부 즉시 결정 및 선언</td></tr></table></div>
+<h3>3.3 공사장 특화 초기상황보고 예시 스크립트</h3>
+<p>(무전) "○○공사장 화재, 지상 ○층 건물 ○층 비계 외벽 연소 중, LPG 용기 노출 위험 있음, 요구조자 ○명 확인, 선착대는 외부 방어 진압 실시 중, 2단계 대응 선언, 지휘관은 ○○, 이상."</p>
+<h2>4. ICS 조직 구성 및 섹터 운영</h2>
+<h3>4.1 초기 ICS 구성 (소규모 공사장 화재)</h3>
+<div class="tbl-label">Table 2-3-4. 소규모 공사장 화재 ICS 구성</div>
+<div class="tbl-wrap"><table><tr><th><strong>직위</strong></th><th><strong>역할</strong></th><th><strong>주요 임무</strong></th></tr><tr><td><strong>현장지휘관(IC)</strong></td><td>지휘소(CP) 운영 / 전체 통제</td><td>전술 결정·자원 배분·단계 조정·안전 모니터링</td></tr><tr><td><strong>진압섹터(Attack Sector)</strong></td><td>내부 진압대 통제</td><td>화점층 진입·직접 방수·잔불 정리</td></tr><tr><td><strong>구조섹터(Rescue Sector)</strong></td><td>인명검색·구조 담당</td><td>인원 미확인 층 우선 검색, 요구조자 의무대 인계</td></tr><tr><td><strong>안전관(Safety Officer)</strong></td><td>비계 붕괴·가스 위험 모니터링</td><td>위험 발생 시 즉각 철수 명령 권한 보유</td></tr><tr><td><strong>급수섹터(Water Supply)</strong></td><td>소화수·폼 공급</td><td>소화전·물탱크 연결·폼 원액 공급</td></tr></table></div>
+<h3>4.2 대형 공사장 화재 시 ICS 확장</h3>
+<p>화재 규모가 커지거나 다수 층에 화재가 번진 경우, IC는 Operations Section Chief(작전섹션장)를 지정하고 현장 지휘를 위임한 뒤 자신은 전략적 지휘에 집중한다.</p>
+<div class="tbl-label">Table 2-3-5. 확장 ICS 구성 요소</div>
+<div class="tbl-wrap"><table><tr><th><strong>섹션/부서</strong></th><th><strong>구성 직위</strong></th><th><strong>활성화 기준</strong></th></tr><tr><td><strong>작전섹션(Operations)</strong></td><td>섹션장 + 진압·구조·환기 그룹</td><td>2개 이상 층 동시 화재 / 대응 2단계 이상</td></tr><tr><td><strong>계획섹션(Planning)</strong></td><td>섹션장 + 상황 추적</td><td>자원 30개 이상 / 2시간 이상 장기전</td></tr><tr><td><strong>군수섹션(Logistics)</strong></td><td>섹션장 + 급수·연료·식량</td><td>교대 대원 필요 시 / 장시간 작전</td></tr><tr><td><strong>안전관(Safety)</strong></td><td>안전관 + 부안전관</td><td>위험물·가스 현장 / 비계 붕괴 위험 확인 시</td></tr></table></div>
+<h2>5. 진압 전술 및 전략</h2>
+<h3>5.1 공사장 화재 진압 전략 선택</h3>
+<div class="tbl-label">Table 2-3-6. 진압 전략 선택 기준</div>
+<div class="tbl-wrap"><table><tr><th><strong>전략</strong></th><th><strong>조건</strong></th><th><strong>핵심 전술</strong></th></tr><tr><td><strong>외부 방어 진압 (Exterior/Defensive)</strong></td><td>비계 전층 연소 / 붕괴 임박 / 가스 폭발 위험 / 내부 요구조자 없음 확인</td><td>대구경 관창(65mm) 외부 방수 / 인접 건물 방어 / 노출 가스용기 냉각·제거 / 비화 경계</td></tr><tr><td><strong>내부 공격 진압 (Interior/Offensive)</strong></td><td>요구조자 확인됨 / 구조물 안전 확인 / 진입로 확보 / 가스 차단 완료</td><td>SCBA 착용 진입 / 화점 직접 방수 / 층별 섹터 진압 / 연결송수관 활용</td></tr><tr><td><strong>전환 전략 (Transitional)</strong></td><td>초기 내부 진압 → 붕괴 징후 발생 시</td><td>즉각 철수 신호(Mayday or 경보) / 외부 전환 / 안전관 주도 비계 안전성 재평가 후 재진입 결정</td></tr></table></div>
+<h3>5.2 RECEO 프레임워크 적용</h3>
+<div class="tbl-label">Table 2-3-7. 공사장 화재 RECEO 적용</div>
+<div class="tbl-wrap"><table><tr><th><strong>우선순위</strong></th><th><strong>RECEO 항목</strong></th><th><strong>공사장 특화 적용 사항</strong></th></tr><tr><td><strong>1순위</strong></td><td>R – Rescue (인명구조)</td><td>인원 명부 기반 층별 검색 / 가스 위험 구역은 방호조치 후 진입 / 비계 상층부 고립자 굴절차 활용</td></tr><tr><td><strong>2순위</strong></td><td>E – Exposures (노출 방호)</td><td>인접 건물 방호 소방호스 선개설 / 비화 경계반 편성 / 노출 LPG·아세틸렌 용기 냉각</td></tr><tr><td><strong>3순위</strong></td><td>C – Confinement (확산 차단)</td><td>비계 연결부 절단(필요 시) / 코어샤프트 개구부 방수커튼 / 개구층간(슬래브 개구부) 차단</td></tr><tr><td><strong>4순위</strong></td><td>E – Extinguishment (화재 진압)</td><td>화점층 직접 방수 / 폼 소화약제(AR-AFFF) 가연성 액체류 병행 / 코어샤프트 연기 배연</td></tr><tr><td><strong>5순위</strong></td><td>O – Overhaul (잔불 정리)</td><td>우레탄폼·방진시트 탄화부 개방 후 냉각 / TIC로 골조 잔열 확인 / 비계 결속부 잔불 점검</td></tr></table></div>
+<h3>5.3 소화약제 선택 기준</h3>
+<p>공사장 화재에는 일반 가연물과 가연성 액체류(용제·도료·방수재)가 혼재한다. 일반 가연물에는 물(직접 방수 또는 세무방수)을 사용하고, 가연성 액체류에는 수성막포(AFFF) 또는 알코올저항성포(AR-AFFF)를 활용한다.</p>
+<div class="tbl-label">Table 2-3-8. 공사장 화재 소화약제 선택</div>
+<div class="tbl-wrap"><table><tr><th><strong>화재 유형</strong></th><th><strong>권장 약제</strong></th><th><strong>선택 이유</strong></th></tr><tr><td><strong>일반 가연물 (목재·방진시트·스티로폼)</strong></td><td>물 / 세무방수</td><td>냉각 효과, 광범위 적용 가능</td></tr><tr><td><strong>가연성 액체류 (도료·용제·방수재)</strong></td><td>수성막포(AFFF) / AR-AFFF</td><td>막 형성으로 재점화 방지, 증기 억제</td></tr><tr><td><strong>LPG·아세틸렌 가스화재</strong></td><td>용기 차단 + 냉각수</td><td>가스 공급 차단이 최우선, 직접 소화 시도 금지</td></tr><tr><td><strong>전기화재(가설전력)</strong></td><td>이산화탄소(CO₂) / 분말</td><td>통전 중 방수 금지, 차단 후 물 사용 가능</td></tr></table></div>
+<h2>6. 위험 요소 관리 및 안전 통제</h2>
+<h3>6.1 비계(Scaffold) 붕괴 위험 관리</h3>
+<p>비계 붕괴는 공사장 화재에서 가장 치명적인 위험 요소다. 화재로 인해 결속철물이 약화되면 비계 전체 또는 일부가 돌발 붕괴할 수 있다. 안전관(Safety Officer)은 비계 변형·기울기·결속부 상태를 지속 모니터링하고, 위험 징후 시 즉각 철수 경보를 발령한다.</p>
+<div class="tbl-label">Table 2-3-9. 비계 붕괴 징후 및 대응 기준</div>
+<div class="tbl-wrap"><table><tr><th><strong>징후</strong></th><th><strong>관찰 포인트</strong></th><th><strong>대응 기준</strong></th></tr><tr><td><strong>결속부 변형</strong></td><td>클램프·핀 변색·변형·이탈</td><td>즉시 해당 면 활동 중단, 대원 철수</td></tr><tr><td><strong>비계 기울기 증가</strong></td><td>수직 프레임 기울기 5° 이상</td><td>진입 금지 구역 선포, 외부 방수로 전환</td></tr><tr><td><strong>방진시트 탈락</strong></td><td>연소 및 압력으로 시트 분리·낙하</td><td>낙하 위험구역 반경 설정(건물 높이의 1/3 이상)</td></tr><tr><td><strong>타워크레인 와이어 상태</strong></td><td>화재 열에 의한 와이어 로프 변색·이완</td><td>크레인 반경 내 활동 중단, 크레인 기사 대피</td></tr></table></div>
+<h3>6.2 가스용기(LPG·아세틸렌) 관리</h3>
+<div class="tbl-label">Table 2-3-10. 가스용기 위험 관리 절차</div>
+<div class="tbl-wrap"><table><tr><th><strong>단계</strong></th><th><strong>조치 내용</strong></th><th><strong>담당</strong></th></tr><tr><td><strong>① 위치 파악</strong></td><td>현장소장으로부터 가스용기 보관 위치 도면·정보 즉시 입수</td><td>현장지휘관(IC)</td></tr><tr><td><strong>② 냉각 개시</strong></td><td>열에 노출된 가스용기 외부에서 지속 냉각수 살수 (온도 55℃ 이하 유지)</td><td>급수섹터</td></tr><tr><td><strong>③ 밸브 차단</strong></td><td>안전 거리 확보 후 전문 요원이 밸브 잠금 / 불가능 시 냉각 유지</td><td>구조섹터</td></tr><tr><td><strong>④ 제거·이동</strong></td><td>냉각 완료 후 안전 구역으로 이동 / 직화에 직접 노출된 용기는 충분한 냉각 후 처리</td><td>구조섹터</td></tr><tr><td><strong>⑤ 배제구역 유지</strong></td><td>BLEVE(Boiling Liquid Expanding Vapor Explosion) 위험 시 반경 300m 이상 배제</td><td>현장지휘관(IC)</td></tr></table></div>
+<h3>6.3 가설전기 차단 절차</h3>
+<p>- 현장소장·전기 담당자 통해 가설전력 분전반 위치 즉시 확인</p>
+<p>- 전기 담당자 지도 하에 순차 차단: 고압→저압→각 층 분전반</p>
+<p>- 차단 완료 전 통전 구역 진입 금지, 절연 장갑 착용 의무</p>
+<p>- 차단 후 잠금 표식(Lockout/Tagout) 부착, 임의 재통전 방지</p>
+<h2>7. 인명구조 전술</h2>
+<h3>7.1 인원 파악 체계</h3>
+<p>공사장은 출퇴근 명부 관리가 불규칙한 경우가 많다. 인명구조 전술의 첫 단계는 정확한 인원 수 파악이며, 이는 현장소장·작업반장을 통해 즉시 확인해야 한다.</p>
+<div class="tbl-label">Table 2-3-11. 인원 파악 및 구조 우선순위</div>
+<div class="tbl-wrap"><table><tr><th><strong>단계</strong></th><th><strong>내용</strong></th><th><strong>비고</strong></th></tr><tr><td><strong>① 인원 명부 확보</strong></td><td>현장소장에게 당일 현장 인원 명부·층별 배치 즉시 확인</td><td>인원 미확인 시 전층 검색 원칙</td></tr><tr><td><strong>② 대피 인원 확인</strong></td><td>현장 집결지에서 탈출 인원 명부 대조</td><td>누락자·부상자 파악</td></tr><tr><td><strong>③ 미확인 구역 설정</strong></td><td>층별·구역별 미확인 목록 작성, 우선검색 구역 지정</td><td>화점 인접층·코어샤프트 주변 우선</td></tr><tr><td><strong>④ 구조대 투입</strong></td><td>SCBA 착용 2인 1조 진입, 화점층 인접 위·아래층 우선 검색</td><td>TIC 활용, 통신 유지 의무</td></tr></table></div>
+<h3>7.2 고층부 고립자 구조</h3>
+<p>비계 연소·계단 차단으로 고층부에 고립된 근로자가 발생할 수 있다. 이 경우 굴절사다리차(Aerial Platform) 활용이 최우선이며, 옥상 탈출이 가능한 경우 옥상 대피 후 구조를 유도한다.</p>
+<p>- 굴절사다리차: 최대 도달 층·구조물 이격 거리 사전 확인</p>
+<p>- 로프구조(Rope Rescue): 사다리차 접근 불가 시 옥상 앵커 로프 구조</p>
+<p>- 내부 진입 구조: 방호 소방호스라인 확보 후 2인 1조 진입, TIC 활용</p>
+<h2>8. 배연(Ventilation) 계획</h2>
+<h3>8.1 공사장 환기 특성</h3>
+<p>공사장은 창문·문 등 개구부가 미시공 상태이거나 가설 자재로 막혀 있는 경우가 많다. 코어샤프트(엘리베이터 피트)는 굴뚝효과를 강화해 연기·화염이 상부층으로 급속 이동한다.</p>
+<div class="tbl-label">Table 2-3-12. 공사장 배연 전략</div>
+<div class="tbl-wrap"><table><tr><th><strong>배연 방법</strong></th><th><strong>적용 조건</strong></th><th><strong>주의사항</strong></th></tr><tr><td><strong>자연배연(Natural)</strong></td><td>풍향 유리한 경우 / 상부 개구부 존재</td><td>코어샤프트 굴뚝효과 활용, 하부 진입구 폐쇄로 방향 고정</td></tr><tr><td><strong>강제배연(PPV Fan)</strong></td><td>하부 신선공기 공급 가능한 경우</td><td>화점층 위 개구부 미확인 시 PPV 사용 금지, 화재 확대 위험</td></tr><tr><td><strong>수직 배연(Vertical)</strong></td><td>옥상 개구부 확보 가능 시</td><td>낙하 위험 구역 접근 시 구조 안전성 확인 선행</td></tr><tr><td><strong>배연 금지</strong></td><td>비계 연소로 인한 비화 위험 높을 때 / 가스 누출 의심 시</td><td>급격한 기류 변화로 가스 확산 가능성</td></tr></table></div>
+<h2>9. 무전 교신 및 통신 관리</h2>
+<h3>9.1 공사장 화재 무전 채널 관리</h3>
+<p>대형 공사장 화재는 다수 섹터가 동시 운영되므로 채널 혼선 방지를 위해 진압·구조·지휘 채널을 분리 운영한다.</p>
+<div class="tbl-label">Table 2-3-13. 채널 운영 계획</div>
+<div class="tbl-wrap"><table><tr><th><strong>채널</strong></th><th><strong>사용 주체</strong></th><th><strong>내용</strong></th></tr><tr><td><strong>지휘채널(Ch.1)</strong></td><td>IC ↔ 섹터지휘관</td><td>전술·전략·자원 배분·단계 변경</td></tr><tr><td><strong>진압채널(Ch.2)</strong></td><td>진압섹터장 ↔ 진압대원</td><td>화점 상황·방수 개시·철수</td></tr><tr><td><strong>구조채널(Ch.3)</strong></td><td>구조섹터장 ↔ 구조대원</td><td>인원 확인·구조 진행·이송</td></tr><tr><td><strong>비상채널(Mayday)</strong></td><td>전 대원</td><td>긴급 조난·붕괴·가스폭발 신호</td></tr></table></div>
+<h3>9.2 현장소장(건설현장 관계자) 연락 체계</h3>
+<p>- 현장소장: 도면·인원·위험물·전기차단 권한 / 지휘소 상주 요청</p>
+<p>- 전기 담당자: 가설전력 차단 지원</p>
+<p>- 가스 담당자: LPG·아세틸렌 차단 지원</p>
+<p>- 구조전문가(필요 시): 비계·구조물 안전성 현장 평가</p>
+<h2>10. 상황 변화 대응 (돌발 상황)</h2>
+<h3>10.1 BLEVE(가스용기 폭발) 발생 시</h3>
+<div class="tbl-label">Table 2-3-14. BLEVE 대응 절차</div>
+<div class="tbl-wrap"><table><tr><th><strong>단계</strong></th><th><strong>조치</strong></th><th><strong>무전 예시</strong></th></tr><tr><td><strong>즉각 철수</strong></td><td>폭발음·화염 기둥 확인 즉시 전 대원 철수 명령</td><td>(전체) "가스 폭발 위험! 전 대원 즉시 철수, 집결지로 이동, 이상"</td></tr><tr><td><strong>배제구역 확대</strong></td><td>반경 300m 이상 배제구역 즉각 확대, 경찰 협조 요청</td><td>(지령) "BLEVE 위험으로 배제구역 300m 확대, 경찰 지원 요청, 이상"</td></tr><tr><td><strong>외부 방어 전환</strong></td><td>고정 소방호스라인으로 원거리 냉각수 살수 유지</td><td>진압섹터장에게 외부 방어 전환 지시</td></tr><tr><td><strong>대응 단계 상향</strong></td><td>필요 시 3단계 이상 상향, 증원 요청</td><td>(지령) "○○공사장 화재 3단계 선언, 지원대 요청, 이상"</td></tr></table></div>
+<h3>10.2 비계 붕괴 발생 시</h3>
+<p>- 안전관: 즉각 비상 철수 경보(나팔·무전) 발령</p>
+<p>- 모든 내부 대원 즉시 철수, 출구 방향 확인 후 탈출</p>
+<p>- 철수 후 전 대원 인원 점검, 부상자 확인</p>
+<p>- 외부에서 구조물 안정성 평가 후 재진입 여부 결정</p>
+<p>- 붕괴된 비계 하부는 대형 중장비(굴삭기) 지원 후 접근</p>
+<h3>10.3 고립된 대원 발생(Mayday) 시</h3>
+<div class="tbl-label">Table 2-3-15. Mayday 대응 절차</div>
+<div class="tbl-wrap"><table><tr><th><strong>단계</strong></th><th><strong>내용</strong></th><th><strong>담당</strong></th></tr><tr><td><strong>Mayday 선언</strong></td><td>대원 무전: "MAYDAY MAYDAY MAYDAY, 이름·층·상황·공기잔량" 송신</td><td>고립 대원</td></tr><tr><td><strong>즉각 응답</strong></td><td>IC: Mayday 채널 확보, 일반 교신 중단, RIT(신속구조팀) 즉시 출동</td><td>현장지휘관(IC)</td></tr><tr><td><strong>RIT 투입</strong></td><td>고립 대원 위치 특정(열화상·무전 방향) 후 RIT 2인 이상 진입</td><td>신속구조팀(RIT)</td></tr><tr><td><strong>전술 조정</strong></td><td>고립 대원 구조 완료 전까지 해당 구역 진압 활동 보류, 구조 우선</td><td>현장지휘관(IC)</td></tr></table></div>
+<h2>11. 현장지휘관 핵심 의사결정 포인트</h2>
+<h3>11.1 3문장 의사결정 통제 프로세스 적용</h3>
+<p>의사결정 시 "왜(Why) / 목표(Goal) / 예상결과(Anticipated Outcome)"의 3문장 구조를 활용해 편향된 판단을 방지한다.</p>
+<div class="tbl-label">Table 2-3-16. 3문장 의사결정 사례 (내부 진입 여부)</div>
+<div class="tbl-wrap"><table><tr><th><strong>판단 요소</strong></th><th><strong>내용</strong></th></tr><tr><td><strong>Why(왜 하는가)</strong></td><td>코어샤프트 3층에 근로자 1명 고립된 것으로 추정됨 — 인명구조가 최우선</td></tr><tr><td><strong>Goal(목표)</strong></td><td>비계 외부 방호 확보 후 내부 계단 통해 3층 진입, 고립자 구조</td></tr><tr><td><strong>Anticipated Outcome(예상결과)</strong></td><td>비계 결속부 일부 변형 관찰됨 — 진입 전 안전관 현장 평가 완료 필요, 붕괴 징후 심화 시 외부 굴절차 전환</td></tr></table></div>
+<h3>11.2 공사장 화재 현장지휘관 체크리스트</h3>
+<div class="tbl-label">Table 2-3-17. 현장지휘관 자기점검 체크리스트</div>
+<div class="tbl-wrap"><table><tr><th><strong>구분</strong></th><th><strong>점검 항목</strong></th><th><strong>완료 여부</strong></th></tr><tr><td><strong>인명</strong></td><td>인원 명부 확보 완료? / 미확인 구역 구조대 투입? / 대피 인원 집결지 확인?</td><td>□</td></tr><tr><td><strong>위험물</strong></td><td>LPG·아세틸렌 차단 완료? / 냉각수 살수 유지 중? / 배제구역 설정?</td><td>□</td></tr><tr><td><strong>전기</strong></td><td>가설전력 차단 완료? / 차단 담당자 지휘소 상주 중?</td><td>□</td></tr><tr><td><strong>비계</strong></td><td>안전관 비계 안전성 모니터링 중? / 붕괴 위험구역 배제?</td><td>□</td></tr><tr><td><strong>ICS</strong></td><td>섹터 지휘관 명시적 지정 및 무전 공유 완료? / 채널 분리 완료?</td><td>□</td></tr><tr><td><strong>전략</strong></td><td>공격/방어 전략 무전 선언 완료? / 상황 변화에 따른 전환 기준 설정?</td><td>□</td></tr><tr><td><strong>자원</strong></td><td>급수 확보? / 예비대 준비 완료? / 폼 원액 준비?</td><td>□</td></tr><tr><td><strong>배연</strong></td><td>배연 계획 수립? / 코어샤프트 기류 확인? / PPV 사용 여부 결정?</td><td>□</td></tr></table></div>
+<h2>12. 상황판단회의 후 완진선언</h2>
+<h3>1. 완진 전 단계별 확인 절차</h3>
+<p>현장지휘관(IC)은 화점 억제 후 2차 인명검색(Secondary Search)을 실시해 전 층·전 구역의 잔류 인원 유무를 확인한다. 공사장은 지하층·코어샤프트·비계 상층부·자재 야드 등 사각지대가 많으므로, 단위지휘관들과 함께 구역별 순회 점검을 반드시 시행한다. 열화상카메라(TIC)로 골조 내부·코어샤프트·가연자재 잔해를 스캔해 숨은 불씨·잔열을 확인하고, 고온 지점 발견 시 즉시 국소 냉각을 지시한다. 잔불 정리 후 LPG·가설전력 차단 상태를 재확인하고, 가스 농도 측정으로 안전을 검증한다. 비계·크레인 구조 안정성을 구조전문가와 확인하고, 낙하 위험 구역은 완진 이후에도 배제 구역으로 유지한다. 모든 조건이 충족되면 현장지휘관(IC)은 단위지휘관들과 상황판단회의를 열어 구역별 보고를 종합한 뒤, 무전으로 "○○공사장 화재는 현 시간부로 완진(Final Extinguishment)"을 공식 선언한다.</p>
+<div class="tbl-label">Table 2-3-18. 완진 전 점검 리스트(Pre-FED Checklist)</div>
+<div class="tbl-wrap"><table><tr><th><strong>항목</strong></th><th><strong>점검 기준/내용</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td><strong>2차 인명검색(Secondary Search)</strong></td><td>전 층·코어샤프트·비계 상층부·자재 야드 전수 확인</td><td>인명검색완료(ALL CLEAR) 전 완진 금지, 사각지대(지하층·비계 상부) 우선 점검</td></tr><tr><td><strong>열화상카메라 잔열 확인(TIC Survey)</strong></td><td>골조·코어샤프트·가연자재 잔해 스캔</td><td>고온지점 표식 후 즉시 국소냉각, 재측정으로 온도 정상화 확인</td></tr><tr><td><strong>잔불 정리(Overhaul)</strong></td><td>가연자재(우레탄폼·방진시트) 탄화 구역 개방·제거·냉각</td><td>은폐 연소 제거 핵심, 미세분무/안개방수로 증기 최소화</td></tr><tr><td><strong>가스·전기 안전(Isolation)</strong></td><td>LPG·아세틸렌 차단 재확인, 가설전력 분전반 잠금 표식, 가스 농도 재측정</td><td>재 점화·폭발 방지, 재 통전 금지·잠금 표식 유지</td></tr><tr><td><strong>비계·크레인 구조 안정성</strong></td><td>비계 프레임·결속·타워크레인 와이어 상태 확인(구조전문가 협조)</td><td>낙하위험 구역 배제 유지, 완진 후에도 경고 표식 유지</td></tr><tr><td><strong>배연·가스 잔류</strong></td><td>구역별 순차배연 완료, 가스 농도 정상 확인</td><td>급격한 배연 금지, 배연 후 열화상카메라(TIC) 재확인</td></tr><tr><td><strong>오염·위해요소</strong></td><td>유해가스(CO·HCN) 측정, 우레탄폼 연소 잔여물 처리</td><td>재 출동 예방, 개인보호장비(PPE) 수준 유지·배연 강화</td></tr><tr><td><strong>자원·기록</strong></td><td>소방호스라인·장비 회수, 사진·열화상카메라(TIC) 캡처·무전 로그 정리</td><td>사후 조사·보고 근거 확보, 잔여 대기전력 지정</td></tr><tr><td><strong>구역별 종합보고(Brief-back)</strong></td><td>단위지휘관의 현재상황·조치·필요사항(CAN) 보고 종합, 완진선언(FED) 조건 확인</td><td>완진선언 여부를 객관적으로 판단</td></tr></table></div>
+  </div>
+</section>
+<hr class="sep">
+
+<section id="nrb" class="part-section" style="--part-color:#1e5c8a">
+  <div class="part-header">
+    <div class="part-num">PART 2-1</div>
+    <div class="part-title">노래방화재 현장지휘</div>
+  </div>
+  <div class="part-body">
+    <p><strong>PART 2-1  노래방화재 현장지휘</strong></p>
+<p>부산소방학교 지휘역량강화센터(ICTC)</p>
+<h2>01  실제사례</h2>
+<p><strong>사례 1. 경기 부천시 노래방 화재 (2024)</strong></p>
+<p>지하 2층 복합건물 내 노래방에서 발화. 방음재·합성 내장재가 대량 연소하며 유독가스(HCN·CO)가 급속 축적. 지하 특성상 연기 배출이 어렵고 단일 계단이 연기로 차단되어 대피 인원 다수가 계단에서 쓰러졌다. 소방대 도착 시 이미 계단·복도 전체가 농연으로 가시성 제로. 지하 노래방의 방음·무창 구조가 인명 피해를 키운 대표적 사례.</p>
+<p><strong>사례 2. 서울 강남구 노래방 화재 (2023)</strong></p>
+<p>심야 시간대 3층 노래방 복도에서 전기적 원인으로 발화. 방음재·PVC 내장재 급연소. 방 내부에 고객이 갇혀 창문으로 구조 요청. 사다리차로 외부 구조 및 내부 진압 동시 진행. 밀폐 방음 구조와 고객 분산 배치가 인명 확인을 어렵게 한 사례.</p>
+<h2>Chapter 1.  사고발생 (Incident Occurrence)</h2>
+<p>노래방은 다수의 방음 처리된 개별 방과 복도가 연결된 밀폐형 유흥 시설이다. 방음재(우레탄폼·스티로폼·흡음재)와 PVC 내장재가 대량 연소하면서 독성 가스(HCN·CO)가 단시간에 치명 농도에 도달한다. 지하층에 위치한 경우 연기 배출이 더욱 어렵고, 단일 계단이 막히면 사실상 대피 경로가 없다. 신고는 "연기 냄새" 또는 고객의 직접 신고로 접수되는 경우가 많다.</p>
+<div class="tbl-label">Table 2-1-1. 노래방 화재 주요 위험 요소</div>
+<div class="tbl-wrap"><table><tr><th><strong>위험 요소</strong></th><th><strong>세부 내용</strong></th><th><strong>전술적 시사점</strong></th></tr><tr><td><strong>방음재·흡음재 대량 연소</strong></td><td>우레탄폼·스티로폼·흡음재 급연소, HCN·CO 다량 발생</td><td>SCBA 착용 없이 접근 절대 금지, 유독가스 차단 우선</td></tr><tr><td><strong>PVC·합성 내장재</strong></td><td>연소 시 염화수소(HCl) 등 부식성 가스 발생</td><td>장비 내식성 확인, 오염 제거 절차 시행</td></tr><tr><td><strong>밀폐 방음 구조</strong></td><td>자연 배연 불가, 연기·열 축적 빠름</td><td>TIC 필수 활용, 강제 배연 계획 선수립</td></tr><tr><td><strong>지하층 입지</strong></td><td>연기 상승·배출 어려움, 진입 경로 단일화</td><td>지하 진입 시 배기구·환기구 위치 사전 파악</td></tr><tr><td><strong>방별 고객 분산</strong></td><td>방마다 잠금 또는 닫힌 상태, 인원 파악 어려움</td><td>방 번호 기준 전수 검색, 관리자로부터 고객 수 즉시 확인</td></tr><tr><td><strong>야간 음주 상태 고객</strong></td><td>자력 대피 판단력 저하</td><td>구조대 우선 투입, 대피 유도와 인원 확인 병행</td></tr><tr><td><strong>전기 설비 과부하</strong></td><td>노래방 장비·조명 과부하로 전기적 발화 빈번</td><td>가설 전력 차단 선행, 분전반 위치 즉시 확인</td></tr></table></div>
+<h2>Chapter 2.  현장출동 (En Route to the Scene)</h2>
+<h3>1. 정확한 위치 및 규모 확인</h3>
+<p>출동 중 현장지휘관(IC)은 소방활동정보카드·소방안전지도·출동지령서·무전을 교차 확인해 노래방의 정확한 주소·층수(지상/지하)·입지(단독/복합건물 내)를 파악한다. 노래방은 지하층이나 상가 건물 내 혼재하는 경우가 많아 출입구 위치와 층별 구조가 일반 주거와 크게 다르다.</p>
+<div class="tbl-label">Table 2-1-2. 위치·규모 사전 확인 체크리스트(Pre-Arrival Checks)</div>
+<div class="tbl-wrap"><table><tr><th><strong>항목 기준</strong></th><th><strong>내용</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td><strong>주소·접근</strong></td><td>정확 주소, 골목명, 랜드마크, 주출입구 방향</td><td>오인 출동 방지, 최단 접근·부서 위치 선정</td></tr><tr><td><strong>층위</strong></td><td>지상/지하층, 건물 내 위치(층·호)</td><td>지하층 특화 대응(배연 어려움·단일 계단 차단) 대비</td></tr><tr><td><strong>규모·방 수</strong></td><td>노래방 방 개수, 층별 배치</td><td>전수 인명검색 소요 인원·시간 산정</td></tr><tr><td><strong>수직동선</strong></td><td>계단 수·위치, 비상구·피난사다리</td><td>계단 확보·문 제어(Door Control) 계획 수립</td></tr><tr><td><strong>차량 접근</strong></td><td>골목 폭, 불법 주정차, 전개 공간</td><td>대기단계(Staging Area)·사다리 전개 구역 확보</td></tr><tr><td><strong>급수자원</strong></td><td>소화전 위치·가용성, 중계급수 필요성</td><td>연속 방수·예비 급수선 계획</td></tr><tr><td><strong>위험물</strong></td><td>방음재 종류, 분전반 위치, 가스용기 유무</td><td>유독가스 대응 약제 준비, 가스 차단 선행</td></tr></table></div>
+<h3>2. 출동 중 3교신</h3>
+<div class="tbl-label">Table 2-1-3. 출동 중 3교신 내용</div>
+<div class="tbl-wrap"><table><tr><th><strong>교신 순서</strong></th><th><strong>대상</strong></th><th><strong>주요 내용</strong></th></tr><tr><td><strong>① 제1교신</strong></td><td>종합상황실(지령센터)</td><td>현장 주소 재확인 / 노래방 층수·방 수 / 지하층 여부 / 관리자 연락처 / 선착대 도착 예상시간</td></tr><tr><td><strong>② 제2교신</strong></td><td>후속 출동대</td><td>예상 화점층 및 현장 상황 공유 / 유독가스 경고 / 역할 분담(구조·진압·급수) 사전 협의</td></tr><tr><td><strong>③ 제3교신</strong></td><td>자대 대원</td><td>SCBA 착용 준비 / 진입 루트 예상 / 전기 차단 임무 분담 / TIC·유도 로프 준비</td></tr></table></div>
+<h3>3. 특수차량 진입 확인 및 추가 장비 요청</h3>
+<p>노래방이 지하층에 위치하거나 골목 안에 있는 경우 사다리차 접근이 어렵다. 유독가스 대응을 위해 SCBA·TIC·유도 로프를 필수 탑재하고, 환기팬(배연기)을 신속히 준비한다.</p>
+<div class="tbl-label">Table 2-1-4. 특수 장비 우선 목록</div>
+<div class="tbl-wrap"><table><tr><th><strong>장비</strong></th><th><strong>용도</strong></th><th><strong>비고</strong></th></tr><tr><td><strong>SCBA (공기호흡기)</strong></td><td>유독가스(HCN·CO) 환경 필수</td><td>방음재 연소 현장 비착용 진입 절대 금지</td></tr><tr><td><strong>열화상카메라(TIC)</strong></td><td>농연 속 인명검색·화점 위치 파악</td><td>2인 1조 선두 대원 상시 휴대</td></tr><tr><td><strong>유도 로프(Guideline)</strong></td><td>무창·농연 복도 길찾기·철수</td><td>진입구 고정 후 사용, 공기 잔량 25% 시 철수</td></tr><tr><td><strong>배연기(PPV Fan)</strong></td><td>지하 연기 배출</td><td>배출구 확보 후 가동, 화점 방 방수 개시 후 작동</td></tr><tr><td><strong>강제 진입 공구</strong></td><td>잠긴 방 도어 강제 개방</td><td>방별 전수 검색 시 필수</td></tr></table></div>
+<h3>4. 유관기관 요청 (Requests to Cooperating Agencies)</h3>
+<div class="tbl-label">Table 2-1-5. 유관기관별 즉시요청사항</div>
+<div class="tbl-wrap"><table><tr><th><strong>유관기관</strong></th><th><strong>요청사항(예)</strong></th><th><strong>전술시사점</strong></th></tr><tr><td><strong>경찰</strong></td><td>골목 통제, 차량·주민 접근 차단</td><td>진입·회차 동선 확보</td></tr><tr><td><strong>한전</strong></td><td>건물 전원 차단, 감전 위험 확인</td><td>내부 진입 안전 확보, 2차 전기 위험 차단</td></tr><tr><td><strong>가스</strong></td><td>가스 공급 차단, 배관 누설 점검</td><td>폭발·재발화 위험 저감</td></tr><tr><td><strong>구급/의료</strong></td><td>구급대 보강, 연기흡입 환자 대비 응급실 통보</td><td>CO·HCN 중독 환자 우선 이송 준비</td></tr><tr><td><strong>지자체</strong></td><td>임시 대피소 개소</td><td>대피 고객 집결·관리</td></tr><tr><td><strong>수도사업소</strong></td><td>소화전 유량·압력 증강</td><td>동시 방수 안정화</td></tr></table></div>
+<h2>Chapter 3.  현장도착 (On-Scene Arrival)</h2>
+<h3>1. 선착대장 초기 보고 청취</h3>
+<p>현장지휘관(IC)은 선착대장으로부터 초기 상황 보고를 무전으로 즉시 청취한다. 화점 층수·방 번호, 복도 연기 상황, 고객 잔류 여부, 계단 접근 가능성을 핵심으로 파악한다.</p>
+<div class="tbl-label">Table 2-1-6. 선착대장 표준 보고 항목(Initial Radio Report)</div>
+<div class="tbl-wrap"><table><tr><th><strong>항목</strong></th><th><strong>예시 보고(내용)</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td><strong>위치·층</strong></td><td>지하 1층 복도 화점 추정, A방면 도착</td><td>현장지휘소(ICP) 위치, 방-층 포맷 통일</td></tr><tr><td><strong>연기·화염</strong></td><td>복도 전체 농연, 가시성 제로</td><td>SCBA 착용 진입만 허용, 배연 기계 즉시 준비</td></tr><tr><td><strong>인명·대피</strong></td><td>고객 잔류 여부 미확인, 관리자 확인 중</td><td>관리자로부터 고객 수·방 배치 즉시 확보</td></tr><tr><td><strong>계단·문 상태</strong></td><td>계단 연기 상승, 출입문 개방 상태</td><td>출입문 즉시 폐쇄, 계단 확보 소방호스 선개설</td></tr><tr><td><strong>연소 확대</strong></td><td>복도 인접 방 연기 유입 시작</td><td>방별 문 닫힘 유지, 복도 차단 소방호스 전개</td></tr><tr><td><strong>접근·장애물</strong></td><td>지하 계단 1개소, 대피 주민 군집</td><td>대피 인원 집결지 지정, 진입·대피 동선 분리</td></tr><tr><td><strong>급수·설비</strong></td><td>계단 하부 소화전 가용, 전력·가스 차단 미확인</td><td>전력·가스 차단 즉시 요청</td></tr></table></div>
+<h3>2. 최초 상황평가 (Initial Size-Up)</h3>
+<div class="tbl-label">Table 2-1-7. 최초 상황평가 체크리스트(Initial Size-Up Checklist)</div>
+<div class="tbl-wrap"><table><tr><th><strong>항목</strong></th><th><strong>확인 포인트</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td><strong>외부 관찰</strong></td><td>연기 색·양·출구 분출 방향, 창·환기구 상태</td><td>유독가스 농도 추정, 풍상측 진입 회피</td></tr><tr><td><strong>접근 안전</strong></td><td>계단 위치·수, 지하 진입 위험성</td><td>SCBA 착용 팀만 진입, 외부 안전 대원 배치</td></tr><tr><td><strong>인명 상황</strong></td><td>고객 수·방 배치, 자력 대피 가능 인원 확인</td><td>관리자 인원 명부 즉시 확보, 미확인 방 우선 검색</td></tr><tr><td><strong>내부 정보</strong></td><td>복도 연기 밀도, 방문 상태, 가시성</td><td>TIC 선두 활용, 유도 로프 설치</td></tr><tr><td><strong>연소 확대</strong></td><td>복도→인접 방 수평 확산, 상층 연기 이동</td><td>방문 닫힘 유지, 복도 차단 소방호스 배치</td></tr><tr><td><strong>용수·압력</strong></td><td>소화전 위치·유량·압력</td><td>중계급수 검토, CAN 보고</td></tr></table></div>
+<h3>3. 방면 지정 (Side Designation)</h3>
+<div class="tbl-label">Table 2-1-8. 방면 지정 가이드(Side Designation Guide)</div>
+<div class="tbl-wrap"><table><tr><th><strong>구분</strong></th><th><strong>기준</strong></th><th><strong>예시 지시(무전)</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td><strong>A방면</strong></td><td>건물 주 출입구(지하 진입 계단 포함)</td><td>현장지휘소(ICP) A방면 설치, 계단 확보 소방호스 1선 전개</td><td>현장지휘소(ICP)·대기지점으로 사용, 대피 인원 집결지</td></tr><tr><td><strong>B방면</strong></td><td>A 기준 좌측 측면</td><td>B방면 환기구 연기 확인, 배연 대기</td><td>대체 배연 포인트</td></tr><tr><td><strong>C방면</strong></td><td>건물 후면</td><td>C방면 접근 곤란, 외벽 냉각 우선</td><td>연소 확대 감시·차단선 배치</td></tr><tr><td><strong>D방면</strong></td><td>A 기준 우측 측면</td><td>D방면 비상구 확인, 구조 대기</td><td>비상구 활용 구조 포인트</td></tr></table></div>
+<h3>4. 360° 상황평가 (360° Size-Up)</h3>
+<div class="tbl-label">Table 2-1-9. 360° 상황평가 체크리스트</div>
+<div class="tbl-wrap"><table><tr><th><strong>구역</strong></th><th><strong>확인 항목</strong></th><th><strong>관측 포인트</strong></th><th><strong>즉시 조치</strong></th></tr><tr><td><strong>지하 진입구</strong></td><td>연기·유독가스 분출 방향</td><td>출입구·환기구 연기 분출속도</td><td>진입구 폐쇄 여부 결정, SCBA 착용 팀만 진입</td></tr><tr><td><strong>측면(B/D)</strong></td><td>외벽 온도·환기구 연기</td><td>건물 측면 환기구 상태</td><td>배연 포인트 확보, 배연기 설치 위치 선정</td></tr><tr><td><strong>상부(지상)</strong></td><td>건물 상부 연기 분출</td><td>환기구·덕트 연기 유출</td><td>상층 연소 확대 방지 경계, 배연기 가동 준비</td></tr><tr><td><strong>공통</strong></td><td>수평 확산 경로</td><td>복도 연기 이동 방향</td><td>계단 확보 소방호스 전개, 방문 닫힘 유지</td></tr><tr><td><strong>안전</strong></td><td>낙하물·협소 공간</td><td>전선·차양·적치물</td><td>안전 통제선 확장, 투입 전 위험 브리핑</td></tr></table></div>
+<h3>5. 연기 및 화염 상태 파악 (Reading Smoke &amp; Flame Conditions)</h3>
+<div class="tbl-label">Table 2-1-10. 연기·화염 판독 매트릭스</div>
+<div class="tbl-wrap"><table><tr><th><strong>관측</strong></th><th><strong>내용</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td><strong>짙은 검은 연기(고온·난류)</strong></td><td>방음재·PVC 내장재 연소, HCN·CO 급증</td><td>SCBA 없이 진입 절대 금지, 배연 기계 즉시 가동</td></tr><tr><td><strong>황갈색 연기(HCN·염화수소)</strong></td><td>방음재·PVC 합성수지 연소 특유</td><td>독성 최고 수준, 공기호흡기 착용 필수, 방어 전략 검토</td></tr><tr><td><strong>복도 출구 양압 분출</strong></td><td>화점층 과압·연소 가속</td><td>개구부 무분별 개방 금지, 통제 배연 시점 IC 승인</td></tr><tr><td><strong>지하 계단 연기 역류</strong></td><td>연기 상승 경로 차단, 지하 연기 축적</td><td>계단 하부 배연기 설치, 지하 출입구 일시 폐쇄 후 배연 시작</td></tr><tr><td><strong>화염 없이 연기만 다량</strong></td><td>무염 연소·열 축적</td><td>TIC로 화점 방 위치 파악 후 직접 진입</td></tr></table></div>
+<h2>Chapter 4.  현장대응 (On-Scene Operations)</h2>
+<h3>전반부 대응 (Primary Phase Operations)</h3>
+<h3>1. 지휘권 인수 및 선언 (Assume and Announce Command)</h3>
+<p>노래방 화재는 밀폐 방음 구조·유독가스·지하층 입지라는 복합 위험이 존재하므로, 현장지휘관(IC)은 현장 도착 즉시 선착대장으로부터 대면 보고로 지휘권을 인계받고, 무전으로 지휘권 선언을 실시한다.</p>
+<div class="tbl-label">Table 2-1-11. 지휘권 인수·선언 절차</div>
+<div class="tbl-wrap"><table><tr><th><strong>단계</strong></th><th><strong>핵심내용</strong></th><th><strong>지휘내용</strong></th></tr><tr><td><strong>도착 보고</strong></td><td>선착대가 초기 위험 요소 무전 보고</td><td>현장지휘관(IC)이 보고를 수신·요약 재송신, 유독가스 경고 포함</td></tr><tr><td><strong>대면 보고</strong></td><td>선착대장이 화점·인명·진입 가능성·자원 현황을 CAN 보고</td><td>고객 수·방 배치, 계단 상태, 유독가스 농도 확인</td></tr><tr><td><strong>지휘권 인수</strong></td><td>현장지휘관(IC)이 지휘권 인수 의사 표명</td><td>현장지휘소(ICP)와 대기구역(Staging Area) 위치 지정</td></tr><tr><td><strong>지휘권 선언</strong></td><td>전 채널에 지휘권 확립 메시지 송출</td><td>전 대원에게 현장지휘소 위치, 보고 채널, 임무 분배 원칙 공지</td></tr><tr><td><strong>일원화 전환</strong></td><td>모든 보고·지시를 IC 중심 단일 체계로 전환</td><td>방-층 중심으로 대원 임무 지정, CAN 보고로 간략 보고</td></tr></table></div>
+<h3>2. 전략 결정 및 팀별 임무 지시</h3>
+<div class="tbl-label">Table 2-1-12. 전략 선택 기준(Strategy Decision Criteria)</div>
+<div class="tbl-wrap"><table><tr><th><strong>전략</strong></th><th><strong>적용 조건</strong></th><th><strong>핵심 전술</strong></th></tr><tr><td><strong>내부 공격 진압(Offensive)</strong></td><td>생존 징후 확인, 계단 확보 가능, SCBA 팀 준비 완료</td><td>2인 1조 SCBA 진입, 화점 방 직접 방수, 복도 차단 소방호스 유지</td></tr><tr><td><strong>외부 방어 진압(Defensive)</strong></td><td>복도 전층 연소·건물 붕괴 징후·고객 전원 대피 확인</td><td>외부 환기구 방수, 연소 확대 방지, 배연 집중</td></tr><tr><td><strong>전환 전략(Transitional)</strong></td><td>초기 내부 진압 중 유독가스 급증·대원 공기 부족 시</td><td>즉각 철수 신호, 외부 전환, 재진입 조건 설정</td></tr></table></div>
+<h3>3. 인명구조 전술</h3>
+<p>노래방 인명구조는 방별 전수 검색이 핵심이다. 방마다 잠금 또는 닫힌 상태이므로 강제 진입 공구를 활용해 방 번호 순서로 체계적으로 검색한다. 관리자로부터 고객 수·방 배치 정보를 즉시 확보한다.</p>
+<div class="tbl-label">Table 2-1-13. 인명검색 우선순위</div>
+<div class="tbl-wrap"><table><tr><th><strong>우선순위</strong></th><th><strong>대상</strong></th><th><strong>방법</strong></th></tr><tr><td><strong>1순위</strong></td><td>화점 인접 방·복도 쓰러진 인원</td><td>TIC 활용 2인 1조, SCBA 착용 필수</td></tr><tr><td><strong>2순위</strong></td><td>지하층 전수 방(화점층)</td><td>방 번호 순서 체계 검색, 강제 진입 공구</td></tr><tr><td><strong>3순위</strong></td><td>상층 계단 대피 중 쓰러진 인원</td><td>유도 로프 따라 이송, 구급대 인계</td></tr><tr><td><strong>4순위</strong></td><td>인접 방·상층 방</td><td>배연 후 가시성 확보 시 검색</td></tr></table></div>
+<h3>4. RECEO 프레임워크 적용</h3>
+<div class="tbl-label">Table 2-1-14. 노래방 화재 RECEO 적용</div>
+<div class="tbl-wrap"><table><tr><th><strong>우선순위</strong></th><th><strong>RECEO 항목</strong></th><th><strong>노래방 특화 적용</strong></th></tr><tr><td><strong>1순위</strong></td><td>R – Rescue (인명구조)</td><td>방별 전수 검색, SCBA 착용 2인 1조, TIC·유도 로프 필수</td></tr><tr><td><strong>2순위</strong></td><td>E – Exposures (노출 방호)</td><td>인접 방·상층 연소 확대 방지 소방호스 선개설</td></tr><tr><td><strong>3순위</strong></td><td>C – Confinement (확산 차단)</td><td>복도 차단 소방호스, 방문 닫힘 유지, 구획화</td></tr><tr><td><strong>4순위</strong></td><td>E – Extinguishment (화재 진압)</td><td>화점 방 직접 방수(40mm), 방음재 완전 냉각</td></tr><tr><td><strong>5순위</strong></td><td>O – Overhaul (잔불 정리)</td><td>방음재 내부·천장 TIC 스캔, 잔열 국소 냉각, 환기 지속</td></tr></table></div>
+<h3>5. 배연(Ventilation) 계획</h3>
+<p>노래방은 밀폐 방음 구조로 자연 배연이 거의 불가능하다. 유독가스 축적을 해소하기 위해 기계 배연(PPV/배연기)이 필수이며, 화점 방 방수 개시 이후 현장지휘관(IC)의 승인하에 가동한다.</p>
+<div class="tbl-label">Table 2-1-15. 노래방 배연 전략</div>
+<div class="tbl-wrap"><table><tr><th><strong>배연 방법</strong></th><th><strong>적용 조건</strong></th><th><strong>주의사항</strong></th></tr><tr><td><strong>기계 배연(Exhaust Fan)</strong></td><td>배출구(환기구·계단 상부 개구) 확보 후 배연기 설치</td><td>화점 방 방수 개시 후 가동, 화염 확산 방지</td></tr><tr><td><strong>양압 배연(PPV Fan)</strong></td><td>신선 공기 유입구 확보 가능한 경우</td><td>배출구 크기 유입구보다 커야 효과, 가스 폭발 위험 구역 금지</td></tr><tr><td><strong>자연 배연</strong></td><td>건물 외부 창·환기구 개방 가능 시</td><td>지하는 굴뚝 효과 없어 효과 미미, 기계 배연 병행 필요</td></tr><tr><td><strong>배연 금지</strong></td><td>가스 누출 의심·폭발 위험 구역</td><td>급격한 기류 변화로 가스 확산 위험</td></tr></table></div>
+<h3>6. 무전 채널 관리</h3>
+<div class="tbl-label">Table 2-1-16. 채널 운영 계획</div>
+<div class="tbl-wrap"><table><tr><th><strong>채널</strong></th><th><strong>사용 주체</strong></th><th><strong>내용</strong></th></tr><tr><td><strong>지휘채널(Ch.1)</strong></td><td>IC ↔ 섹터지휘관</td><td>전술·전략·자원 배분·단계 변경</td></tr><tr><td><strong>진압채널(Ch.2)</strong></td><td>진압섹터장 ↔ 진압대원</td><td>화점 상황·방수 개시·철수</td></tr><tr><td><strong>구조채널(Ch.3)</strong></td><td>구조섹터장 ↔ 구조대원</td><td>인원 확인·구조 진행·이송</td></tr><tr><td><strong>비상채널(Mayday)</strong></td><td>전 대원</td><td>긴급 조난·공기 부족·붕괴 신호</td></tr></table></div>
+<h3>후반부 대응 (Late-Phase Operations)</h3>
+<h3>상황판단회의 후 완진선언</h3>
+<p>현장지휘관(IC)은 화점 억제 후 2차 인명검색(Secondary Search)을 실시해 전 방·복도·공용부의 잔류 인원 유무를 확인한다. 겉보기로 진압이 완료된 것처럼 보여도 즉시 완진을 선언하지 않고, 단위지휘관들과 함께 현장을 직접 순회하며 최종 상태를 점검한다. 노래방은 방음재·흡음재 내부에 숨은 불씨가 장시간 잔존할 수 있다. 열화상카메라(TIC)로 방음재 내부·천장을 스캔하고, 열원 발견 시 즉시 국소 냉각 주수를 지시한다. 방음재 개방·제거 후 잔불 정리가 완료되고 "온도 정상·유독가스 농도 안전" 확인이 완료되면, IC는 단위지휘관들과 상황판단회의를 열어 구역별 보고를 종합한 뒤, 무전으로 "○○노래방 화재는 현 시간부로 완진(Final Extinguishment)"을 공식 선언한다.</p>
+<div class="tbl-label">Table 2-1-24. 완진 전 점검 리스트(Pre-FED Checklist)</div>
+<div class="tbl-wrap"><table><tr><th><strong>항목</strong></th><th><strong>점검 기준/내용</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td><strong>2차 인명검색(Secondary Search)</strong></td><td>방·복도·화장실·스태프실·비상구 전수 확인, 잠금 방 강제 개방 후 재확인</td><td>인명검색 완료(ALL CLEAR) 확인 전 완진 금지, 지하층 사각지대(보관실·기계실) 우선 점검</td></tr><tr><td><strong>열화상카메라 잔열 확인(TIC Survey)</strong></td><td>방음재(우레탄폼·흡음재)·벽체·천장·천장 내부 공간 스캔</td><td>고온 지점 표식 후 즉시 국소 냉각, 재측정으로 온도 정상화 확인</td></tr><tr><td><strong>잔불 정리(Overhaul)</strong></td><td>방음재 탄화 구역 개방·파쇄·제거 후 내부 화점 냉각</td><td>은폐 연소 제거 핵심, 방음재 내부 불씨는 장시간 잔존</td></tr><tr><td><strong>가스·전기 안전(Isolation)</strong></td><td>전원 차단 유지, 분전반 잠금 표식, 가스 농도(CO·HCN) 재측정</td><td>유독가스 재축적 방지, 재 통전 금지</td></tr><tr><td><strong>배연·유독가스 잔류</strong></td><td>구역별 배연 완료, CO·HCN 농도 허용 기준 이하 확인</td><td>유독가스 잔류 시 대원 진입 금지, 배연 지속 후 재측정</td></tr><tr><td><strong>구조 안정성</strong></td><td>천장 처짐·벽체 박리·방음재 낙하 위험 점검</td><td>위험 구역 활동제한구역 지정</td></tr><tr><td><strong>오염·위해요소</strong></td><td>HCN·CO·HCl 농도 측정, 방음재 잔여물 처리 계획</td><td>재 출동 예방, 잔여물 밀폐 후 전문 폐기 처리</td></tr><tr><td><strong>자원·기록</strong></td><td>소방호스라인·장비 회수, 사진·TIC 캡처·무전 로그 정리</td><td>사후 조사·보고 근거 확보</td></tr><tr><td><strong>구역별 종합보고(Brief-back)</strong></td><td>단위지휘관의 CAN 보고 취합, 완진선언(FED) 조건 확인</td><td>완진선언 여부를 객관적으로 판단</td></tr></table></div>
+<p><strong>소방 현장지휘 교재</strong></p>
+<p>PART 2-4 빌라화재 현장지휘  |  PART 2-5 아파트화재 현장지휘</p>
+<p>부산소방학교 지휘역량강화센터(ICTC)</p>
+<h2>목  차</h2>
+<p>PART 2-4  빌라화재 현장지휘</p>
+<p>Chapter 1. 사고발생</p>
+<p>Chapter 2. 현장출동</p>
+<p>Chapter 3. 현장도착</p>
+<p>Chapter 4. 현장대응 (전반부 / 후반부)</p>
+<p>PART 2-5  아파트화재 현장지휘</p>
+<p>Chapter 1. 사고발생</p>
+<p>Chapter 2. 현장출동</p>
+<p>Chapter 3. 현장도착</p>
+<p>Chapter 4. 현장대응 (전반부 / 후반부)</p>
+  </div>
+</section>
+<hr class="sep">
+
+<section id="villa" class="part-section" style="--part-color:#7d3c98">
+  <div class="part-header">
+    <div class="part-num">PART 2-4</div>
+    <div class="part-title">빌라화재 현장지휘</div>
+  </div>
+  <div class="part-body">
+    <p><strong>PART 2-4  빌라화재 현장지휘</strong></p>
+<h2>01  실제사례</h2>
+<p><strong>사례 1. 부산 4층 빌라 주택화재 (2025)</strong></p>
+<p>저층 다가구 주택 화재 위험성을 보여준 사건. 불은 4층 가정집에서 시작, 불길과 연기가 빠르게 번져 거주자 A씨(40대 남성)가 창밖으로 뛰어내리다 추락 중상 후 사망. 빌라 내 거주 주민 20여명이 급히 대피. 소방공무원 73명·장비 22대 투입, 약 30분 만에 진화. 단일 출입구와 계단으로 이루어진 구조는 화재 시 빠르게 연기와 화염이 차올라 피난을 더욱 어렵게 함.</p>
+<p><strong>사례 2. 경기 부천시 원미구 빌라 주차장 화재 (2025)</strong></p>
+<p>2025년 3월 23일 01:46, 원미구의 한 빌라 1층 필로티 주차장에 주차된 차량에서 화재 발생. 16분 만에 진화됐으나 차량 내부의 40대 1명 사망, 주차장 천장과 차량 2대가 소실되는 등 재산피해 약 7,100만 원 발생. 야간 시간대+밀폐형 필로티 주차장에서 급격한 연기 확산과 열 축적이 질식/의식 소실 위험을 단시간에 높임. 야간 경보·대피 방송 절차, 속공 라인 전개와 인원점검 및 대피 동선 확보가 핵심 대응 요소.</p>
+<h2>Chapter 1.  사고발생 (Incident Occurrence)</h2>
+<h2>Chapter 2.  현장출동 (En Route to the Scene)</h2>
+<p><strong>1. 정확한 위치 및 규모 확인</strong></p>
+<p>출동 중 현장지휘관(IC)은 소방활동정보카드, 소방안전지도, 출동지령서, 무전을 교차 확인해 빌라의 정확한 주소·층위(지상/반지하/지하)를 파악한다. 빌라는 저층 다세대·단일 계단·협소 복도 특성으로 연기 이동·진입 동선·배연 루트가 현저히 달라지므로 도착 전에 반드시 확인한다.</p>
+<p><strong>Table 2-4-1. 위치·규모 사전 확인 체크리스트(Pre-Arrival Checks)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>항목 기준</strong></th><th><strong>내용</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td>주소·접근</td><td>정확주소, 골목명, 랜드마크, 주출입구 방향</td><td>오인출동 방지, 최단접근·부서위치 선정</td></tr><tr><td>동/규모</td><td>동 개수, 층수(지상/지하), 세대 수·분포</td><td>인명구조 우선층(화접층·상부층) 지정</td></tr><tr><td>수직동선</td><td>계단실 수·위치, 엘리베이터 유무</td><td>계단실확보·문 제어(Door Control)도 계획 수립</td></tr><tr><td>수평동선</td><td>복도형식(중복도/편복도), 비상구·피난사다리</td><td>인명검색 경로·구조 우회동선확정</td></tr><tr><td>차량 접근</td><td>골목 폭, 불법 주정차, 전개 공간</td><td>대기단계(Staging Area)·사다리전개 구역 확보</td></tr><tr><td>급수자원</td><td>소화전위치/가용성, 중계급수 필요성</td><td>연속 방수·예비 급수선 계획</td></tr><tr><td>점유/거주</td><td>야간점유밀도, 고령·거동불편 세대위치</td><td>신속동료구조팀(RIT)/구조장비 우선 배치, 우선인명검색 대상지정</td></tr></table></div>
+<p><strong>2. 출동대 및 경로 파악</strong></p>
+<p>현장지휘관(IC)은 출동 중인 소방력(진압 5개 팀, 구조 2개 팀, 구급 2개 팀)과 차량 종류(펌프차, 물탱크차, 구조공작차, 고가사다리차 등)를 확인한다. 골목 폭, 불법 주정차, 진입 각도, 노면 상태를 종합 고려해 접근 가능 차량의 진입 순서를 조정한다.</p>
+<p><strong>Table 2-4-2. 출동 경로·사이징 의사결정(En-route Routing <strong><em><em>&amp;</em></strong></em> Sizing Decisions)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>조건</strong></th><th><strong>판단</strong></th><th><strong>조치</strong></th></tr><tr><td>골목 협소·불법 주정차 다수</td><td>대형차접근·회차 곤란</td><td>소형펌프차 우선진입, 대형차 외곽대기(Staging Area), 소방호스현장 전개준비</td></tr><tr><td>진입 각도 급협·차양·간판 장애</td><td>정면근접 전개지연</td><td>인원·장비 도보 전개전환, 차량하부 안전요원 배치, 대체방면선택</td></tr><tr><td>야간 조도 부족·동/호 식별 곤란</td><td>소방차 오인정차·지연 위험</td><td>조명(Spot Light)활용, 확인지점 일시정지, 상황실로 동·호 재확인</td></tr><tr><td>이중주차로 병목·회차 공간 부족</td><td>철수지연·차량 고립</td><td>견인·일시통제요청, 회차지점 사전지정, 불필요차량 외곽대기(Staging Area)</td></tr><tr><td>소화전 위치·압력 불확실</td><td>급수연속성 불명</td><td>소화전 시험개방, 필요시 중계/릴레이(Relay Pumping)급수, 물탱크차순환대기</td></tr><tr><td>외벽 접근 가능(발코니·창)</td><td>외부 전개로 초기 제압·구조 가능</td><td>사다리차 전개 공간 선점, A/B 방면 우선 접근, 내부 팀과 동시 전개</td></tr><tr><td>보행자·주민 밀집</td><td>구급·구조 동선 간섭</td><td>구급·구조 전용동선 분리, 콘·바리케이드배치, 현장접근 인원통제</td></tr><tr><td>노면 불량(결빙·파손)</td><td>차량 미끄럼·장비 낙하 위험</td><td>속도제한, 안전지점 정차·수동 운반, 미끄럼방지 자재사용</td></tr></table></div>
+<p><strong>3. 특수차량 진입 확인 및 추가 장비요청</strong></p>
+<p>현장지휘관(IC)은 선착대장에게 무전으로 빌라 주변 도로 폭과 차량 진입 가능 여부를 즉시 확인하게 한다. 빌라 밀집 지역은 고가사다리차, 굴절사다리차 등 특수차량의 진입이 어려운 골목이 많으므로 특수장비의 진입 가능성을 선제적으로 파악한다.</p>
+<p><strong>Table 2-4-4. 특수차 진입 가능 판단 기준(Apparatus Access Criteria)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>항목</strong></th><th><strong>기준/내용</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td>골목 폭·회전 반경</td><td>최소통행 폭·회전 반경미달, 불법 주정차로 차폭제한</td><td>굴절사다리차·고가사다리차 대기구역(Staging Area)전환, 소형펌프차 우선진입·연장호스준비</td></tr><tr><td>상부·측면 장애물</td><td>전선, 차양·간판, 돌출 발코니로 버킷전개 간섭</td><td>휴대용사다리·내부구조 동시전환, 장애물구역 활동제한구역 설정</td></tr><tr><td>접근 각도·지면 상태</td><td>급협코너, 경사·결빙·파손 노면으로 전개불안</td><td>도보전개 전환, 안전지점정차, 필요시경찰 통제·견인요청</td></tr><tr><td>전개·회차 공간</td><td>전면·아웃리거 공간부족, 회차 지연 위험</td><td>대형교차로·주차장 외곽배치(Staging Area), 내·외부 동시전개 계획수립</td></tr><tr><td>인명구조 필요</td><td>발코니 대피자·창가 구조 대상자 확인</td><td>사다리전개 방면 우선지정, 내부팀과 문 제어(Door Control)·계단확보 소방호스 연동</td></tr><tr><td>외벽·연소화대위험</td><td>외벽 수직확산·인접동 그을음 증가</td><td>외벽냉각·연소확대방지 우선, 외부방수와 내부공격분담</td></tr><tr><td>급수 가용성</td><td>소화전 부족·압력 저하·장시간 진압 예상</td><td>중계/릴레이(Relay Pumping)급수가동, 물탱크차 증원 요청</td></tr><tr><td>대체 수단 전환</td><td>특수차량 진입 불가 또는 지연</td><td>통제배연(PPV)·휴대사다리, 내부진입 진압으로 전환</td></tr></table></div>
+<p><strong>4. 유관기관 요청 (Requests to Cooperating Agencies)</strong></p>
+<p>빌라 화재는 협소 골목과 주택 밀집 특성으로 교통 통제·대피 지원에 대한 유관기관의 신속 협조가 중요하다. 현장지휘관(IC)은 출동 중 상황실을 통해 경찰에 골목 통제·불법 주정차 견인·주민 접근 차단을 요청하고, 한전에는 동·라인 단위 전원 차단, 가스에는 가스 밸브 폐쇄와 누설 점검을 즉시 지시한다.</p>
+<p><strong>Table 2-4-5. 유관기관별 즉시요청사항(Cooperating-Agency Immediate Requests)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>유관기관</strong></th><th><strong>요청사항(예)</strong></th><th><strong>전술시사점</strong></th></tr><tr><td>경찰</td><td>골목통제, 불법주정차 견인, 주민·차량접근 차단, 교차로 교통 통제</td><td>진입·회차 동선 확보로 사다리차·구급동 선분리 및 병목해소</td></tr><tr><td>한전</td><td>동/라인 전원 차단, 고압 위험구역 표지, 누전·감전위험 확인</td><td>외부전개·내부진입 안전확보, 2차 전기위험차단</td></tr><tr><td>가스</td><td>가스공급 차단, 집합계량기·배관 누설 점검, 가스농도 측정</td><td>폭발·재발화 위험 저감, 가스인접구간접근 안전확보</td></tr><tr><td>구급/의료</td><td>구급대 보강, 인근 응급실 대기 통보, 환자분류·이송계획 공유</td><td>연기흡입·화상환자 우선이송·병원분산으로 초기 과밀 완화</td></tr><tr><td>지자체</td><td>임시대피소 개소, 취약계층 보호 인력·통역·안내 인력 배치</td><td>대피자 집결·관리원활, 현장소방력은 진압·구조에 집중가능</td></tr><tr><td>수도사업소</td><td>소화전 유량·압력 증강, 밸브조정, 급수장애 긴급대응</td><td>동시방수운용 안정화, 중계/릴레이(Relay Pumping)급수계획보완</td></tr><tr><td>도로·교통 부서</td><td>우회동선 설정, 임시통제 표지, 중대형차량 회차공간확보</td><td>특수차 전개 공간확보, 외곽대기(Staging Area)운영 안정화</td></tr></table></div>
+<h2>Chapter 3.  현장도착 (On-Scene Arrival)</h2>
+<p><strong>1. 선착대장 초기 보고 청취</strong></p>
+<p>현장지휘관(IC)은 선착대장으로부터 초기 상황보고를 무전으로 즉시 청취한다. 이 보고를 통해 화재 발생 층수와 정확한 세대 위치, 계단실·출입문의 개방·폐쇄 상태, 인접 세대로의 연기·열 확산 여부, 현재 수행 중인 조치, 추가로 필요한 자원에 대한 핵심 정보를 파악한다.</p>
+<p><strong>Table 2-4-3. 선착대장 표준 보고 항목(Initial Radio Report)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>항목</strong></th><th><strong>예시 보고(내용)</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td>위치·방면·층</td><td>"A방면 정면도착, 3층 302호 화점 추정."</td><td>현장지휘소(ICP)·대기구역 배치, '방면-층-호' 포맷 통일</td></tr><tr><td>연기·화염 상태</td><td>"3→4층 연기유입, 창호틈 양압분출, 외벽 소규모 화염."</td><td>계단확보 소방호스 우선전개, 통제 배연 시점·경로 설정</td></tr><tr><td>인명·대피 현황</td><td>"대피 미완료세대 다수, 마지막목격 302·303호."</td><td>구조 우선구역 지정, 신속동로구조팀(RIT) 대기, 인원확인보고(PAR) 즉시 가동</td></tr><tr><td>계단실·문 상태</td><td>"계단실 연기상승, 출입문 닫힘 유지."</td><td>문 제어(Door Control) 담당 지정, 계단 보호 강화</td></tr><tr><td>연소확대(인접 세대/동)</td><td>"B방면 인접세대 창글음 증가."</td><td>연소확대방지 소방호스전개, 외벽냉각 병행</td></tr><tr><td>접근·장애물</td><td>"골목 이중주차, D방면 사다리전개 공간 제한."</td><td>대형차 외곽대기(Staging Area), 호스 연장·도보 전개 전환</td></tr><tr><td>급수·설비</td><td>"동측 소화전 1기 압력 보통, 가스·전력차단 미확인."</td><td>급·배수계획 확정, 가스·전력 차단요청준비</td></tr></table></div>
+<p><strong>2. 최초 상황평가 (Initial Size-Up)</strong></p>
+<p>현장지휘관(IC)은 주변 안전을 확보한 뒤 건물 외부에서 화재 규모와 진행 상황을 신속히 파악한다. 건물 층수, 화점 위치, 구조 대상자 존재 여부, 옥상 대피 가능성, 인접 건물로의 연소확대 위험을 종합 관찰한다. 단일 계단 구조의 빌라는 인명 대피가 어려우므로 대피자·미확인 인원 파악에 주력하고, 인접 건물로의 화염 확산 가능성을 고려해 방어선을 선별한다.</p>
+<p><strong>Table 2-4-9. 최초 상황평가 체크리스트(Initial Size-Up Checklist)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>항목</strong></th><th><strong>확인 포인트</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td>외부 관찰</td><td>연기 색·양·속도, 불꽃 분출, 볼티 비산 방향, 창·베란다 손상</td><td>상층·인접세대 현소확대 방지 우선, 외벽냉각방수검토, 풍상측 진입회피</td></tr><tr><td>접근 안전</td><td>골목 폭·이중주차·상부 장애물(전선·차양), 전개·회차 공간</td><td>현장지휘소(ICP)·대기지점지정, 활동제한구역설정, 사다리차 대체 방면검토</td></tr><tr><td>인명 상황</td><td>대피 현황, 미확인 인원, 마지막 목격 세대·위치</td><td>구조우선구역지정, 계단/복도확보 소방호스 1선전개, 신속동료구조팀(RIT)대기</td></tr><tr><td>내부 정보 수집</td><td>계단실·복도 연기이동, 출입문 상태(닫힘/개방), 가시성·열, 방범창·적치물</td><td>문 제어(Door Control)우선, 열화상카메라(TIC) 활용 인명검색, 도어·창개방시점 통제</td></tr><tr><td>연소 확대</td><td>외벽·샤프트 수직 확산, 복도 창 수평 확산, 인접 동 그을음</td><td>연소확대 차단을 위한 소방호스 선 배치, 내·외부동시 전개로 확산차단, 배연환기시점 조율</td></tr><tr><td>용수·압력 우선순위·보고</td><td>소화전위치·유량·압력, 연결송수관, 옥내소화전 등 소방시설(Standpipe)가용</td><td>중계/릴레이(Relay Pumping)급수검토, 펌프압 관리, 현장상황·조치·필요(CAN)보고</td></tr></table></div>
+<p><strong>3. 방면 지정 (Side Designation)</strong></p>
+<p>현장지휘 혼선을 방지하기 위해 화재 대상 빌라의 방면을 지정한다. A방면(Side A: 정면), B방면(Side B: 좌측), C방면(Side C: 후면), D방면(Side D: 우측) 순으로 통일하여 무전으로 전파한다.</p>
+<p><strong>Table 2-4-10. 방면 지정 가이드(Side Designation Guide)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>구분</strong></th><th><strong>기준</strong></th><th><strong>예시 지시(무전)</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td>A방면</td><td>주 출입구·단일 계단이 있는 정면</td><td>"현장지휘소(ICP) A방면 설치, 계단 확보 소방호스 1선 전개."</td><td>현장지휘소(ICP)·대기지점(Staging Area) 위치로 사용, 대피 동선 보호와 초기 수평 전개의 기준이 됨</td></tr><tr><td>B방면</td><td>A 기준 좌측 측면(인접 빌라 담장·골목)</td><td>"B방면 창 연기 증가, 배연대기."</td><td>대체진입·배면 포인트로 활용, 인접세대 연소확대방지와 사다리 접근 경로를 확보</td></tr><tr><td>C방면</td><td>건물 후면(발코니·가스계량기·배관 밀집 가능)</td><td>"C방면 접근곤란, 외벽 냉각 우선."</td><td>연소확대방지·감시를 배치, 활동제한구역을 설정하고 후면 확산·비산 감시를 강화</td></tr><tr><td>D방면</td><td>A 기준 우측 측면(주차 밀집·협소 골목)</td><td>"D방면 사다리 전개, 창문구조."</td><td>창문구조 및 수평전개를 담당, 외부수직 확산차단과 인접동 연소확대방지</td></tr><tr><td>내부 기준</td><td>복도 말단·코너·계단실 상·하행, 세대 번호 체계</td><td>"복도 말단 창측=D방향 간주, 문 제어(Door Control)유지."</td><td>인명검색경로와 문 제어(Door Control)</td></tr></table></div>
+<p><strong>4. 360° 상황평가 (360° Size-Up)</strong></p>
+<p>현장지휘관(IC) 또는 보조 지휘요원은 현장도착 후 안전이 확보되는 범위에서 빌라 외주를 따라 360° 탐색을 실시한다. 빌라 특성상 측면·후면이 인접 주택과 근접하므로 양측·후면으로의 연소확대 여부와 연기 배출 장에 여부를 우선 확인한다.</p>
+<p><strong>Table 2-4-11. 360° 상황평가 체크리스트(360° Size-Up)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>구역</strong></th><th><strong>확인 항목</strong></th><th><strong>관측 포인트</strong></th><th><strong>즉시 조치</strong></th></tr><tr><td>후면(C)</td><td>창·출입부 상태, 연기·화염, 구조 신호</td><td>연기 색·양·분출속도 간헐적 불빛·호출, 베란다·환기구</td><td>후면차단선 및 활동제한구역 설정, 대체진입 포인트지정, 인접건물 연소확대차단 준비</td></tr><tr><td>측면(B/D)</td><td>외벽 온도·틈새, 연기 누출, 인접 업소 연소확대</td><td>경계벽 과열·균열, 차양·전선 접촉 위험, 창호파손</td><td>인접구역 연소확대차단 선배치, 측면배연 포인트확보, 휴대사다리접근·창문구조 대비</td></tr><tr><td>상부(옥상)</td><td>옥상문·배기·설비 화재 여부</td><td>옥상문 연기유출, 덕트 과열, 설비합체 발열</td><td>상부감시·배기배치, 출입통제, 필요시 배연환기(내부팀과 타이밍조율)</td></tr><tr><td>공통</td><td>수직/수평 확산 경로</td><td>계단실·샤프트(Shaft)·배관실·환기구 흐름</td><td>계단실확보 소방호스전개, 문 제어(Door Control)시행, 통제배연(PPV) 시점 현장지휘관(IC) 승인하 검토</td></tr><tr><td>안전</td><td>접근 가능성·낙하물·협소 공간</td><td>전선·차양·적치물, 미끄럼·시야제한</td><td>현장지휘소(ICP) 기준안전통제선 확장, 개인안전거리유지, 인명검색팀 투입전 위험브리핑</td></tr></table></div>
+<p><strong>5. 연기 및 화염 상태 파악 (Reading Smoke <strong><em><em>&amp;</em></strong></em> Flame Conditions)</strong></p>
+<p>현장 접근 중 현장지휘관(IC)과 대원은 창문, 베란다, 외벽 등에서 분출되는 연기와 불꽃을 관찰하여 화점층, 연소속도, 확산방향을 추정한다. 빌라는 세대 간 이격이 좁아 연소확대 위험이 크므로, 관찰 결과를 즉시 무전으로 전파한다.</p>
+<p><strong>Table 2-4-7. 연기·화염 판독 매트릭스(Smoke/Flame Reading Matrix)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>관측</strong></th><th><strong>내용</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td>짙은 검은 연기(고온·난류)</td><td>석유계/내장재 연소가능, 고열·독성 증가</td><td>상층대피우선, 전환공격검토, 계단실확보 소방호스+문 제어(Door Control) 즉시시행</td></tr><tr><td>회색/갈색 연기(간헐 분출)</td><td>환기제한연소, 플래시오버·백드래프트 전조 가능</td><td>개구부 무분별 개방금지, 통제배연(PPV)시점 현장지휘관(IC) 승인하 조정</td></tr><tr><td>창호 틈 양압 분출(분출→흡입 전환)</td><td>화점층 과압·연소 가속, 층간 확산징후</td><td>화접층 A방면 진입 어려움, 외벽냉각·연소확대방지 경계관창배치</td></tr><tr><td>수직으로 빠른 연기 상승(코너·배면)</td><td>외벽·샤프트 따라 수직확산</td><td>상층·인접 세대 연소확대방지 경계관창 전개, 방면(C/D) 감시·차단선 배치</td></tr><tr><td>볼티·불꽃 비산(spotting)</td><td>인접세대·외벽 착화 위험</td><td>연소확대방지 우선, 발코니·처마냉각방수</td></tr><tr><td>불꽃 창 너머 관찰·유리 파손</td><td>내부가연물 고온연소, 열방출률(RHR) 증가</td><td>내부진입팀 개인보호장비 재확인, 소방호스라인 준비</td></tr><tr><td>연기 색 밝아짐+양 증가</td><td>급격연소로 산소흡입, 환기 전환징후</td><td>배연·진입동시 충돌금지, 팀 간 타이밍 무전조율</td></tr><tr><td>무창부에서 연기만 다량(화염 미노출)</td><td>무염연소/열축적(RHR), 시야 제로</td><td>열화상카메라(TIC)활용 인명검색, 표식테이프 운용</td></tr></table></div>
+<h2>Chapter 4.  현장대응 (On-Scene Operations)</h2>
+<h3>전반부 대응 (Primary Phase Operations)</h3>
+<p><strong>1. 지휘권 인수 및 선언 (Assume and Announce Command)</strong></p>
+<p>빌라 화재는 단일 계단식 구조와 협소 골목, 높은 주거 밀도를 특징으로 하므로, 현장지휘관(IC)은 현장도착 즉시 선착대장으로부터 대면보고로 지휘권을 인계받고, 무전으로 지휘권 선언을 실시한다. 선언에는 현장지휘소(ICP) 위치, 운영 채널, 초기 우선순위(단일 계단 보호, 상층·인접 세대 연소확대방지, 협소 접근로 통제)를 포함한다.</p>
+<p><strong>Table 2-4-8. 지휘권 인수·선언 절차(Procedure <strong><em><em>&amp;</em></strong></em> Standard Elements)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>단계</strong></th><th><strong>핵심내용</strong></th><th><strong>지휘내용</strong></th></tr><tr><td>도착 보고</td><td>선착대가 현장도착·초기 위험요소·대략 화점 정보를 무전 보고</td><td>현장지휘관(IC)이 수신 사항을 요약 재송신하고 안전사항을 전달</td></tr><tr><td>대면보고</td><td>선착대장이 화점층, 계단실·문상태, 인명·대피, 급수·접근로를 현재상황·조치·필요사항(CAN)을 간결하게 보고</td><td>현장지휘관(IC)이 화점층·계단 보호 필요성·연소확대방지·연결송수관, 옥내소화전 등 소방시설(Standpipe) 상태를 확인</td></tr><tr><td>지휘권 인수</td><td>현장지휘관(IC)이 공식적으로 지휘권 인수를 표명하고 현장지휘계획(IAP) 초안을 구상</td><td>현장지휘소(ICP)·대기구역(Staging Area) 위치를 지정하고, 초기임무(구조·계단보호·연소확대방지)를 배정</td></tr><tr><td>지휘권 선언</td><td>전 채널로 지휘권 확립을 선언하고 현장지휘소(ICP) 위치·운영 채널을 알림</td><td>"지금부터 OO빌라 화재 현장지휘는 OO지휘관이 지휘한다." 등 표준 용어로 일괄 통보</td></tr><tr><td>일원화 전환</td><td>모든 보고·지시를 현장지휘관(IC) 중심 단일 체계로 통합</td><td>방면-층-구역을 중심으로 현장상황·조치·필요(CAN) 사항 위주로 간략하게 보고를 통일, 임의지휘라인 금지</td></tr></table></div>
+<p><strong>2. 최초 상황평가 (Initial Size-Up) — 전반부</strong></p>
+<p>현장지휘관(IC)은 주변 안전을 확보한 뒤 건물 외부에서 화재 규모와 진행 상황을 신속히 파악한다.</p>
+<p><strong>3. 방면 지정 → 4. 선착대원 현장활동 통제</strong></p>
+<p>빌라는 단일 계단실·협소 복도를 여러 세대가 공유하므로 다수 대원의 동시 진입은 혼잡·추락·질식 등 사고 위험이 크다. 현장지휘관(IC)은 출동 중 무전으로 "현장도착 전까지 개별 행동 금지"를 반복 고지하고, 후착대는 외곽 대기지점(Staging Area)에서 안전거리를 확보해 대기한다.</p>
+<p><strong>Table 2-4-6. 선착대원 통제 체크리스트(Arrival Control Checklist)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>항목</strong></th><th><strong>기준/내용</strong></th><th><strong>조치</strong></th></tr><tr><td>개별행동 금지</td><td>도착·지시 전 임의 진입·라인 전개금지</td><td>현장지휘관(IC)이 무전으로 반복적으로 알림</td></tr><tr><td>투입 인원·출입로 관리</td><td>단일 계단·협소 복도로 과잉 진입 시 병목·충돌 위험</td><td>선착대 최소인원만 투입, 후착대는 (Staging Area)대기, 2인 1조 단계적으로 투입</td></tr><tr><td>계단실 보호·문 제어(Door Control)</td><td>연기 역류·가시성 저하 시 피난·진입 동선 상실</td><td>문 제어(Door Control)전담지정, 계단확보를 위한 소방호스 1선 우선전개, 필요시 통제배연(PPV)를 승인·운용</td></tr><tr><td>개인보호장비(PPE/SCBA) 및 안전구역</td><td>투입인원·위치 추적이 안전의 전제</td><td>투입 전/교대 전/철수 후 인원확인보고(PAR)를 시행</td></tr><tr><td>안전·개인보호장비(PPE/SCBA)</td><td>개인보호장비(PPE/SCBA)착용, 공기·무전 사전점검</td><td>투입 전 팀호출(Call-out) 후 진입, 공기량 공유</td></tr></table></div>
+<p><strong>5. 지휘형태 결정 (Selection of Command Mode)</strong></p>
+<p>360° 상황평가와 방면 지정이 끝나면 현장지휘관(IC)은 빌라 현장 여건에 맞춰 지휘형태를 선택·전환한다.</p>
+<p><strong>Table 2-4-12. 지휘형태 전개 기준(Command Mode Criteria)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>지휘형태</strong></th><th><strong>적용 조건(요지)</strong></th><th><strong>지휘 포인트</strong></th></tr><tr><td>전진지휘(Forward Command)</td><td>선착대장이 내부 상황을 즉시 확인·지휘해야 할 때</td><td>내부지휘+현장지휘소(ICP) 연속성, 인원확인보고(PAR)강화, 문 제어(Door Control)·계단/복도방어 선우선</td></tr><tr><td>고정지휘(Fixed Command)</td><td>A방면에서 가시성·안전이 확보될 때</td><td>현장지휘소(ICP) A방면 설치, 대기지정(Staging Area),보고주기설정, 연소확대 차단계획</td></tr><tr><td>이동지휘(Mobile Command)</td><td>고정위치에서 정보가 부족하거나 후면·측면 확인이 필요할 때</td><td>단시간 이동지휘 후 현장지휘소(ICP)복귀, 배연/방수 타이밍 동기화, 안전담당(ISO)으로 연속성유지</td></tr><tr><td>혼합지휘(Combined Command)</td><td>복수 방면 동시 전개·변동 큰 초동 단계</td><td>현장지휘소(ICP) 중심통제유지+제한적 이동지휘, 인명검색우선→차단→진입확인</td></tr></table></div>
+<p><strong>6. 전략 결정(공격/방어) (Strategy Selection: Offensive/Defensive)</strong></p>
+<p>현장지휘관(IC)은 수집된 상황 정보를 종합하여 공격 전략(Offensive) 또는 방어 전략(Defensive)을 결정한다. 빌라 화재는 단일 계단 구조·협소 골목·인접 세대/인접동 연소확대 위험이 커서, 원칙적으로 공격 전략을 우선 검토한다.</p>
+<p><strong>Table 2-4-13. 전략 선택 기준(Strategy Decision Criteria)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>전략</strong></th><th><strong>공격(Offensive)</strong></th><th><strong>방어(Defensive)</strong></th><th><strong>전환(Transition)</strong></th></tr><tr><td>인명·경로</td><td>생존징후 확인, 단일계단과 복도 가시 확보 후 동시 구조·진입</td><td>계단·복도 차단, 전면연소·낙하물로 내부 접근 부적절</td><td>방어→공격: 장애물제거·가시확보·생존징후 재확인시 공격으로 전환 / 공격→방어: 경로상실·붕괴징후 등 구조위험 증가시 방어로 전환</td></tr><tr><td>화재·환경(연기·열·배연·연소확대)</td><td>제연·양압가능, 연기층·열 저감 상태에서 국부화점 억제 및 연소확대 방지</td><td>고온·농연 지속, 플래시오버/백드래프트 징후, 외벽·샤프트를 통한 수직·수평 연소확대 우세시 외부 억제·차단선을 우선</td><td>방어→공격: 환기확보·열완화·연소확대통제 시 공격으로 전환 / 공격→방어: 열상승·연기악화·연소확대시 방어로 전환</td></tr><tr><td>자원·지휘(용수·인력·안전·통신)</td><td>공격1-2 소방호스라인과 백업확보, 활동제한구역 밖 안전을 유지</td><td>용수·인력열세 또는 안전한계(붕괴·감전·가스누출 등) 발생 시 외부억제·대기</td><td>방어→공격: 추가용수·인력도착, 연결송수관, 옥내소화전 등 소방시설(Standpipe)·연장확보, 안전상황이 호전시 공격으로 전환 / 공격→방어: 용수고갈·인력이탈·안전상황 악화시 방어로 전환</td></tr></table></div>
+<p><strong>7. 전술 결정 및 구체적 임무지시 (Tactics <strong><em><em>&amp;</em></strong></em> Assignments)</strong></p>
+<p>현장지휘관(IC)은 선택된 전략에 따라 전술 목표를 설정하고 각 팀에 구체 임무를 부여한다. 빌라 화재에서는 단일 계단·협소 복도·인접 세대 밀집·외벽 수직 확산 가능성을 고려한다. 초기 공격(Offensive)이 가능하면 계단 확보 소방호스(Stair Protection Line)과 문 제어(Door Control)를 우선 시행하고, 필요한 경우 개구부진입인명검색(VEIS)을 제한적으로 적용한다.</p>
+<p><strong>팀별 임무·교신·안전요소</strong></p>
+<p><strong>Table 2-4-14. 팀별 임무·교신·안전요소(Assignments·Communications·Safety)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>팀</strong></th><th><strong>임무</strong></th><th><strong>동선·수단</strong></th><th><strong>안전요소</strong></th></tr><tr><td>진압1</td><td>화점 직접·조합공격, 계단 확보 소방호스 유지</td><td>현관·계단 통해 화점 세대 접근, 문 제어(Door Control), 초기 소방호스라인 전개(40/65mm), 필요 시 소방시설 연계</td><td>단일 계단 연기·열 역류 차단, 플로우패스(Flow Path) 제어, 이데이(MAYDAY) 대비</td></tr><tr><td>진압2</td><td>인접 세대·상·하층 연소확대 차단, 외벽 수직확산 억제</td><td>외벽·샤프트·배관실 감시, 차단선 형성, 외부 방수 보조</td><td>낙하물·유리비산·전선접촉위험, 하풍회피, 활동제한구역유지</td></tr><tr><td>구조1</td><td>고립 세대 인명검색·구조, 생존자 확보</td><td>계단화보된 소방호스뒤 인명검색, 열화상카메라(TIC)활용, 방별격리·표식</td><td>복도 가시성·연기층 높이 확인, 경량 칸막이 붕괴 위험</td></tr><tr><td>구조2</td><td>개구부진입인명검색(VEIS)·2차 인명검색(조건부)</td><td>사다리·창 접근, 창 개방→진입→방 격리→인명검색 순서</td><td>개구부진입인명검색(VEIS)은 화점 추정·연기흐름이 원활할 때만 제한적용, 추락·절단 위험관리</td></tr><tr><td>배연팀</td><td>제연·양압 또는 방향성 배연, 연기층 저감</td><td>창·복도 개구부 통제, 배연 창·팬 운용, 계단 양압(가능시)</td><td>무분별한 개구 금지, 역류·풍향화재 유발 방지, 개방·폐쇄 일원화</td></tr><tr><td>전기·가스 차단</td><td>2차 위험 제거(전기·가스·보일러실)</td><td>전기차단기·가스밸브·보일러 차단</td><td>감전·가스누출·폭발 위험, 가스몰탱크·배관 위치 확인</td></tr><tr><td>구급</td><td>연기흡입·화상 환자 분류(Triage)·처치·이송</td><td>건물 외 안전구역에 응급의료소 운영, 이송 동선 분리</td><td>교차오염 관리, 차량 동선과 소방 동선 분리, 저체온 예방</td></tr><tr><td>급수·중계</td><td>용수확보, 중계가압·소방호스연장·장비보급</td><td>소화전 연계, 펌프 중계, 골목 차량 이격, 소방호스 보호</td><td>동압 저하·동결·누수 점검, 골목 협소로 인한 장비 손상 방지</td></tr><tr><td>지휘보조</td><td>현장지휘소(ICP)보조, 상황판·자원추적·통신관리</td><td>'방면-층-구역 + 간략보고(CAN)' 로그, 인원·소방호스라인 추적</td><td>무전 포화 관리, 전술 전환(공격→방어) 지시 신속 반영</td></tr><tr><td>안전</td><td>위험성평가, 활동제한구역설정·감시, 전환권고</td><td>360° 현장확인, 외벽·샤프트(Shaft) 수직 확산·낙하물·전기 위험 감시</td><td>철수·전환관리, 즉시 위험 중지 관한 행사</td></tr></table></div>
+<p><strong>현장통제 및 안전구역 확보</strong></p>
+<p><strong>Table 2-4-15. 현장통제 핵심 조치(Scene Control Actions)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>항목</strong></th><th><strong>기준/내용</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td>통제반경</td><td>건물외곽으로 최소건물 높이 1.5배 1차통제반경 설정, 풍하측은 추가 확장</td><td>열복사·유리비산·발코니낙하대비, 외곽에 현장지휘소(ICP)·임시의료소를 배치</td></tr><tr><td>배제구역</td><td>외벽/발코니붕과 우려방면, 가스계량기 집합부·프로판보관, 전선트레이 하부는 완전배제</td><td>대원동선은 상풍측·코너회피로 설정, 이중바리케이드/야광테이프로 시인성 확보</td></tr><tr><td>열복사 구역</td><td>외벽분출화염·발코니/외장재연소시 전면·코너 중심표시, 차량·인원 노출금지</td><td>펌프·고가사다리차(적용 시) 차량은 열복사 구역 밖 상풍측 배치, 호스 보호 매트 사용</td></tr><tr><td>출입관리</td><td>골목 출입·주차장진입부에 차량차단선 설치, 팀·차량출입 목록관리</td><td>용수·장비지원동선 우선 확보, 불법주정차 강제이격, 대원체크인/체크아웃 운영</td></tr><tr><td>광역 대비/교통·활동공간</td><td>외곽교통통제구역, 장비집결(Staging Area)·임시의료소 분리 배치</td><td>단일계단확보 소방호스 유지, 공격동선과 대피동선분리, 중계가압·호스연장차량위치 조기확정</td></tr><tr><td>안전(현장통제선 구성·표식)</td><td>콘/바리케이드/야광테이프/표지판으로 연속 표식, 야간조명·확성기로 고지</td><td>경계인력(경찰·관리인)배치, 통제상태 주기보고</td></tr></table></div>
+<p><strong>2. 관계자 확보 (Stakeholder <strong><em><em>&amp;</em></strong></em> Gather Critical Info)</strong></p>
+<p>현장지휘관(IC)은 도착 즉시 관리사무소·경비·입주자 대표 등 관계자를 확보하여 세대별 상황·대피 현황·설비 상태를 신속히 파악한다.</p>
+<p><strong>Table 2-4-16. 관계자 확인사항(Stakeholder Interview Checklist)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>항목</strong></th><th><strong>질문 예시</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td>인원 파악</td><td>현재 각 세대 대피 현황은? 미확인/연락 두절 세대는? 노약자·거동불편 편·영유아·산소치료자 세대는?</td><td>구조우선순위설정(단일계단단차단위험고려), 구조팀 투입순서와 구역지정, 인원현황을 반영</td></tr><tr><td>구조 특이점</td><td>고립 우려 세대(예: 302호 노약자)·외국인 세대·반려동물·임시 칸막이 등 내부 구조 특이점은?</td><td>강제진입·추가인력배치, 문 제어(Door Control)·개구부진입인명검색(VEIS) 적용여부판단, 분할인명검색을 계획</td></tr><tr><td>피난 경로</td><td>단일계단접근성·가시성은? 계단/복도방화문상태는? 옥상·발코니대피가능성은?</td><td>계단보호 소방호스라인·문 제어(Door Control) 우선, 대피유도순서확정, 계단상·하부혼잡·주민재진입을 통제</td></tr><tr><td>소방설비 상태</td><td>연결송수관, 옥내소화전 등 소방시설(Standpipe)유무·가압상태? 감지기·경보작동여부는?</td><td>용수계획(외부급수·중계가압)확정, 경보지연시 수동경보·대피방송을 보완</td></tr><tr><td>전기·가스</td><td>전기메인차단반·가스계량기집합부위치는? 차단권한·절차는?</td><td>감전/가스누출/폭발위험저감, 활동제한구역 확대, 접화원통제·외벽방수각도를 조정</td></tr><tr><td>외벽·발코니</td><td>외벽 마감재·발코니 창호·차양물 상태? 최근 보수·가연물 적치 여부?</td><td>수직확산 가능성평가, 외부차단선·연소확대방지, 낙하물 위험방면을 이중차단</td></tr><tr><td>평면·출입·골목</td><td>동·호수 배치·계단 위치·지하주차/창고 유무? 골목 폭·불법 주차현황?</td><td>소방차진입·배치동선확정, 호스보호매트·우회동선설정, 초기 소방호스라인 전개거리를 산정</td></tr><tr><td>엘리베이터·옥상</td><td>소형 엘리베이터 유무·정지 여부? 옥상문 잠금·키 위치?</td><td>엘리베이터사용금지 재확인, 옥상배연·대피보조가능성을 검토</td></tr><tr><td>특별 위험</td><td>산소통·리튬이온 배터리·보일러실·창고 가연물 집중 구역은?</td><td>폭발·재점화 위험구역표시, 냉각·격리·연소확대방지 강화, 위험사항을 공유</td></tr></table></div>
+<p><strong>3. 대기단계 운영 (Staging Operations)</strong></p>
+<p><strong>Table 2-4-17. 대기단계 운영 체크리스트(Staging Operations Checklist)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>항목</strong></th><th><strong>기준/내용</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td>대기 위치</td><td>단지입구·외곽도로·부지에 1차(장비집결)-2차(투입대기) 대기선을 설정, 현장지휘소(IC)는 상풍측 외곽에 위치</td><td>좁은골목 병목을 피하고, 필요시 우회·역방향진입을 경찰과 즉시 조정</td></tr><tr><td>진입 통제</td><td>선착대외차량은 허가호출시에만 진입, 역할별(펌프/고가사다리/구급/장비) 진입순서를 사전지정</td><td>소방호스라인전개·용수연결 방해를 예방, 불필요차량은 외곽대기(Staging Area)를 유지</td></tr><tr><td>준비 상태</td><td>무전청취, 공격라인·예비호스·들것·배연장비 사전세팅, 연결송수관, 옥내소화전 등 소방시설(Standpipe) 미설치/미가압을 전제로 외부급수·중계가압을 즉시 가동할 준비</td><td>요청즉시 연소확대방지/내부진입/구급보강으로 전환</td></tr><tr><td>통신·지휘</td><td>대기단계 책임자(Staging Officer)를 지해해 차량배치도·인원명부·장비현황을 상황판으로 관리</td><td>인원파악과 순차투입하고, 공격→방어전환시 신속재배치</td></tr><tr><td>교통·회차</td><td>출입로에 일방동선을 설정하고 회차지점(원형/T자)을 확보, 일반차량·자재반입은 우회 또는 일시정지</td><td>구급차이송·재진입, 고가사다리차(적용시) 회차, 물류지원순환</td></tr></table></div>
+<p><strong>5. 소방용수공급체계 확보 (Firefighting Water Supply, FWS)</strong></p>
+<p><strong>Table 2-4-19. 소방용수공급체계 표준 구성(Standard Firefighting Water Supply Configuration)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>항목</strong></th><th><strong>기준/내용</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td>1선펌프차(First-Due Engine)</td><td>화점에 최단거리로 배치하고, 공격라인·계단확보 소방호스에 안정유량 공급, 흡·토출압, 유량계, 물탱크와 펌프차 소방호스라인을 즉시 세팅</td><td>초기에 지연없는 방수, 연결송수관, 옥내소화전 등 소방시설(Standpipe) 미가압시 장거리전개·중계계획을 즉시 연동</td></tr><tr><td>중요물탱크차(Primary Water Tender)</td><td>핵심급수원으로 지정해 수위 50% 이상 상시 유지, 1선펌프차 직결 또는 중계라인에 편성</td><td>소화전불량·단수시 공백제로를 확보, 골목병목을 피하도록 회차동선을 사전 지정</td></tr><tr><td>용수(Hydrant/대체 수원)</td><td>가용소화전 2개 이상 확보를 원칙으로 하되, 저유량·폐색을 대비해 대체수원(저수조·수조차·비상급수탑·인근상수도맨홀)을 병행조사</td><td>수원전환이 즉시 가능하도록 흡·토출커플링·밸브를 사전배치, 하풍측·가스계량기 집합부 인접부는 급·배수동선에서 배제</td></tr><tr><td>중계급수(Relay Supply)</td><td>수원→중요물탱크차→1선펌프차간중계펌핑을 구성하고, 각펌프의 목표토출압(노즐요구압+마찰손실+고저차)을 공유</td><td>장거리·충간전개에서도 압력을 유지, 골목·문턱·계단에는 호스보호매트를 설치</td></tr><tr><td>예비/이원 급수(Backup/Dual Supply)</td><td>주급수선과 별도예비선을 동시구축, 밸브·소방호스라인을 명확히 표식해 무전한마디로 절체 가능</td><td>연속방수를 확보해 구조지연을 방지, 화세급등·수원장애시 즉시절체·증설</td></tr></table></div>
+<p><strong>1. 초진(Initial Knockdown) - 7면 포위 (Seven-Side Containment, SSC)</strong></p>
+<p>빌라화재는 다세대 구조 특성상 인접 세대로의 연소 확대 위험이 높다. 현장지휘관(IC)은 발화 세대 기준으로 상·하·좌·우·전·후·화점의 7면 포위(SSC)를 적용해 확산을 차단한다.</p>
+<p><strong>Table 2-4-22. 7면 포위 운용 체크리스트(Seven-Side Containment Checklist)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>면</strong></th><th><strong>점검/조치</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td>상(천장)</td><td>보드상부·천장 빈공간·배관/덕트 관통부를 열화상카메라(TIC)로 스캔, 필요시 가연한 개구부 미세분무/안개방수로 냉각</td><td>은폐연소와 상층전이를 조기에 차단, 상층 인명구조와 연소확대차단</td></tr><tr><td>하(바닥)</td><td>바닥하부 빈공간·문턱주변·케이블트레이(CableTray: 전선지지덕트/받침대)인접부를 확인, 진불·적열부는 국소냉각하고, 누수·감전위험을 병행점검</td><td>하층으로의 열·연기침투를 억제, 하층대피·인명 구조 안전 향상</td></tr><tr><td>좌/우(측벽)</td><td>경계벽·콘센트 박스·배관 박스 등 관통부 틈을 열화상카메라(TIC)로 확인, 노즐 스윔(원형 또는 좌↔우로 천천히 흔들어 표면을 고르게 냉각)</td><td>인접세대로의 측면확산을 차단, 인명구조동선을 안전하게 유지</td></tr><tr><td>전/후(출입·복도/발코니)</td><td>출입문·복도·발코니방향은 문 제어(Door Control: 필요시에만 제한개방)하에 방수, 개구부에는 차열포(방열담요) 등으로 열·불티를 차단, 복도확보 소방호스와 대피동선을 분리</td><td>플로우패스(Flow Path) 형성을 억제하고, 계단확보 소방호스 유지</td></tr><tr><td>화점</td><td>직접분사로 연료에 맞춰 열을 빠르게 떨어뜨리고, 이어서 펄스 방수(Pulse: 0.5~1초 짧은 간헐 분사)로 증기팽창·가시성 변화를 관찰, 가연물 제거·연소확대 차단을 병행</td><td>초진달성속도를 높이고, 전체에 7면포위에 필요한 입력·유량부담을 줄이고 재점화 위험 낮춤</td></tr></table></div>
+<p><strong>2. 초진구역 배연 (Post-Knockdown Ventilation)</strong></p>
+<p>주요 화점 진압이 완료되면 즉시 배연을 실시한다. 표준 절차는 배출구 선 확보 → 상층 가스 냉각(미세 분무/안개) → 유입구 제한(문 제어: Door Control) 순서를 준수한다.</p>
+<p><strong>Table 2-4-23. 배연 전술 선택 매트릭스(Ventilation Tactics Matrix)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>적용사항</strong></th><th><strong>핵심절차</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td>기본 자연 배연(Natural Venting)</td><td>상층·하풍측 배출구부터 연다→ 상층가스를 짧게냉각(미세분무/안개)→ 유입구최소화(문 제어:Door Control)</td><td>장비의존도낮음·신속성높음. 급격배연으로 플로우패스(Flow Path)가 과도형성되지 않도록 개구범위를 단계확대, 발코니·유리하부는 활동제한구역으로 이중 통제</td></tr><tr><td>양압배연(PPV)</td><td>배출구 선 확보 후 유입구(현관/전실)에 양압배연(PPV) 팬설치(틈새차페로 밀폐강화)→ 압력형성확인→ 문 제어(Door Control) 유지, 가속점병행</td><td>잔불정리 선행이전제다. 가스계량기 집합부·분진위험구역은 사용 금지, 신속동료구조팀(RIT)과 가동 시점을 사전조율</td></tr><tr><td>계단실·샤프트 활용(Stair/Shaft Vent)</td><td>계단실/엘리베이터샤프트 상부를 배출구로 지정→ 하부유입구제한→ 필요시 양압배연(PPV)보조</td><td>굴뚝효과로 상층위험증가. 상층 연소 확대 방지용 경계관창을 병행한다</td></tr><tr><td>발코니/파사드 방면(Balcony/Facade Side)</td><td>기존개구 또는 절개부를 배출구로활용→ 내부문 제어(Door Control)유지→ 낙하·비산대비 차열포로 동선보호</td><td>유리비산·외벽낙하물 고위험구역, 외부차단선을 이중설정하고, 급·배수동선을 우회, 전면부 연기배출에 효과적</td></tr><tr><td>구획 순차 배연(Zonal/Staged Ventilation)</td><td>세대/복도구획을 하나씩운영: 배출구개방→ 상층냉각→ 문 제어(Door Control)→ 열화상카메라(TIC) 확인 후 다음구획으로 진행</td><td>연기역류·재순환을 방지, 개구·폐쇄담당을 지정하고 무전통제로 재발화 위험을 낮춤</td></tr><tr><td>지하·반지하/밀폐 구역(Basement/Semibasement/Confined)</td><td>배출루트 선 확보(계단상단/환기구)→ 가스측정→ 제한적 양압배연(PPV) 또는 배기팬(Exhauster)운용→ 열화상카메라(TIC) 재확인</td><td>폭발성혼합기·전기아크 위험, 방장비사용과 측정-배연-재측정 사이클을 준수, 인원확인보고(PAR) 엄격 유지</td></tr></table></div>
+<p><strong>6. 단위지휘관 지정 (Assign Division/Group Supervisors)</strong></p>
+<p><strong>Table 2-4-20. 단위지휘관 편성·보고 체계(Organization <strong><em><em>&amp;</em></strong></em> Reporting)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>구분</strong></th><th><strong>지정 기준</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td>구역별(Division)</td><td>층·방면 기준으로 구획</td><td>문 제어(Door Control)와 계단확보 소방호스를 유지하고, 인명검색 순서를 화점인접세대→수직확산우려세대(상·하층)→복도말단/계단/계단인접으로 통일 운영, 가스계량기집합부·전선트레이 인접부는 활동제한구역으로 확대</td></tr><tr><td>기능별(Group)</td><td>기능별 임무기준으로 설정</td><td>진압-인명검색-배연운수간 상호간섭 최소화(특히 배연 개구시점통제)와 중계급수(Relay Pumping)·예비/이원급수(Backup/Dual)확보를 단일창구에서 조정, 신속동료구조팀(RIT)은 별도Group으로 독립운용</td></tr><tr><td>복합형(Hybrid)</td><td>화재층은 구역별, 외부지원(소방시설·배연·연소확대방지)은 기능별로 혼합 운용</td><td>충내부전술(화점접근·분할 인명검색)과 외부지원(중계급수·외벽 연소확대방지·활동제한구역관리)을 동시 통제, 공격→방어전환시 자원·동선을 신속재배치</td></tr></table></div>
+<p><strong>7. 무전망 분리 (Splitting Radio Nets)</strong></p>
+<p><strong>Table 2-4-21. 무전망 분리 의사결정 기준(When to Split TAC/CMD)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>항목</strong></th><th><strong>기준/내용</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td>인원/트래픽(Personnel/Traffic)</td><td>동시투입 3팀 이상이거나, 내부진압+인명검색+연소확대 방어/고가사다리차(적용 시)+용수 등 각 망을 분리운영</td><td>지휘망(CMD)·작전망(TAC)·지원망(LOG) 분리로 혼선·중첩교신을 차단, 각 망에 단위지휘관(DGS)을 채널관리자 겸임으로 지정</td></tr><tr><td>음영·간섭(Coverage/Interference)</td><td>단일계단실·반지하·두꺼운 방화문에서 감쇠/음영, 전선트레이·가스계량기 집합부 인접부에서 난반사·잡음발생</td><td>중계지점을 계단실상부전실/옥외상풍측에 설치, 안테나나치·출력을 조정, 불량구역엔 수신호·러너(Runner)를 병행</td></tr><tr><td>임무 복잡도(Mission Complexity)</td><td>문 제어(Door Control)하 분할 인명검색, 상·하층 연소확대 차단, 조건충족 시 개구부진입인명검색(VEIS)제한 적용, 신속동료구조팀(RIT)대기</td><td>배연·신속동료구조팀(RIT)·소방차연결구(FDC)를 별도망(지원망 또는 전술망-B)으로 분리해 개구타이밍·안전이벤트를 지휘통제 하에 조정</td></tr><tr><td>안전사고(Safety Events)</td><td>메이데이(MAYDAY), 긴급탈출, 전기위험(분전반/전선트레이), 가스누출(가스계량기집합부), 외벽/발코니 낙하물발 생</td><td>전채널동시공지(일시단일망)→확인→원채널 복귀절차를 표준화, 안전점검관(ISO)이 확인·기록</td></tr><tr><td>현장규모(Scene Size/Span)</td><td>복수세대 연소확대 또는 화재층·상층·외벽, 골목 양방향 통제 병행</td><td>층별 Division+기능별 Group으로 무전망을 분리하고 지휘망(CMD)은 전술간섭 없는 중요사항만 수신</td></tr></table></div>
+<p><strong>4. 직전대기 운영 (On-Deck Operations)</strong></p>
+<p><strong>Table 2-4-18. 직전대기 운용 체크리스트(On-Deck Checklist)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>항목</strong></th><th><strong>기준/내용</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td>위치 선정</td><td>화재층 계단참/복도말단 또는 한층 아래전실에 설정, 문 제어(Door Control)가 가능하고 열·연기·낙하물위험이 낮은 지점을 선택, 단일계단건물은 계단확보 소방호스와 인접배치</td><td>플로우패스(Flow Path)를 억제하고 대피경로를 유지, 연결송수관·옥내소화전 등 소방시설(Standpipe) 부재·미가압가능성을 고려해 중계가압위치와 동선을 동시에 확정</td></tr><tr><td>준비 사항</td><td>개인보호장비(PPE) 전착용, 공기호흡기(SCBA) 입력확인, 열화상카메라(TIC), 예비호스·분기관·노즐, 유도로프(Guideline/Search Rope), 강제진입공구(방화문·도어체인용), 들것·구급키트를 세팅, 팀별 임무지정·투입순서·철수 경로를 공유</td><td>1분내 투입, 복도코너·문턱·출입통로에는 호스보호매트를 설치해 소방호스라인손상과 걸림을 방지</td></tr><tr><td>우선 임무</td><td>(1)교대(Relief): 화점·인명검색팀 교대 (2)증원(Reinforce): 인접세대·상·하층 연소확대차단 (3)구조(Rescue): 단일계단 차단시 계구부진입인명검색(VEIS)보조 (4)메이데이(MAYDAY)</td><td>공격→방어전환시 즉시역할을 전환, 외벽/발코니 수직확산 징후가 우세하면 연소확대방지/차단선과 연동해 투입구역을 재조정</td></tr><tr><td>대기 상태</td><td>무전청취지속, 대기선이탈금지, 소방호스라인·장비 정돈유지, 팀리더는 5~10분 간격으로 업데이트 사항을 보고</td><td>혼선·중복투입을 방지하고 인원파악을 유지, 철수/운행정지 지시에 즉시 반응</td></tr></table></div>
+<h3>후반부 대응 (Late-Phase Operations)</h3>
+<p><strong>완진 전 점검 리스트(Pre-FED Checklist)</strong></p>
+<p><strong>Table 2-4-24. 완진 전 점검 리스트(Pre-FED Checklist)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>항목</strong></th><th><strong>점검 기준/내용</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td>2차 인명검색(Secondary Search)</td><td>화재층·상층·하층세대, 전실·계단실, 베란다/발코니전수확인</td><td>인명검색완료(ALL CLEAR) 확인 전 완진금지, 무창·고립 신고세대를 우선 점검</td></tr><tr><td>열화상카메라 잔열 확인(TIC Survey)</td><td>열화상카메라(TIC)로 벽체·천장·경계벽관통부(콘센트·배관/전선박스)·발코니바닥/외벽단열재·문틀상부스캔</td><td>고온지점 표시후 국소냉각→재측정한다, 측면·수직전이가능 구역을 중점 점검</td></tr><tr><td>잔불 정리(Overhaul)</td><td>천장·점검구·가구배후·경계벽틈 개방/제거, 은폐연소물처리</td><td>벽·천장 속 숨은 불을 제거, 실내 중기공격은 미세 분무</td></tr><tr><td>전기·가스 안전(Isolation)</td><td>분전반차단유지, 가스계량기집합부·배관밸브차단 확인, 누설감시</td><td>재점화·감전방지, 재통전/재가압 금지 표식 유지</td></tr><tr><td>배연·연기 잔류(Ventilation)</td><td>구획별 순차배연, 문 제어(Door Control)로 플로우패스(Flow Path)통제, 배연후 열화상카레마(TIC) 재확인</td><td>급격배연금지, 계단확보</td></tr><tr><td>발코니/외벽 위험(Facade/Balcony Hazards)</td><td>유리비산, 외벽마감·단열재잔염, 낙하물위험제거·표식</td><td>위험 구역을 활동제한구역으로 지정</td></tr><tr><td>지하·반지하/주차 연계(Basement/Semi-basement/Parking)</td><td>경사로(Lamp) 상단 배출확보, 가스측정(CO/HCN/O2/LEL), 필요시 방폭팬 사용</td><td>폭발성혼합기·전기위험통제, 현재상황·조치·필요사항을(CAN) 간결하게 보고</td></tr><tr><td>오염·유해요소(Contamination)</td><td>유해가스 재측정, 오염수·그을음 정리 계획 수립</td><td>재발화·재출동을 예방, 개인보호장비(PPE) 수준과 환기강도를 유지</td></tr><tr><td>자원·기록(Resources/Docs)</td><td>호스·장비회수·복구, 열화상카메라(TIC)캡처/사진/무전로그 정리, 관리주체인계자료준비</td><td>사사후 조사·보고 근거 확보, 잔여 대기전력 지정</td></tr><tr><td>구역별 종합보고(Brief-back)</td><td>단위지휘관의 현재상황·조치·필요사항(CAN)보고취합·누락/중복제거, 완진선언(FED)조건확인</td><td>완진선언 여부를 객관적으로 판단</td></tr></table></div>
+<p><strong>3. 상황판단회의 후 완진선언 (Situation Assessment → Final Extinguishment Declaration, FED)</strong></p>
+<p>현장지휘관(IC)은 연기가 걷힌 뒤 2차 인명검색(Secondary Search)을 실시해 잔류 인원을 확인한다. 겉보기로 진압이 완료되어도 즉시 완진을 선언하지 않고, 단위지휘관(DGS)들과 화재층-상층-하층-계단실-전실-발코니/외벽을 직접 순회 점검한다. 탄화 잔해 하부에서 불씨가 확인되거나 잔불 정리가 미흡이 확인되면 예비 소방호스라인으로 추가 냉각·방수를 지시한다. 발코니 하부·외벽 마감·경계벽 관통부·계단실 상부까지 잔불 제거와 "온도 정상" 확인을 마치면, 현장지휘관(IC)은 단위지휘관들과 상황판단회의를 열어 구역별 보고를 종합한다. 유리·외장재 낙하, 전기/가스 위험, 구조적 불안정과 인명 문제가 모두 해소되었다고 판단하면 현장지휘관(IC)은 무전으로 "OO빌라 화재는 현 시간부로 완진(Final Extinguishment)"이라고 공식 선언한다.</p>
+  </div>
+</section>
+<hr class="sep">
+
+<section id="apt" class="part-section" style="--part-color:#b7600a">
+  <div class="part-header">
+    <div class="part-num">PART 2-5</div>
+    <div class="part-title">아파트화재 현장지휘</div>
+  </div>
+  <div class="part-body">
+    <p><strong>PART 2-5  아파트화재 현장지휘</strong></p>
+<h2>01  실제사례</h2>
+<p><strong>사례 1. 경기도 의정부시 의정부동 대봉그린아파트 화재 (2015)</strong></p>
+<p>1층 주차장에 주차된 오토바이에서 시작된 불이 인근에 주차된 차량으로 급속히 옮겨 붙으며 확산됐다. 강한 화염이 건물 외벽의 드라이비트 등 가연성 마감재를 타고 빠르게 수직으로 확산되어 순식간에 아파트 전체로 번졌다. 불길은 인접한 다른 동의 건물까지 번지면서 총 3개 동이 화재 피해를 입었고, 결국 5명이 사망하고 125명이 부상당하는 대형 참사로 이어졌다. 이 화재를 계기로 아파트 외벽의 가연성 마감재에 대한 규제와 소방시설 설치기준이 강화되었으며, 다중주택의 화재 대응과 관련된 법규 개정이 이루어졌다.</p>
+<p><strong>사례 2. 울산 삼환아르누보 주상복합아파트(33층) 화재 (2020)</strong></p>
+<p>외벽을 따라 12층에서 옥상까지 불길이 급격히 번졌지만, 소방의 적극적인 대응으로 사망자 없이 93명의 부상자만 발생한 성공적 대응 사례. 당시 강한 바람과 가연성 외장재로 인해 불길이 2시간 만에 건물 전체로 확산되었으나, 소방대는 옥상 및 층별 대피를 신속히 유도하고 적극적인 제연 조치를 시행했다. 날이 밝자 헬기와 지상 사다리차를 동원하는 등 다각적인 구조수단을 활용해 옥상에 있던 주민 77명을 포함한 모든 주민을 안전하게 구조했다. 이 사건 이후 외장재 화재 위험성에 대한 경각심이 커져 건축법이 개정되어 외벽재료 기준이 더욱강화되었다.</p>
+<h2>Chapter 2.  현장출동 (En Route to the Scene) — 아파트</h2>
+<p><strong>1. 정확한 위치 및 규모 확인</strong></p>
+<p>출동 중 현장지휘관(IC)은 소방활동정보카드, 소방안전지도, 출동지령서, 무전을 교차 확인해 아파트의 정확한 주소·동/라인·호수·층위(지상/지하 주차장)를 파악한다. 단지형 아파트는 동(棟) 다수·지하 주차장 여부에 따라 연기 이동·진입 동선·배연 루트가 현저히 달라지므로 도착 전에 반드시 확인한다.</p>
+<p><strong>Table 2-5-1. 위치·규모 사전 확인 체크리스트(Pre-Arrival Location <strong><em><em>&amp;</em></strong></em> Scale Checklist)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>항목 기준</strong></th><th><strong>내용</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td>주소·동·호 확인</td><td>신고주소, 동·층·호수, 방면(A/B/C/D) 일치 여부 재확인(상황실/신고자 교차확인)</td><td>오인출동방지, 초기보고·지시는 현재상황·조치·필요사항을(CAN) 간결하게 보고</td></tr><tr><td>접근경로</td><td>진입골목 폭·회차 가능, 불법 주정차·가드레일·차량 유무</td><td>진입로 통제·견인 요청 선제 시행, 대형차(특수차) 진입 가부 판단</td></tr><tr><td>화재 규모·층</td><td>화재층수·확산 범위(연기 색·양·속도, 외벽 확산 징후) 사전 추정</td><td>공격/방어전략 초안, 계단 확보 소방호스·연소확대차단 선배치</td></tr><tr><td>인명정보</td><td>미확인 인원 수, 마지막 목격 위치, 취약계층(노약자·장애인·아동) 여부</td><td>구조우선구역 지정, 신속동료구조팀(RIT)대기, 인원확인보고 강화 계획</td></tr><tr><td>설비·위험물</td><td>가스케이지·배관, 전력 설비·전선, 소화전 위치·압력</td><td>가스·전기차단 요청, 급·배수 계획·중계(Relay Pumping) 필요성 판단</td></tr><tr><td>피난·사다리 전개</td><td>외부피난시설·발코니 구조가능지점, 방범창존재</td><td>사다리전개 공간확보, 절단 장비준비, 문 제어(Door Control) 계획</td></tr><tr><td>보완정보</td><td>CCTV·경비실 정보, 단지 배치도, 야간 시인성(표지)</td><td>사각지대 파악·순찰 동선 설정, 야간 표지·콘 배치</td></tr></table></div>
+<p><strong>2. 출동대 및 경로 파악</strong></p>
+<p>출동 중 현장지휘관(IC)은 현재 투입 소방력(진압 5개 팀, 구조 2개 팀, 구급 2개 팀)과 차량 편성(펌프차, 물탱크차, 고가사다리차, 구조공작차)을 정확히 파악한다.</p>
+<p><strong>Table 2-5-2. 출동 경로·사이징 의사결정(En-route Routing <strong><em><em>&amp;</em></strong></em> Sizing Decisions)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>조건</strong></th><th><strong>판단</strong></th><th><strong>조치</strong></th></tr><tr><td>단지 출입구 다수, 내부 도로 복잡</td><td>최단·가장 넓은동선 선택 필요</td><td>선착차량에 우선진입 출입구지정, 후속차량은 대체동선 선택</td></tr><tr><td>야간조도 부족으로 동 번호식별 곤란</td><td>식별 오류·오인 정차위험</td><td>조명(Sopt Light)·헤드랜프(Head Lamp)활용, 동표지 확인지점에서 일시정지·확인</td></tr><tr><td>주간 이중주차·택배 차량으로 병목</td><td>진입지연·회차불가 가능</td><td>경찰견인·일시통제요청, 진입전 병목구간 보고</td></tr><tr><td>고가사다리차 전개 공간 협소</td><td>전개 불가·접근 지연</td><td>전개가능 면적 사전탐색, 대체로A/B방면 사다리전개 또는 내부공격전환 검토</td></tr><tr><td>물탱크차 연속 급수 필요</td><td>소화전 압력·유량 불확실</td><td>소화전시험개방지시, 필요시 중계/릴레이(Relay Pumping) 급수계획가동</td></tr><tr><td>화재 층 방향과 연결통로 미확보</td><td>대형차 부서 위치 재조정 필요</td><td>화재동 정면·측면우선배치, 보행자로는 구급·구조 동선으로 분리</td></tr><tr><td>단지 내 회차 공간 한정</td><td>대형차 고립·후퇴 지연 위험</td><td>회차지지점 사전지정, 불필요차량은 외곽대기(Staging Area)</td></tr><tr><td>풍향이 화재 동쪽으로 집중</td><td>연기역류·시야 저하</td><td>풍상측 진입회피, 풍하측으로 대체진입 지정</td></tr><tr><td>다수 동(동별 유사 외관)</td><td>동 오인 가능성</td><td>동-라인-호 재확인, 무전보고형식 통일("A동 3번 라인 1203호")</td></tr></table></div>
+<p><strong>3. 특수차량 진입 확인 및 추가 장비요청</strong></p>
+<p>현장지휘관(IC)은 출동 중 선착대장에게 고가사다리차, 굴절사다리차 등 특수차량의 단지 내 진입 가능 여부를 우선 파악하도록 지시한다. 아파트 화재는 고층부에서 외부 방수·구조 접근이 결정적이므로, 단지 출입구 폭·내부 도로 폭, 상부 장애물(전선·차양·교량), 회차 공간, 전개 면(아웃리거 공간)을 종합 고려해 직접 전개 가능성을 판단한다.</p>
+<p><strong>Table 2-5-4. 특수차 진입 가능 판단 기준(Apparatus Access Criteria)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>항목</strong></th><th><strong>기준/내용</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td>단지 출입·내부 도로 폭</td><td>차폭·게이트 협소, 지하주차장 경사로(Lamp)만 존재, 보행 난간·가드레일 간섭</td><td>굴절사다리차·고가사다리차 외곽대기(Staging Area)전환, 소형펌프차 우선진입·연장호스준비, 접근동선분리</td></tr><tr><td>회전·회차 가능</td><td>코너회전 반경협소, 회차공간 협소, 지상구조물(화단·조경석) 간섭</td><td>선두차량 정차지점 사전지정, 회차지점 확보, 불필요차량 외곽대기(Staging Area)</td></tr><tr><td>전개 면(아웃리거)</td><td>주차밀집·차양·전신주로 아웃리거 전개 불가</td><td>대체방면배치 또는 고가사다리차 전환검토, 외부방수는 연소확대차단 중심</td></tr><tr><td>상부 장애물</td><td>전선횡단, 보행데크·차양, 돌출 발코니 간섭</td><td>사다리전개 금지구역지정, 휴대사다리·내부구조 동선 대체</td></tr><tr><td>화재 위치·층</td><td>고층부(≥10층)·코너 세대·파사드(Façade) 연소확대</td><td>외벽냉각·코너사다리전개, 내·외부동시제압으로 확산차단</td></tr><tr><td>인명 구조 필요</td><td>발코니·창가 대피자, 인접세대 연기 유입</td><td>사다리구조 우선방면지정, 계단확보 소방호스·문 제어(Door Control)연동, 구급동선분리</td></tr><tr><td>급수 기용성</td><td>단지 소화전 부족·압력 저하, 동시 방수 다선 운용</td><td>중계/릴레이(Relay Pumping)급수 즉시가동, 물탱크차 순환배치, 펌프입력관리</td></tr><tr><td>대체 수단 전환</td><td>특수차량 전개지연/불가, 풍상측 장애</td><td>내부 소방시설(Standpipe)로 공격전환, 통제배연(PPV)·절단장비 병행, 외각은 연소확대 방지</td></tr></table></div>
+<p><strong>4. 유관기관 요청 (Requests to Cooperating Agencies)</strong></p>
+<p><strong>Table 2-5-5. 유관기관별 즉시요청사항(Cooperating-Agency Immediate Requests)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>유관기관</strong></th><th><strong>요청사항(예)</strong></th><th><strong>전술시사점</strong></th></tr><tr><td>경찰</td><td>단지외곽 통제선설정, 주민·차량 접근 차단, 주요 교차로 교통 통제·견인 지원</td><td>진입·회차 동선 확보, 군중밀집 완화로 사다리차·구급동선 분리용이</td></tr><tr><td>한전</td><td>동/라인단위 전원차단, 위험구역 표시, 감전 위험 구간 확인</td><td>사다리 전개·내부전개 안전확보, 전기화재 2차 위험차단</td></tr><tr><td>가스</td><td>공급차단, 집합계량기·배관 누설 점검, 가스농도 확인</td><td>폭발·재발화 위험저감, 배관 인접 구간 접근 안전확보</td></tr><tr><td>아파트 관리사무소</td><td>엘리베이터 정지/소방운전 전환, 출입통제·대피 방송, 세대주 연락망 가동, CCTV 열람·백업</td><td>대피가속·실종자 신속 확인, 인명검색 동선 최적화, 증거·사고 조사지원</td></tr><tr><td>교통·도로 관리부서</td><td>단지 진입로 임시 통제, 우회 동선 설정·표지, 불법 주정차 견인</td><td>병목해소로 특수차 즉각전개, 외곽대기(Staging Area) 운영 안정화</td></tr><tr><td>수도사업소</td><td>소화전 유량·압력 증강, 밸브 조정, 급수 장애 신고 대응</td><td>동시방수 다선 운용 안정화, 중계/릴레이(Relay Pumping) 급수 계획 보완</td></tr><tr><td>인근 의료기관</td><td>응급실 대기·다수사상자대비 통보, 재난의료지원팀(DMAT) 요청, 환자 분류·수용능력 공유</td><td>연기흡입·화상 환자집중수용, 이송 우선순위 확립</td></tr></table></div>
+<h2>Chapter 3.  현장도착 (On-Scene Arrival) — 아파트</h2>
+<p><strong>1. 선착대장 초기 상황보고 청취</strong></p>
+<p>현장지휘관(IC)은 출동 중 무전으로 선착대장의 초기 상황 보고를 청취한다.</p>
+<p><strong>Table 2-5-3. 선착대장 표준 보고 항목(Initial Radio Report)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>항목</strong></th><th><strong>예시 보고(내용)</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td>위치·대상·방면</td><td>"OO아파트A동 도착, A방면확보"</td><td>현장지휘소(ICP)·대기구역(Staging Area) 배치, 방면 통일(A/B/C/D)</td></tr><tr><td>화재 층·연소 양상</td><td>"8층 804호 화점, 외벽으로 검은연기/화염분출"</td><td>계단확보 소방호스·연소확대 방지우선, 통제배연(PPV) 검토</td></tr><tr><td>내부 진입 가능성</td><td>"복도고열·가시성 0, 내부진입불가"</td><td>전환공격 또는 외부 방수 우선</td></tr><tr><td>인명·대피</td><td>"대피미완료, 9~10층 발코니대피자 다수"</td><td>구조 우선구역 지정, 신속동료구조팀(RIT) 대기, 인원확인보고(PAR) 강화</td></tr><tr><td>설비·용수</td><td>"소방시설(Standpipe) 미확인, 동측소화전 2기"</td><td>급수·압력 확인, 필요 시 중계/릴레이(Relay Pumping)급수</td></tr><tr><td>접근·위험 요소</td><td>"정문 병목, 사다리차 전개 공간 제한. 가스계량기 C방면"</td><td>대형차 대기구역(Staging Area)·호스 연장, 가스/전력 차단 요청</td></tr></table></div>
+<p><strong>2. 최초 상황평가 (Initial Size-Up)</strong></p>
+<p><strong>Table 2-5-9. 최초 상황평가 체크리스트(Initial Size-Up Checklist)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>항목</strong></th><th><strong>확인 포인트</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td>외부관찰</td><td>연기 색·양·속도, 불꽃 분출, 볼티 비산 방향, 베란다·창 손상, 파사드(외벽) 상태 확인</td><td>상층·인접세대 연소확대방지 우선, 외벽냉각 방수검토, 풍상측 진입회피</td></tr><tr><td>접근안전</td><td>단지 출입구·골목 폭, 불법 주정차, 상부 장애물(차양·전선), 전개·회차 공간 확보</td><td>현장지휘소(ICP)·대기지점지정(Staging Area), 활동제한구역설정, 사다리차대체 방면을 검토</td></tr><tr><td>인명상황</td><td>대피 현황, 미확인 인원, 발코니 대피 신호, 계단실 혼잡도 확인</td><td>구조우선구역지정, 계단/복도 방어선 1선 전개, 신속동료구조팀(RIT)을 대기</td></tr><tr><td>내부정보 수집</td><td>계단실·복도 연기 이동, 출입문 상태(닫힘/개방), 코어 샤프트 영향, 가시성·열상태 확인</td><td>문 제어(Door Control)우선, 열화상카메라(TIC) 인명검색, 개구부개방·배연시점을 통제</td></tr><tr><td>연소확대</td><td>파사드(Façade) 수직 확산, 복도 창 통한 수평 확산, 인접 동 그을음·착화 징후 확인</td><td>연소확대차단 선배치, 내·외부동시전개로 확산차단, 배연환기를 조율</td></tr><tr><td>용수·압력 우선순위·보고</td><td>소화전위치·유량·압력, 연결송수관, 옥내소화전 등 소방시설(Standpipe) 가용 여부 확인</td><td>중계/릴레이(Relay Pumping)급수 검토, 펌프압 관리, 현장상황·조치·필요(CAN)보고</td></tr></table></div>
+<p><strong>3. 방면 지정</strong></p>
+<p><strong>Table 2-5-10. 방면 지정 기준(Side Designation Guide)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>구분(방면)</strong></th><th><strong>기준</strong></th><th><strong>예시 지시(무전)</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td>A방면(정면)</td><td>도로 접면·단지 정문·주 출입구가 있는 정면</td><td>"현장지휘소(ICP) A방면설치, 계단확보 소방호스라인 1선전개"</td><td>현장지휘소(ICP)·대기지점(Staging Area)으로 사용, 계단실 진입축과 초기수평전개의 기준, 구급동선분리 운용에 적합</td></tr><tr><td>B방면(좌측)</td><td>A기준 좌측 측면(동 측면 파사드(Façade), 지상 주차·보행로 인접)</td><td>"B방면 창연기증가, 배연대기·사다리측면 전개"</td><td>대체진입·배연포인트로 활용, 파사드(Façade) 냉각방수 및 인접 연소 확대차단 방어선 전개 적합</td></tr><tr><td>C방면(후면)</td><td>후면 놀이터·후면 주차장·근린시설 접면</td><td>"C방면접근혼잡, 연소확대차단 우선"</td><td>후면감시·차단선운용, 회차공간을 활용해 중계/릴레이(Relay Pumping) 급수운영 적합</td></tr><tr><td>D방면(우측)</td><td>A기준 우측 측면(지상 주차 밀집·협소 보행로)</td><td>"D방면 사다리전개, 창문구조 준비"</td><td>창문구조·수평전개를 담당, 외벽 수직확산차단과 인접동 연소확대차단에 적합</td></tr><tr><td>내부 기준</td><td>계단실·엘리베이터홀·공용복도 방향, 동·층·호수 체계</td><td>"복도말단창측=D방향간주, 문 제어(Door Control) 유지"</td><td>인명검색경로와 문 제어(Door Control)</td></tr></table></div>
+<p><strong>4. 360° 상황평가 (360°Size-Up)</strong></p>
+<p><strong>Table 2-5-11. 360° 상황평가 체크리스트(360° Size-Up Checklist)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>구역</strong></th><th><strong>확인 항목</strong></th><th><strong>관측 포인트</strong></th><th><strong>즉시 조치</strong></th></tr><tr><td>후면(C)</td><td>창·출입부, 연기/화염, 구조 신호</td><td>연기 색·양·속도, 볼티 비산, 발코니 대피 신호</td><td>후면차단선·활동제한구역 설정, 대체진입·창접근 지정, 인접동 연소확대차단 경계관창 선배치</td></tr><tr><td>측면(B/D)</td><td>외벽 가열·틈새, 연기 누출, 노출물 위험</td><td>가스 배관·실외기·차양 가열, 창호 파손·균열</td><td>연소확대차단 경계관창 배치, 측면배연포인트확보, 휴대사다리·소방호스라인 전개준비</td></tr><tr><td>상부(옥상/상층)</td><td>옥상문·배기 설비, 상층 발코니</td><td>옥상문 연기유출, 파사드(Façade) 수직 확산, 상층 대피자</td><td>상부 감시·배기배치, 출입통제, 필요 시 통제배연(PPV) 내부팀과 타이밍 조율</td></tr><tr><td>공통</td><td>수직/수평 연기 흐름</td><td>계단실·코어샤프트·복도창 이동</td><td>계단/복도방어선 전개, 문 제어(Door Control) 우선, 통제배연(PPV) 시점 지휘승인하 검토</td></tr><tr><td>안전</td><td>접근 가능성·낙하물·조도</td><td>전선·차양·적치물, 야간 시야 제한</td><td>현장지휘소(ICP) 기준 안전 통제선 확장, 개인 안전거리 유지, 투입 전 위험 브리핑 실시</td></tr></table></div>
+<p><strong>5. 연기 및 화염 상태 파악</strong></p>
+<p><strong>Table 2-5-7. 연기·화염 매트릭스(Smoke/Flame Reading Matrix)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>관측</strong></th><th><strong>내용</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td>짙은 검은 연기(고온·난류)</td><td>석유계/내장재 연소가능, 고열·독성 증가</td><td>상층대피우선, 전환공격검토, 계단실확보 소방호스+문 제어(Door Control) 즉시시행</td></tr><tr><td>회색/갈색 연기(간헐 분출)</td><td>통제배연(PPV) 연소, 플래시오버·백드래프트 전조 가능</td><td>개구부무분별개방금지, 통제배연(PPV)시점 현장지휘관(IC) 승인하 조정</td></tr><tr><td>창호 틈 양압 분출(분출→흡입 전환)</td><td>화점층 과압·연소가속, 층간 확산징후</td><td>화접층 A방면 진입억제, 외벽냉각·연소확대차단 경계관창</td></tr><tr><td>수직으로 빠른 연기 상승(코너·배면)</td><td>외벽·샤프트(shaft) 따라 수직확산</td><td>상층·인접세대 연소확대차단, 배면(C/D) 감시·차단선 배치</td></tr><tr><td>볼티·불꽃 비산(spotting)</td><td>인접세대·외벽 착화위험</td><td>연소확대차단 우선, 발코니·처마 냉각방수</td></tr><tr><td>불꽃 창 너머 관찰·유리 파손</td><td>내부가연물 고온 연소, 열방출률(RHR) 증가</td><td>내부진입팀호흡·열보호강화, 2선 확보·소방호스라인 준비</td></tr><tr><td>연기 색 밝아짐+양 증가</td><td>급격연소로 산소흡입, 환기 전환징후</td><td>환기·진입 동시 진행금지, 팀간타이밍 무전조율</td></tr><tr><td>무창부에서 연기만 다량(화염 미노출)</td><td>무염연소/열 축적, 시야 제로</td><td>열화상카메라(TIC)활용 인명검색, 표식테이프운용</td></tr></table></div>
+<h2>Chapter 4.  현장대응 (On-Scene Operations) — 아파트</h2>
+<h3>전반부 대응 (Primary Phase Operations)</h3>
+<p><strong>1. 지휘권 인수 및 선언 (Assume and Announce Command)</strong></p>
+<p>현장지휘관(IC)은 현장도착 즉시 선착대장으로부터 대면보고를 받아 공식적으로 지휘권을 인수한다. 이어 무전으로 "지금부터 OO아파트 화재 현장지휘는 OO지휘관이 말한다"고 지휘권 선언을 하고, 현장지휘소(ICP) 위치·운용 무전채널·대원임무 지정·전파한다.</p>
+<p><strong>Table 2-5-8. 지휘권 인수·선언 절차(Procedure <strong><em><em>&amp;</em></strong></em> Standard Elements)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>단계</strong></th><th><strong>핵심내용</strong></th><th><strong>지휘내용</strong></th></tr><tr><td>도착 보고</td><td>선착대가 현장도착 상황과 초기 위험요소를 무전 보고. ("OO아파트 A동 도착, 8층 804호 추정 화점, 외벽 연기 다량.")</td><td>현장지휘관(IC)이 선착대 보고를 수신·요약 재송신하고, 필요 시 안전사항을 전달</td></tr><tr><td>대면보고</td><td>선착대장은 화점·인명·진입 가능성·자원 현황을 현장상황·조치·필요(CAN)보고 형식으로 대면보고</td><td>화점층, 계단실 상태, 연결송수관·스프링클러 등 소방시설 작동가능 여부를 확인</td></tr><tr><td>지휘권 인수</td><td>현장지휘관(IC)이 지휘권 인수 의사를 명확히 표명하고, 현장지휘계획(IAP) 수립 전제로 구조·계단 등 연소확대방지 등 우선순위 결정</td><td>현장지휘소(ICP)와 대기구역(Staging Area) 위치를 지정</td></tr><tr><td>지휘권 선언</td><td>현장지휘관(IC)이 전 채널에 지휘권 확립 메시지를 송출해 지휘체계를 확립("지금부터 OO아파트 현장지휘는 OO지휘관이 지휘한다.")</td><td>전 대원에게 현장지휘소 위치, 보고 채널, 임무 분배 원칙을 공지</td></tr><tr><td>일원화 전환</td><td>모든 보고·지시를 현장지휘관(IC) 중심 단일체계로 전환하고, '방면-층-호'를 중심으로 대원임무지정과 현장상황·조치·필요(CAN)로 간략하게 보고</td><td>모든 대원은 현장지휘관(IC)→단위지휘관 단선 보고로 전환하고, 임의 지휘 라인 금지</td></tr></table></div>
+<p><strong>2. 최초 상황평가 → 3. 방면 지정 → 4. 선착대원 현장활동 통제</strong></p>
+<p><strong>Table 2-5-6. 선착대원 통제 체크리스트(Arrival Control Checklist)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>항목</strong></th><th><strong>기준/내용</strong></th><th><strong>조치</strong></th></tr><tr><td>개별 행동 금지</td><td>도착·지시 전 임의 진입·소방호스라인 전개 금지</td><td>현장지휘관(IC)이 무전으로 반복 고지</td></tr><tr><td>투입 인원·출입로 관리</td><td>협소복도/복수 출입로로 과잉 진입·동선 겹침 위험</td><td>선착대 최소 인원만 진입, 출입 방향별 인원 분배·교차 통로 금지</td></tr><tr><td>계단 확보 소방호스·문 제어(Door Control)</td><td>피난동선 보호와 연기역류차단 필요</td><td>계단확보 소방호스 1선 우선전개, 문 제어(Door Control)전담지정·필요시 개방 금지</td></tr><tr><td>인원확인보고(PAR)</td><td>투입인원·위치 추적이 안전의 전제</td><td>투입 전/교대 전/철수 후 인원확인보고(PAR)를 시행</td></tr><tr><td>안전·개인보호장비(PPE/SCBA)</td><td>개인보호장비(PPE/SCBA) 완비, 공기·무전 사전점검</td><td>투입 전 팀호출(Call-out) 후 진입, 공기량 공유</td></tr></table></div>
+<p><strong>5. 지휘형태결정 (Command Mode Selection)</strong></p>
+<p><strong>Table 2-5-12. 지휘형태 전개 기준(Command Mode Criteria)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>지휘형태</strong></th><th><strong>적용 조건(요지)</strong></th><th><strong>지휘 포인트(간략)</strong></th></tr><tr><td>전진지휘(Forward Command)</td><td>선착대장이 실내에 직접진입해 초기 판단·지휘필요한 단계</td><td>내부지휘+현장지휘소(ICP)연속성, 인원확인보고(PAR 강화, 문 제어·계단/복도방어선우선, 용수·펌프압·배연타이밍 상시조율</td></tr><tr><td>고정지휘(Fixed Command)</td><td>A방면에서 가시성·안전 확보, 전개·대피 동선이 A방면에 집중</td><td>현장지휘소(ICP) A방면설치, 대기지정(Staging Area), 채널·보고주기공지, 연소확대차단계획</td></tr><tr><td>이동지휘(Mobile Command)</td><td>고정 위치 시야 제한 또는 후면/측면 전개 확인 필요</td><td>단시간 돌러보고 현장지휘소(ICP) 복귀, 배연/방수 타이밍 동기화, 안전담당(ISO)으로 지휘연속성유지</td></tr><tr><td>혼합지휘(Combined Command)</td><td>복수 방면 동시 전개·상층 확산 우려 등 변동 큰 초동</td><td>현장지휘소(ICP)중심 통제유지+제한적 이동지휘 병행, 인명검색→차단→진압 우선순위 재확인</td></tr></table></div>
+<p><strong>6. 전략 결정(공격/방어)</strong></p>
+<p><strong>Table 2-5-13. 전략 선택 기준(Strategy Decision Criteria)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>전략</strong></th><th><strong>공격(Offensive)</strong></th><th><strong>방어(Defensive)</strong></th><th><strong>전환(Transition)</strong></th></tr><tr><td>인명·경로</td><td>생존징후확인, 공격계단-대피계단 분리확립, 전실·계단·가시 확보 후 동시구조·진입, 엘리베이터는 화재층·직상층 정지금지, 소방전용승강기만 통제 사용</td><td>계단·전실이고 열과 농연으로 진입불가이거나 방화문 개방으로 복도 플로우패스(Flow Path) 형성, 풍향화재로 부적절하면 외부억제로 전환</td><td>방어→공격: 경로장애제거, 전실·계단 제연, 생존징후 재확인시 공격으로 전환 / 공격→방어: 경로상실·메이데이·붕괴징후 등 구조위험 증가시방어로 전환</td></tr><tr><td>화재·환경(연기·열·배연·연소확대)</td><td>제연·양압성능 확보, 연기층·열저감상태에서 충내 국부화점을 직접 공격하고, 파사드(Façade)/발코니/샤프트를 통한 연소확대를 차단</td><td>고온·농연지속, 플래시오버/백드래프트 징후, 파사드(Façade)/발코니/샤프트 수직확산 우세, 풍향화재, 스프링클러·제연미작동시 외부억제·연소확대방지선을 우선</td><td>방어→공격: 배연 확보, 열 완화, 연소확대 통제 달성시 공격으로 전환 / 공격→방어: 열상승·연기악화·수직확산 가속시방어로 전환</td></tr><tr><td>자원·지휘(용수·인력·안전·통신)</td><td>Standpipe가압·압력확인, 화점 진입을 위해 두 개의 진압팀(1·2)을 운용, 예비팀을 확보, 활동제한구역 밖 안전을 유지</td><td>용수·인력열세, 연결송수관, 옥내소화전 등 소방시설(Standpipe) 압력/유량부족, 가스누출·전기위험·구조손상등 안전한계 발생 시 외부억제·대기하고 현장상황을 공유</td><td>방어→공격: 추가용수·인력도착, Standpipe입력·연장확보, 안전지표 및 진입상태 호전시 공격으로 전환 / 공격→방어: 용수고갈·인력이탈·안전상황 악화 시 방어로 전환</td></tr></table></div>
+<p><strong>7. 전술 결정 및 구체적 임무지시</strong></p>
+<p>현장지휘관(IC)은 선택된 전략에 따라 전술 목표를 설정하고 각 팀에 구체 임무를 부여한다. 아파트화재에서는 공격계단(Attack Stair)-대피계단(Evacuation Stair) 분리, 전실·계단 제연(또는 양압)과 연결송수관·옥내소화전 등 소방시설(Standpipe) 가압·압력 확인, 고층 호스 전개 거리와 용수·인력 확보가 전제 조건이다.</p>
+<p><strong>Table 2-5-14. 팀별 임무·교신·안전요소(Assignments/Communications/Safety)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>팀</strong></th><th><strong>임무</strong></th><th><strong>동선·수단</strong></th><th><strong>안전요소</strong></th></tr><tr><td>진압1</td><td>화점 직접·조합공격, 화세 억제</td><td>공격계단 통해 전실→화점세대 진입, 소방시설 연결·진입, 고층 호스 전개, 문 제어(Door Control)</td><td>전실·계단 제연/양압 확인, 풍향화재·플로우패스(Flow Path) 차단, 열감지·감입, 메이데이(MAYDAY) 대비</td></tr><tr><td>진압2</td><td>인접 세대·상하층 연소확대 차단, 파사드(Façade)/발코니 방어</td><td>차단선 형성, 외벽·샤프트(Shaft) 감시, 외부방수보조</td><td>낙하물·유리 비산, 전선·가설물 접촉위험, 안전거리·하풍 회피</td></tr><tr><td>구조1</td><td>고립 세대 인명검색·구조, 생존자 확보</td><td>대피계단과 분리된 인명검색 동선, 열화상카메라(TIC)·표식 사용</td><td>연기층 높이·가시성, 방화문 닫힘상태, 경량 칸막이 붕괴위험</td></tr><tr><td>구조2</td><td>전실·피난실 인원 확인, 대피 유도·인원 파악</td><td>피난유도·계단분리, 엘리베이터 금지(소방전용 제외)</td><td>과밀·패닉 관리, 질식·추락 방지, 간략보고로 인원현황 공유</td></tr><tr><td>배연팀</td><td>제연·양압 유지/복구, 연기층 저감</td><td>전실·계단 제연팬 운용, 창 개방·유량 조정(조절배연)</td><td>풍향화재 유발 방지, 역류·플로우패스(Flow Path)통제, 개구부 개패 통합지휘</td></tr><tr><td>전기·가스 차단</td><td>2차 위험 제거(전기·가스·스프링클러 밸브 점검)</td><td>전기실·기계실 접근, 밸브·차단기 조작</td><td>감전·가스누출·폭발 위험, 열 기실 내부 고온·산소결핍</td></tr><tr><td>구급</td><td>현장 처치, 연기흡입·화상 분류(Triage)·이송</td><td>대피계단 하부·안전구역에 수용·처치 구역 설정</td><td>오염·교차오염 관리, 이송 동선과 진입 동선 분리</td></tr><tr><td>급수·중계</td><td>용수 확보, 중계가압·호스 연장지원, 장비 지원</td><td>소화전 연계, 펌프 중계·압력 모니터링, 병행 지원선 운영</td><td>동압저하방지, 동결·누수·호스 손상확인, 소방시설압력확인</td></tr><tr><td>지휘보조</td><td>현장지휘소(ICP)운용보조, 상황판·자원추적·통신관리</td><td>'방면-층-구역 + 간략보고(CAN)' 로그, 인원·소방호스라인 추적</td><td>무전 혼선·포화 관리, 안전지표 추적, 전술 변경 신속 전파</td></tr><tr><td>안전</td><td>위험성 평가, 활동제한구역 설정·감시, 전환 권고</td><td>360° 현장확인, 구조손상·낙하·전기·가스·풍향화재 감시</td><td>메이데이 기준, 철수·전환(공격→방어) 상황관리</td></tr></table></div>
+<p><strong>1. 현장통제 및 안전구역 확보</strong></p>
+<p><strong>Table 2-5-15. 현장통제 핵심 조치(Scene Control Actions)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>항목</strong></th><th><strong>기준/내용</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td>통제반경</td><td>화재건물외곽으로 최소건물높이 1.5배까지 1차통제반경 설정, 필요시 풍하측 추가확장</td><td>열복사·낙하물·유리비산을 고려한 안전여유거리 확보, 외곽에 현장지휘소(ICP)·임시의료소 배치</td></tr><tr><td>배제구역</td><td>외벽파사드(Façade)·발코니붕과우려방면, 풍하측·플로우패스(Flow Path)형성구역은 완전배제</td><td>대원동선은 건물모서리회피·상풍측우선, 이중콘/테이프·바리케이드로 시각화</td></tr><tr><td>열복사구역</td><td>화염분출·외벽연소시 파사드(Façade) 전면과 코너부 중심으로 표시, 차량·인원 노출금지</td><td>펌프차·사다리차 대기위치를 코너 바깥·상풍측으로 조정, 호스보호매트 설치</td></tr><tr><td>출입관리</td><td>단지출입구·주차장교차로에 차량차단선 설치, 출입스티커/목록관리</td><td>소방차전용동선 확보, 일반차량전면차단·우회유도, 대원출입체크인·체크아웃 운영</td></tr><tr><td>광역 대비/교통·활동공간</td><td>외곽교통 통제구역, 장비집결(Staging Area), 임시의료소 분리</td><td>공격계단·대피계단 동선분리, 용수지원·중계가압차량 배치, 민·관동선 충돌방지</td></tr><tr><td>안전(현장통제선 구성·표식)</td><td>현장통제선은 콘/바리케이드/야광테이프/표지판으로 연속표식, 야간조명보강</td><td>통제선 끊김없는 시인성확보, 경계인력배치</td></tr></table></div>
+<p><strong>2. 관계자 확보 (Stakeholder <strong><em><em>&amp;</em></strong></em> Gather Critical Info)</strong></p>
+<p><strong>Table 2-5-16. 관계자 확인사항(Stakeholder Interview Checklist)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>항목</strong></th><th><strong>질문 예시</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td>인원 파악</td><td>현재 각 세대 대피 현황은? 미확인/연락 두절 세대는? 노약자·거동불편 편·영유아·환자 세대는?</td><td>구조우선순위설정(단일계단단차단위험고려), 구조팀투입순서와 구역지정, 인원현황을 반영</td></tr><tr><td>구조 특이점</td><td>고립 우려 세대(예: 302호 노약자)·외국인 세대·임시 칸막이 등 내부 구조 특이점은?</td><td>강제진입·추가인력배치, 문 제어(Door Control)·개구부진입인명검색(VEIS) 적용여부판단, 분할인명검색을 계획</td></tr><tr><td>피난 경로</td><td>단일계단접근성·가시성은? 계단/복도방화문상태는? 옥상·발코니대피 가능성은?</td><td>계단보호 소방호스라인·문 제어(Door Control)우선, 대피유도순서확정, 계단상·하부혼잡·주민재진입을 통제</td></tr><tr><td>설비 상태</td><td>연결송수관, 옥내소화전 등 소방시설(Standpipe)유무·가압상태? 감지기·경보작동여부는?</td><td>용수계획(외부급수·중계가압)확정, 경보지연시 수동경보·대피방송을 보완</td></tr><tr><td>전기·가스</td><td>전기메인차단반·가스계량기집합부 위치는? 차단권한·절차는?</td><td>감전/가스누출/폭발위험저감, 활동제한구역 확대, 접화원통제·외벽방수각도를 조정</td></tr><tr><td>외벽·발코니</td><td>외벽 마감재·발코니 창호·차양물 상태? 최근 보수·가연물 적치 여부?</td><td>수직확산 가능성평가, 외부차단선·연소확대방지, 낙하물위험 방면을 이중차단</td></tr><tr><td>평면·출입·골목</td><td>동·호수 배치·계단 위치·지하주차/창고 유무? 골목 폭·불법 주차현황?</td><td>소방차진입·배치동선확정, 호스보호매트·우회동선설정, 초기소방호스라인 전개거리를 산정</td></tr><tr><td>엘리베이터·옥상</td><td>엘리베이터 유무·정지 여부? 옥상문 잠금·키 위치?</td><td>엘리베이터사용금지 재확인, 옥상배연·대피 등 가능성검토</td></tr><tr><td>특별 위험</td><td>전기차·보일러실·창고 가연물 집중 구역은?</td><td>폭발·재점화 위험구역 표시, 냉각·격리·연소확대차단 강화, 간략보고로 위험 공유</td></tr></table></div>
+<p><strong>5. 소방용수공급체계 확보 (Firefighting Water Supply, FWS)</strong></p>
+<p><strong>Table 2-5-19. 소방용수공급체계 표준 구성(Standard Firefighting Water Supply Configuration)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>항목</strong></th><th><strong>기준/내용</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td>1선펌프차(First-Due Engine)</td><td>건물전면을 비워 최단거리에 배치, 흡·토출압·유량계, 중요물탱크와 1선펌프차를 즉시세팅, 연결송수관, 옥내소화전 등 소방시설(Standpipe) 확인후, 공격라인·계단확보 소방호스에 안정유량을 공급</td><td>초기에 지연없는 방수확보, 연결송수관, 옥내소화전 등 소방시설(Standpipe) 미가압/저압시 즉시 소방차연결구(FDC)가압 또는 장거리전개·중계가압으로 전환</td></tr><tr><td>중요물탱크차(Primary Water Tender)</td><td>핵심급수원으로 지정해 수위 50% 이상 유지, 1선펌프차 직결 또는 중계라인편성, 상풍측 외곽에 배치</td><td>소화전 불량·단수시 공백 없이 외부 용수원 연계 운용, 회차·지원 동선 사전 확보로 병목 구간 최소화</td></tr><tr><td>수원(Hydrant/대체 수원)</td><td>건물주변 소화전 2구이상 확보, 결빙·저유량·폐색을 대비해 대체수원(저수조·수조차·비상급수탑·인근상수도맨홀) 병행 조사</td><td>소방차연결구(FDC) 주입선과 병렬로 구성해 전환이 즉시 가능하도록 커플링·밸브 사전 배치, 하풍측·유리 파사드(Façade) 하부 구간은 급·배수 동선에서 배제</td></tr><tr><td>중계급수(Relay Supply)</td><td>수원→중요물탱크차→1선펌프차 중계펌프구성, 각 펌프는 목표토출압(노즐요구압+마찰손실+고저차)을 공유</td><td>고층·장거리 전개에서도 압력유지, 로비·전실·문턱·차량통로에는 호스 보호매트를 설치</td></tr><tr><td>예비/이원 급수(Backup/Dual Supply)</td><td>주급수선과 독립예비선을 동시구축(하나는 소방차연결구(FDC), 다른 하나는 외부 공격라인), 밸브·소방호스라인을 명확표식해 무전한마디로 절체 즉시가능</td><td>연속 방수 확보로 구조 지연과 재발화 위험 최소화, 구역형 고층은 이원 급수체계로 상·하부 존 동시지원</td></tr></table></div>
+<p><strong>3. 대기단계 운영 (Staging Operations)</strong></p>
+<p><strong>Table 2-5-17. 대기단계 운영 체크리스트(Staging Operations Checklist)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>항목</strong></th><th><strong>기준/내용</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td>대기 위치</td><td>현장외곽도로·부지에 1차(장비집결)-2차(투입대기) 대기선을 설정, 현장지휘소(IC)는 상풍측 외곽</td><td>전면부는 고가사다리차 전개공간, 응급의료소, 회차동선을 상시 확보</td></tr><tr><td>진입 통제</td><td>선착대외차량은 현장지휘관(IC) 호출시에만 진입, 역할별(펌프/고가사다리/구급/장비)진입순서를 사전지정, 자재 반입차량은 운행정지</td><td>혼잡·교차사고를 예방하고 소방호스라인전개·용수연결을 방해하지 않도록 하고, 불필요차량은 대기</td></tr><tr><td>준비 상태</td><td>공격라인·예비호스·들것·배연장비 등 사전 세팅</td><td>호출시 즉시내부진입/연소확대방지/배연보강/구급지원으로 전환</td></tr><tr><td>통신·지휘</td><td>대기단계책임자(Staging Officer)를 지정해 차량배치도·인원명부·장비현황을 상황판으로 관리</td><td>인원파악과 순차투입을 실시하고, 공격→방어전환시 신속 재배치</td></tr><tr><td>교통·회차</td><td>일방동선을 설정하고 회차지점(원형/T자)을 확보하고 주정차차량은 강제이격</td><td>구급차이송·재진입, 펌프차교대, 급수차량 등 지체없이 운용</td></tr></table></div>
+<p><strong>6. 단위지휘관 지정 (Assign Division/Group Supervisors)</strong></p>
+<p><strong>Table 2-5-20. 단위지휘관 운용 매트릭스(Division/Group Assignment)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>구분</strong></th><th><strong>지정 기준</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td>구역별(Division)</td><td>층·방면중심으로 구획</td><td>문 제어(Door Control)와 계단 확보를 위한 소방 호스 유지, 인명 검색 순서는 화점 인접 세대→수직 확산 우려 세대(직상·직하)→복도 말단/전실 인접 세대 순으로 통일 운영, 발코니·유리낙하·열복사 방면은 활동제한구역으로 확대 설정</td></tr><tr><td>기능별(Group)</td><td>기능·임무 중심 편성</td><td>기능·임무 중심 편성, 배연 개구 시점은 단일 창구 통제, 중계급수·예비/이원 급수는 일원화 운용, 소방차연결구(FDC)가압, 압력감압밸브(PRV), 구역 설정을 사전 확인해 소방호스 라인 압력 안정성 확보, 신속동료구조팀(RIT)은 별도Group으로 독립 운용</td></tr><tr><td>복합형(Hybrid)</td><td>화재층은 구역별, 타 층·외부는 기능별 혼합 운용</td><td>화재층은 구역별, 타층·외부는 기능별 혼합 운용, 층 내부전술(화점접근·분할 인명 검색)과 외부지원(소방차 연결구 가압·중계급수·배연·활동제한구역 관리) 동시 통제, 공격→방어 전환 시 자원·동선 신속 재배치</td></tr></table></div>
+<p><strong>1. 초진(Initial Knockdown) - 7면 포위 (Seven-Side Containment, SSC)</strong></p>
+<p>아파트화재는 세대 다수·수직 샤프트(덕트/전선/배관)·발코니/파사드(Façade)·수평·수직 확산 위험이 상존한다. 현장지휘관(IC)은 발화 세대를 기준으로 상·하·좌·우·전·후·화점의 7면 포위(SSC)를 적용해 확산을 차단한다.</p>
+<p><strong>Table 2-5-22. 7면 포위 운용 체크리스트(Seven-Side Containment)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>면</strong></th><th><strong>점검/조치</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td>상(천장)</td><td>천장 마감재 상부 빈공간·덕트/배관관통부·전등박스를열화상카메라(TIC)로 스캔, 필요시 가연한 개구부 미세분무/안개방수로 냉각</td><td>은폐연소·상층전이를 조기에 차단, 상층 인명구조와 연소확대차단</td></tr><tr><td>하(바닥)</td><td>바닥하부 빈공간·문턱주변·케이블트레이(CableTray: 전선지지덕트/받침대)인접부를 확인하고 진불·적열부는 국소냉각하고, 감전·누수위험을 병행점검</td><td>하층으로의 열·연기침투를 억제, 하층 대피·인명 구조 안전 향상</td></tr><tr><td>좌/우(측벽)</td><td>경계벽·콘센트/배관박스 등 관통부 틈을 열화상카메라(TIC)로 확인, 노즐 스윔(원형 또는 좌↔우로 천천히 흔들어 표면을 고르게 냉각)</td><td>인접세대로의 측면확산을 차단, 인명구조동선을 안전하게 유지</td></tr><tr><td>전/후(출입·복도/발코니)</td><td>출입문·복도·발코니 방향은 문 제어(Door Control: 필요시에만 제한개방)하에 방수, 개구부에는 차열포(방열담요/커튼) 설치해 열·불티를 차단, 복도확보 소방호스와 대피동선을 분리</td><td>플로우패스(Flow Path) 형성을 억제하고, 계단확보 소방호스 유지, 발코니낙하·유리비산구역은 활동제한구역으로 관리</td></tr><tr><td>화점</td><td>직접분사(Direct Stream)로 연료에 맞춰 열을 빠르게 낮춘 뒤, 펄스 방수(Pulse: 0.5~1초 짧은 간헐 분사)로 증기팽창·가시성 변화를 관리, 가연물 제거·연소확대 차단을 병행</td><td>초진 달성 속도 향상, 전체 7면 포위에 필요한 압력·유량 부담 감소, 재점화 위험 감소</td></tr></table></div>
+<p><strong>4. 직전대기 운영 (On-Deck Operations)</strong></p>
+<p><strong>Table 2-5-18. 직전대기 운용 체크리스트(On-Deck Checklist)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>항목</strong></th><th><strong>기준/내용</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td>위치선정</td><td>화재층계단참·복도말단 또는 한층 아래 전실에 설정, 문 제어(Door Control)가 가능하고 열·연기류가적은 지점 확보, 간판·유리파사드(Façade) 하부, 덕트배출구하부, 전기실인접부는 배제</td><td>계단확보 소방호스(Stair Protection Line) 유지에 기여하고 대피경로를 확보, 소방시설(Standpipe)연결·압력확인과 중계가압 위치를 동시에 확정</td></tr><tr><td>준비사항</td><td>개인보호장비(PPE) 전착용, 공기호흡기(SCBA) 압력확인, 열화상카메라(TIC), 예비호스·분기관·노즐, 유도로프(Guideline/Search Rope), 강제진입공구(방음문·도어체인인용), 들것·구급키트를 세팅, 팀별 임무지정·투입순서·철수 경로를 공유</td><td>1분내 투입, 복도코너·문턱·출입통로에는 호스보호매트를 설치해 소방호스라인손상과 걸림을 방지</td></tr><tr><td>우선임무</td><td>(1) 교대(Relief): 화점/인명검색팀 교대 (2) 증원(Reinforce): 인접룸·천장플레넘·덕트 연소확대차단 (3) 구조(Rescue): 잠금·방음문 강제개방 보조, 조건충족시 개구부진입인명검색(VEIS) 제한적용지원 (4) 메이데이(MAYDAY)</td><td>공격→방어전환시 즉시역할을 재조정, 덕트/파사드(Façade)로 확산우세시 외부연소확대방지/차단선과 연동해 진입구역을 변경</td></tr><tr><td>대기상태</td><td>무전청취지속, 대기선이탈금지, 소방호스라인·장비 정돈유지, 팀리더는 5~10분 간격으로 업데이트 사항을 보고</td><td>혼선·중복투입을 방지하고 인원파악을 유지, 철수/운행정지 지시에 즉시 반응</td></tr></table></div>
+<p><strong>7. 무전망 분리 (Splitting Radio Nets)</strong></p>
+<p><strong>Table 2-5-21. 무전망 분리 의사결정 기준(When to Split TAC/CMD)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>항목</strong></th><th><strong>기준/내용</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td>인원/트래픽(Personnel/Traffic)</td><td>동시투입 3팀 이상 또는 화재층 진압+상층/하층 연소확대방지+연결송수관, 옥내소화전 등 소방시설(Standpipe) 병행운영</td><td>지휘망(CMD)·작전망(TAC)·지원망(LOG) 분리로 혼선·중첩교신을 차단, 각 망에 단위지휘관(DGS)을 채널관리자 겸임으로 지정</td></tr><tr><td>음영·간섭(Coverage/Interference)</td><td>코어/엘리베이터샤프트·지하주차장음영, 제연/양압팬소음, 유리파사드(Glass Façade) 난반사로 수신불량발생</td><td>중계지점을 한 층 아래 전실·계단참 상부·옥외상풍측에 설치하고, 휴대중계기/안테나나치·출력을 조정, 불량구역에는 수신호·러너(Runner)를 병행</td></tr><tr><td>임무 복잡도(Mission Complexity)</td><td>문 제어(Door Control)·계단확보 소방호스유지, 연결송수관, 옥내소화전 등 소방시설(Standpipe)가압·압력감압밸브(PRV)확인, 배연 개구시점 조정, 신속동료구조팀(RIT)대기</td><td>배연·신속동료구조팀(RIT)·소방차연결구(FDC)를 별도망(지원망 또는 전술망-B)으로 분리해 개구타이밍·안전이벤트를 지휘통제 하에 조정</td></tr><tr><td>안전사고(Safety Events)</td><td>메이데이(MAYDAY), 유리낙하/열복사, 전기·가스위험, 스프링클러/압력감압밸브(PRV) 오동작발생</td><td>전채널동시공지(일시단일망)→확인→원채널 복귀순으로 시행, 안전점검관(ISO)이 확인·기록</td></tr><tr><td>현장 규모(Scene Size/Span)</td><td>다층동시전개(화재층+상층), 화재층/상층/외부3축 활동, 대피계단·공격계단 분리운용</td><td>층별Division+기능별Group으로 무전망을 분리하고 지휘망(CMD)은 전술간섭없는 중요사항만 수신</td></tr></table></div>
+<h3>후반부 대응 (Late-Phase Operations)</h3>
+<p><strong>2. 초진구역 배연 (Post-Knockdown Ventilation)</strong></p>
+<p>주요 화점 진압이 완료되면 즉시 배연을 실시한다. 아파트는 세대 다수·공용 복도·단일/이중 계단실·수직 샤프트(덕트/전선/배관) 특성으로 연기와 열기가 구획별 고립·정체되기 쉽다. 표준 절차는 배출구 선 확보 → 상층 가스 냉각(미세 분무/안개) → 유입구 제한(문 제어: Door Control) 순서를 준수한다.</p>
+<p><strong>Table 2-5-23. 배연 전술 선택 매트릭스(Ventilation Tactics Matrix)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>적용사항</strong></th><th><strong>핵심절차</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td>기본 자연 배연(Natural Venting)</td><td>상층·하풍측 배출구부터 연다→ 상층가스를 짧게냉각(미세분무/안개)→ 유입구최소화(문 제어:Door Control)</td><td>장비 의존도 낮고 신속성 높음, 급격한 배연으로 플로우패스(Flow Path)가 과도형성되지 않도록 대, 발코니·유리 하부는 활동제한구역으로 이중 통제</td></tr><tr><td>양압 배연(PPV: Positive Pressure Ventilation)</td><td>배출구 선 확보 후 유입구에 양압 배연(PPV)팬 설치(틈새차페로 밀폐강화)→ 압력형성확인→ 문 제어(Door Control) 유지, 가속점 조율</td><td>잔불정리 선행전제, 가스·분진 폭발 우려 구역에서는 미사용, 신속동료구조팀(RIT)과 가동 시점을 사전 조율</td></tr><tr><td>계단실·샤프트 활용(Stair/Shaft Vent)</td><td>계단실/엘리베이터샤프트 상부를 배출구로 지정→ 하부유입구제한→ 필요시 양압배연(PPV) 보조</td><td>굴뚝효과로 상층위험 증가, 상층 연소 확대 방지용 경계관창을 병행한다</td></tr><tr><td>발코니/파사드(Façade) 방면(Balcony/Facade Side)</td><td>기존개구 또는 절개부를 배출구로 활용→ 내부문 제어(Door Control)유지→ 낙하·비산대비 차열포로 동선보호</td><td>유리비산·외벽 낙하물 고위험구역, 외부차단선을 이중설정하고, 급·배수동선을 우회, 전면부 연기배출에 효과적</td></tr><tr><td>구획 순차 배연(Zonal/Staged Ventilation)</td><td>세대/복도구획을 하나씩 운영: 배출구개방→ 상층냉각→ 문 제어(Door Control)→ 열화상카메라(TIC) 확인 후 다음구획으로 진행</td><td>연기역류·재순환 방지, 개구·폐쇄담당을 지정하고 무전통제로 재발화 위험을 낮춤</td></tr><tr><td>지하 주차장·밀폐 구역(Basement/Parking/Confined)</td><td>배출 루트 선 확보(경사로·환기구 상단 등) → CO·HCN·O2·폭발성 혼합기 등 가스 농도 측정 → 제한적 양압배기(PPV) 또는 배기 팬(Exhauster) 운용 → 열화상카메라(TIC)로 잔열·잔류 가스 재확인, 차량 언더바디·배터리 하부 중심 대유량·장시간 냉각, 재가열·재발화 지속 모니터링</td><td>폭발성 혼합기·전기 아크 위험 큰 구역은 방폭 장비 사용, 측정-배연-재측정 사이클을 준수하고 인원확인보고(PAR) 엄격 유지</td></tr></table></div>
+<p><strong>완진 전 점검 리스트(Pre-FED Checklist)</strong></p>
+<p><strong>Table 2-5-24. 완진 전 점검 리스트(Pre-FED Checklist)</strong></p>
+<div class="tbl-wrap"><table><tr><th><strong>항목</strong></th><th><strong>점검 기준/내용</strong></th><th><strong>전술 시사점</strong></th></tr><tr><td>2차 인명검색(Secondary Search)</td><td>화재층·상층·하층세대, 전실·계단실, 피난실·피난안전구역, 발코니전수확인</td><td>인명검색완료(ALL CLEAR) 확인 전 완진금지, 화점 인접 세대·무창 세대·고립 신고세대를 우선 점검</td></tr><tr><td>열화상카메라 잔열 확인(TIC Survey)</td><td>열화상카메라(TIC)로 벽체·천장·샤프트 관통부(콘센트·배관/전선박스)·발코니바닥/외벽단열재·문틀상부스캔</td><td>고온지점 표시후 국소냉각→재측정한다, 수직·수평전이가능 구역을 중점 점검</td></tr><tr><td>잔불 정리(Overhaul)</td><td>탄화재료, 천장·점검구·가구배후·하부 개방/제거, 은폐연소물처리</td><td>은폐연소제거, 미세분무/안개방수로 실내 중기 충격을 최소화</td></tr><tr><td>설비 격리·복구 상태(Systems)</td><td>스프링클러·스탠드파이프·소방차연결구(FDC)가압상태확인, 압력감압밸브(PRV)설정확인, 전기분전반·가스밸브차단유지</td><td>재점화·감전·가스누출을 방지하고, 복구까지 재통전/재가압 금지 표식을 유지</td></tr><tr><td>배연·연기 잔류(Ventilation)</td><td>구획별 순차배연완료, 문 제어(Door Control)로 플로우패스(Flow Path)통제, 배연 후 열화상카레마(TIC) 재확인</td><td>급격한 배연을 피하고, 공격계단-대피계단 분리를 유지</td></tr><tr><td>파사드·발코니 위험(Facade/Balcony Hazards)</td><td>유리비산, 외벽마감·단열재잔염, 낙하물위험제거·표식</td><td>위험 구역을 활동제한구역으로 지정</td></tr><tr><td>지하 주차장 연계(Basement/Parking)</td><td>경사로(Lamp)상단배출확보, 가스측정(CO/HCN/O2/LEL), 필요시 방폭팬 사용, 전기차(EV)존재시 장시간냉각·감시지시</td><td>폭발성혼합기·전기위험을 통제하고, 전기차(EV)는 재가열감시와 격리구역을 병행</td></tr><tr><td>오염·유해요소(Contamination)</td><td>유해가스 재측정, 오염수·그을음 정리 계획 수립</td><td>재발화·재출동을 예방하고, 개인보호장비(PPE)수준과 배연강도를 유지</td></tr><tr><td>자원·기록(Resources/Docs)</td><td>호스·장비회수·복구계획, 사진/무전로그정리</td><td>사후 조사·보고 근거 확보하고, 잔여 대기전력 지정</td></tr><tr><td>구역별 종합보고(Brief-back)</td><td>단위지휘관의 현재상황·조치·필요사항(CAN)보고취합·누락/중복제거, 완진선언(FED)조건확인</td><td>완진선언 여부를 객관적으로 판단</td></tr></table></div>
+<p><strong>3. 상황판단회의 후 완진선언 (Situation Assessment → Final Extinguishment Declaration, FED)</strong></p>
+<p>현장지휘관(IC)은 연기가 걷힌 뒤 2차 인명검색(Secondary Search)을 실시해 잔류 인원을 확인한다. 겉보기로 진압이 완료되어도 즉시 완진을 선언하지 않고, 단위지휘관(DGS)들과 화재층-상층-하층-계단실-전실-발코니-파사드(Façade)를 직접 순회 점검한다. 아파트는 세대 다수·수직 샤프트(덕트/전선/배관)·발코니/파사드(Façade)·소방시설(Standpipe)/스프링클러가 복합해 숨은 불씨·잔열 가능성이 높다. 탄화 잔해 하부에서 불씨가 확인되거나 잔불 정리가 미흡이 확인되면 예비 소방호스라인으로 추가 냉각·방수를 지시한다. 발코니·외벽 단열재·창틀, 샤프트 관통부, 전실·계단실 상부까지 잔불 제거와 "온도 정상" 확인을 완료하면, 현장지휘관(IC)은 단위지휘관들과 상황판단회의를 열어 구역별 보고를 종합한다. 유리 낙하·전기/가스 위험·구조적 불안정과 인명 문제가 모두 해소되었다고 판단하면 현장지휘관(IC)는 무전으로 "OO아파트 화재는 현 시간부로 완진(Final Extinguishment)"이라고 공식 선언한다.</p>
+  </div>
+</section>
+<hr class="sep">
+
+
+<a class="back-top" href="#topnav">↑ 맨 위로</a>
+
+</div>
+
+<script>
+function toggleMenu() {
+  const d = document.getElementById('toc-drawer');
+  const b = document.getElementById('menu-btn');
+  d.classList.toggle('open');
+  b.textContent = d.classList.contains('open') ? '닫기 ✕' : '목차 ▾';
+}
+function closeMenu() {
+  document.getElementById('toc-drawer').classList.remove('open');
+  document.getElementById('menu-btn').textContent = '목차 ▾';
+}
+document.addEventListener('click', function(e) {
+  if (!document.getElementById('topnav').contains(e.target)) closeMenu();
+});
+
+const secs = [...document.querySelectorAll('.part-section')];
+const links = [...document.querySelectorAll('.toc-link')];
+window.addEventListener('scroll', () => {
+  let cur = '';
+  secs.forEach(s => { if (window.scrollY >= s.offsetTop - 90) cur = s.id; });
+  links.forEach(a => {
+    a.classList.toggle('cur', a.getAttribute('href').substring(1) === cur);
+  });
+}, {passive: true});
+</script>
+</body>
+</html>

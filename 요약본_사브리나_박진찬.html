@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>요약본 — 사브리나 & 박진찬</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f7f5f0;
+  --card: #fff;
+  --text: #1a1812;
+  --sub: #3d3830;
+  --light: #7a746a;
+  --border: #ddd5c4;
+  --nav: #1c1a16;
+  --gold: #d4a853;
+  --red: #b5411c;
+  --blue: #1e548a;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 17px;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* NAV */
+#topnav {
+  background: var(--nav);
+  position: sticky; top: 0; z-index: 200;
+}
+.nav-inner {
+  display: flex; align-items: center;
+  padding: 13px 16px; gap: 10px;
+}
+.nav-title {
+  font-size: 14px; color: var(--gold);
+  font-weight: 700; flex: 1;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+#menu-btn {
+  background: none; border: 1px solid #444;
+  color: #ccc; padding: 6px 11px; border-radius: 6px;
+  font-size: 13px; cursor: pointer;
+  font-family: 'Noto Sans KR', sans-serif; white-space: nowrap;
+}
+#toc-drawer {
+  display: none; background: #111;
+  padding: 0 0 14px;
+  border-top: 1px solid #333;
+  max-height: 70vh; overflow-y: auto;
+}
+#toc-drawer.open { display: block; }
+.toc-section-label {
+  padding: 12px 18px 3px;
+  font-size: 10px; color: #555;
+  letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700;
+}
+.toc-link {
+  display: block; padding: 9px 18px;
+  color: #bbb; text-decoration: none; font-size: 14px;
+  border-left: 3px solid transparent;
+}
+.toc-link.cur { color: var(--gold); border-left-color: var(--gold); }
+
+/* WRAP */
+.wrap { max-width: 680px; margin: 0 auto; padding: 0 15px 80px; }
+
+/* COVER */
+.cover {
+  padding: 32px 0 24px;
+  border-bottom: 2px solid var(--border); margin-bottom: 32px;
+}
+.cover-badge {
+  display: inline-block;
+  background: var(--gold); color: #fff;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.1em; padding: 3px 10px;
+  border-radius: 4px; margin-bottom: 10px;
+  text-transform: uppercase;
+}
+.cover h1 {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 28px; font-weight: 700; line-height: 1.3; margin-bottom: 6px;
+}
+.cover-sub { font-size: 14px; color: var(--light); }
+
+/* BOOK HEADER */
+.book-header {
+  border-radius: 12px; padding: 18px 18px;
+  margin: 0 0 20px;
+  scroll-margin-top: 66px;
+}
+.bh-sabrina { background: #2c1810; }
+.bh-park { background: #0d1f36; }
+.book-header .bh-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; opacity: 0.6; margin-bottom: 4px;
+}
+.book-header .bh-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 22px; font-weight: 700; color: #fff; line-height: 1.3;
+}
+.book-header .bh-sub {
+  font-size: 13px; opacity: 0.65; color: #fff; margin-top: 4px;
+}
+
+/* CHAPTER CARD */
+.ch-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+.ch-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 13px 15px;
+  cursor: pointer;
+}
+.ch-head .ch-num {
+  font-size: 11px; font-weight: 700;
+  padding: 3px 9px; border-radius: 4px;
+  flex-shrink: 0; white-space: nowrap;
+}
+.sabrina .ch-num { background: #f5ece6; color: var(--red); }
+.park-nrb .ch-num { background: #e6eef8; color: var(--blue); }
+.park-gs .ch-num { background: #e8f5ec; color: #1a6b3a; }
+.park-gsa .ch-num { background: #f0e6f5; color: #6b1a8a; }
+.park-villa .ch-num { background: #f5ece6; color: var(--red); }
+.park-apt .ch-num { background: #fff3e6; color: #b7600a; }
+
+.ch-head .ch-title {
+  font-size: 16px; font-weight: 700; color: var(--text); flex: 1; line-height: 1.4;
+}
+.ch-arrow {
+  font-size: 16px; color: var(--light);
+  transition: transform 0.2s; flex-shrink: 0;
+}
+.ch-arrow.open { transform: rotate(180deg); }
+
+.ch-body {
+  display: none;
+  padding: 0 15px 15px;
+  border-top: 1px solid #f0ebe0;
+}
+.ch-body.open { display: block; padding-top: 13px; }
+
+/* CONTENT ELEMENTS */
+.kw {
+  font-size: 16px; font-weight: 700;
+  color: var(--text); margin: 14px 0 5px;
+  line-height: 1.4;
+}
+.kw:first-child { margin-top: 0; }
+.kw .en {
+  font-size: 12px; font-weight: 400;
+  color: var(--light); margin-left: 6px;
+}
+.def {
+  font-size: 16px; line-height: 1.85;
+  color: var(--sub); margin-bottom: 8px;
+}
+.hl {
+  background: #fffbe8;
+  border: 1px solid #e8cc60;
+  border-radius: 7px;
+  padding: 11px 14px;
+  font-size: 16px; font-weight: 500;
+  color: #4a3800; line-height: 1.7;
+  margin: 10px 0;
+}
+.iq {
+  border-left: 3px solid var(--red);
+  padding: 9px 13px;
+  background: #fdf4f0;
+  border-radius: 0 7px 7px 0;
+  font-size: 15px; color: var(--sub);
+  line-height: 1.8; font-style: italic;
+  margin: 10px 0;
+}
+.tag-row {
+  display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0;
+}
+.tag {
+  font-size: 13px; font-weight: 700;
+  padding: 4px 11px; border-radius: 20px;
+  line-height: 1.4;
+}
+.tag-red { background: #f5ece6; color: var(--red); }
+.tag-blue { background: #e6eef8; color: var(--blue); }
+.tag-green { background: #e8f5ec; color: #1a6b3a; }
+.tag-gray { background: #f0ede6; color: #666; }
+.tag-gold { background: #fef3d8; color: #7a5010; }
+
+.stat-row {
+  display: flex; gap: 8px; margin: 10px 0; flex-wrap: wrap;
+}
+.stat {
+  flex: 1; min-width: 70px;
+  background: var(--nav); border-radius: 8px;
+  padding: 11px 10px; text-align: center;
+}
+.stat-n {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 24px; font-weight: 700; color: var(--gold); line-height: 1.1;
+}
+.stat-l { font-size: 11px; color: #999; margin-top: 3px; line-height: 1.35; }
+
+.step-box {
+  background: #edf3fb;
+  border: 1px solid #a8c8e8;
+  border-radius: 8px; padding: 13px 14px; margin: 10px 0;
+}
+.step-box .step-title {
+  font-size: 11px; font-weight: 700; color: var(--blue);
+  letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px;
+}
+.step {
+  display: flex; gap: 10px; align-items: flex-start; margin-bottom: 8px;
+}
+.step:last-child { margin-bottom: 0; }
+.step-c {
+  flex-shrink: 0; width: 24px; height: 24px;
+  background: var(--blue); color: #fff;
+  border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; font-size: 12px; font-weight: 700; margin-top: 2px;
+}
+.step-t { font-size: 16px; line-height: 1.75; color: var(--sub); }
+.step-t strong { color: var(--text); }
+
+.divider { height: 1px; background: var(--border); margin: 10px 0; }
+
+.sep { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+
+.part-label {
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--light); padding: 8px 0 6px; margin-bottom: 4px;
+}
+.back-top {
+  display: block; text-align: center; margin-top: 32px;
+  padding: 13px; background: var(--nav); border-radius: 10px;
+  color: var(--gold); text-decoration: none; font-size: 14px; font-weight: 700;
+}
+</style>
+</head>
+<body>
+
+<div id="topnav">
+  <div class="nav-inner">
+    <div class="nav-title">요약본 — 사브리나 & 박진찬</div>
+    <button id="menu-btn" onclick="toggleMenu()">목차 ▾</button>
+  </div>
+  <div id="toc-drawer">
+    <div class="toc-section-label">사브리나 코헨-해턴</div>
+    <a class="toc-link" href="#s-intro" onclick="closeMenu()">들어가는 말</a>
+    <a class="toc-link" href="#s-ch1" onclick="closeMenu()">1장 — 입장을 바꿔보기</a>
+    <a class="toc-link" href="#s-ch2" onclick="closeMenu()">2장 — 난제</a>
+    <a class="toc-link" href="#s-ch3" onclick="closeMenu()">3장 — 인간에 불과해</a>
+    <a class="toc-link" href="#s-ch4" onclick="closeMenu()">4장 — 퍼즐</a>
+    <a class="toc-link" href="#s-ch5" onclick="closeMenu()">5장 — 자신의 직감을 믿어라</a>
+    <a class="toc-link" href="#s-ch6" onclick="closeMenu()">6장 — 그림자로 평가받기</a>
+    <a class="toc-link" href="#s-ch7" onclick="closeMenu()">7장 — 정신적 준비</a>
+    <a class="toc-link" href="#s-ch8" onclick="closeMenu()">8장 — 인간됨의 대가</a>
+    <a class="toc-link" href="#s-ch9" onclick="closeMenu()">9장 — 두뇌와 행동</a>
+    <a class="toc-link" href="#s-ch10" onclick="closeMenu()">10장 — 다 끝난 뒤에</a>
+    <div class="toc-section-label">박진찬 — 현장지휘</div>
+    <a class="toc-link" href="#p-nrb" onclick="closeMenu()">노래방 화재</a>
+    <a class="toc-link" href="#p-gs" onclick="closeMenu()">고시원 화재</a>
+    <a class="toc-link" href="#p-gsa" onclick="closeMenu()">공사장 화재</a>
+    <a class="toc-link" href="#p-villa" onclick="closeMenu()">빌라 화재</a>
+    <a class="toc-link" href="#p-apt" onclick="closeMenu()">아파트 화재</a>
+  </div>
+</div>
+
+<div class="wrap">
+
+<div class="cover">
+  <div class="cover-badge">요약본</div>
+  <h1>사브리나 & 박진찬</h1>
+  <div class="cover-sub">소방관의 선택 · 소방현장지휘 핵심 요약</div>
+</div>
+
+<!-- ═══════════════════════════════════ 사브리나 ═══ -->
+<div class="book-header bh-sabrina">
+  <div class="bh-label">사브리나 코헨-해턴 저 · 북하우스</div>
+  <div class="bh-title">소방관의 선택</div>
+  <div class="bh-sub">The Heat of the Moment — 생사의 순간, 최선의 결정을 내리는 법</div>
+</div>
+
+<!-- 들어가는 말 -->
+<div id="s-intro" class="ch-card sabrina" style="scroll-margin-top:66px">
+  <div class="ch-head" onclick="toggle(this)">
+    <span class="ch-num">서문</span>
+    <span class="ch-title">들어가는 말</span>
+    <span class="ch-arrow">▾</span>
+  </div>
+  <div class="ch-body">
+    <div class="stat-row">
+      <div class="stat"><div class="stat-n">80%</div><div class="stat-l">산업재해 중 인재 비율</div></div>
+      <div class="stat"><div class="stat-n">80%</div><div class="stat-l">소방관 부상 원인<br>(잘못된 결정)</div></div>
+    </div>
+    <div class="def">저자는 키 155cm, 매니큐어를 바르고 다니는 여성이자 박사학위 소지자이며 아이 엄마다. 노숙 생활 2년을 거쳐 18세에 여성 최초로 웨일스 소방대에 입대했다. 약 20년간 수많은 대형 사건을 지휘했고, 카디프 대학교에서 행동 신경과학 박사학위를 취득했다.</div>
+    <div class="hl">이 책은 소방 현장뿐 아니라 일상의 어떤 고압 상황에서도 적용할 수 있는 의사결정법을 다룬다.</div>
+  </div>
+</div>
+
+<!-- 1장 -->
+<div id="s-ch1" class="ch-card sabrina" style="scroll-margin-top:66px">
+  <div class="ch-head" onclick="toggle(this)">
+    <span class="ch-num">1장</span>
+    <span class="ch-title">입장을 바꿔보기</span>
+    <span class="ch-arrow">▾</span>
+  </div>
+  <div class="ch-body">
+    <div class="kw">공감 <span class="en">Empathy</span></div>
+    <div class="def">공감은 물리적인 감각이다. 동료에게 뭔가를 요구할 때 그것이 어떤 결과를 초래할지를 이해하는 것도 중요하지만, 그들이 어떻게 느낄지를 이해하는 것이 극도로 중요하다. 자기가 상상했던 한계를 깨고 앞으로 나아가게 만드는 것은 공감이다.</div>
+    <div class="kw">스트레스와 의사결정</div>
+    <div class="def">스트레스는 뇌의 정보 처리 용량을 감소시키고 결정을 내리는 능력을 방해한다. 그것은 실존주의적 경험이 아니라 단순한 생물학적 반응이다. 스트레스 상황에서 뭔가를 잘못 이해하거나, 중요한 정보를 놓치거나, 최선이 아닌 대응을 할 확률이 훨씬 높아진다.</div>
+    <div class="kw">죄책감의 활용</div>
+    <div class="def">죄책감을 느끼는 것은 정상적인 반응이다. 그러나 오래도록 벗어나지 못하는 것은 정상 범위를 벗어난다. 그 느낌을 좋은 일을 하는 원동력으로 삼아야 한다.</div>
+  </div>
+</div>
+
+<!-- 2장 -->
+<div id="s-ch2" class="ch-card sabrina" style="scroll-margin-top:66px">
+  <div class="ch-head" onclick="toggle(this)">
+    <span class="ch-num">2장</span>
+    <span class="ch-title">난제</span>
+    <span class="ch-arrow">▾</span>
+  </div>
+  <div class="ch-body">
+    <div class="kw">의사 결정 마비 <span class="en">Decision Inertia</span></div>
+    <div class="def">잘못될 수 있는 모든 요인에 대한 걱정으로 결정 능력이 마비되어 버리는 현상. 결정을 아예 내리지 않는 <strong>결정 누락</strong>, 다른 사람에게 떠넘기는 <strong>선택 전가</strong>로 이어진다.</div>
+    <div class="hl">아무것도 하지 않는 것이 단연 최악의 선택이다.</div>
+    <div class="kw">가장 덜 나쁜 선택지 원칙</div>
+    <div class="def">어떤 결정을 해도 원치 않는 결과가 나올 수밖에 없는 상황에서 그중 가장 나은 것을 선택하는 것. 사망자 숫자를 최소화하는 결정이 가장 덜 나쁜 선택이다.</div>
+    <div class="iq">"가장 덜 나쁜 선택지를 골랐다는 자신은 있어요. 모든 게 괜찮을 것이라는 자신감? 물론 아니죠."</div>
+  </div>
+</div>
+
+<!-- 3장 -->
+<div id="s-ch3" class="ch-card sabrina" style="scroll-margin-top:66px">
+  <div class="ch-head" onclick="toggle(this)">
+    <span class="ch-num">3장</span>
+    <span class="ch-title">인간에 불과해</span>
+    <span class="ch-arrow">▾</span>
+  </div>
+  <div class="ch-body">
+    <div class="kw">심적 모형 <span class="en">Mental Model</span></div>
+    <div class="def">특정 시나리오에 관계되는 정보를 모아둔 머릿속의 파일. 불완전한 정보로 결정을 내려야 할 때 바로 접근 가능한 기억을 활용한다. <strong>새로운 정보가 들어오면 머릿속 그림을 바꿔야 한다.</strong></div>
+    <div class="kw">확증 편향 <span class="en">Confirmation Bias</span></div>
+    <div class="def">자신의 관점을 확인해주는 정보만을 받아들이는 현상. 터널 시야에 갇히면 상황의 한 부분에만 집중하고 전체를 보지 못한다. 자신의 편견을 확인해줄 증거만 찾기 때문에 그런 것만 눈에 보인다.</div>
+    <div class="kw">물병과 진흙 — 스트레스 비유</div>
+    <div class="def">마음을 물이 가득 찬 물병이라 하면, 스트레스는 진흙이다. 진흙이 많아지면 물이 넘쳐버린다. 물은 정보 처리와 사고 과정에 사용되는 유용한 공간이다. 스트레스를 받을수록 처리 용량이 줄어들고, 그 결과 인적 오류가 발생한다.</div>
+    <div class="kw">조건반사 / 도구적 / PIT 학습</div>
+    <div class="def"><strong>조건반사</strong>: 무의식·자동 반응 (소방차 급제동 소리에 심박 빨라짐). <strong>도구적</strong>: 의도적·계획적 학습 (물 강약으로 플래시오버 방지). <strong>PIT</strong>: 과거 경험이 현재 행동을 자동 촉발. 경험이 많을수록 직관의 질이 높아지는 이유.</div>
+    <div class="hl">규칙으로 정해놓은 절차는 난간 역할을 해야지 수갑 역할을 해서는 안 된다.</div>
+  </div>
+</div>
+
+<!-- 4장 -->
+<div id="s-ch4" class="ch-card sabrina" style="scroll-margin-top:66px">
+  <div class="ch-head" onclick="toggle(this)">
+    <span class="ch-num">4장</span>
+    <span class="ch-title">퍼즐</span>
+    <span class="ch-arrow">▾</span>
+  </div>
+  <div class="ch-body">
+    <div class="kw">퍼즐 = 상황 인식</div>
+    <div class="def">재난 현장의 지휘관에게 정보 하나하나는 퍼즐 조각이다. 퍼즐을 완성해가는 과정이 곧 상황 인식이다. 퍼즐 조각이 충분히 모이지 않으면 뇌는 스스로 빈칸을 채운다. 그 추정이 틀릴 수 있음을 항상 의식해야 한다.</div>
+    <div class="kw">공유된 상황 인식 <span class="en">Shared Situational Awareness</span></div>
+    <div class="def">상황 조정실, 현장 대원, 지휘관 모두가 같은 퍼즐 그림을 기반으로 일해야 한다. 같은 정보를 봐도 저마다 자신의 경험과 지식의 렌즈를 통해 받아들이기 때문에 전혀 다른 그림이 나올 수 있다.</div>
+    <div class="hl">퍼즐 그림은 지금 현재를 분석하는 데 그치지 않고 미래 상황까지 예측할 수 있어야 한다.</div>
+    <div class="kw">정보 위임의 중요성</div>
+    <div class="def">모든 정보를 직접 받으면 상황 보고를 받는 일에 압도되어 막상 대응할 시간이 없어진다. 특정 임무나 영역을 위임하는 것이 매우 중요하다.</div>
+  </div>
+</div>
+
+<!-- 5장 -->
+<div id="s-ch5" class="ch-card sabrina" style="scroll-margin-top:66px">
+  <div class="ch-head" onclick="toggle(this)">
+    <span class="ch-num">5장</span>
+    <span class="ch-title">자신의 직감을 믿어라</span>
+    <span class="ch-arrow">▾</span>
+  </div>
+  <div class="ch-body">
+    <div class="stat-row">
+      <div class="stat"><div class="stat-n">80%</div><div class="stat-l">직관적 결정 비율</div></div>
+      <div class="stat"><div class="stat-n">5배</div><div class="stat-l">결정제어 프로세스<br>상황인식 향상</div></div>
+      <div class="stat"><div class="stat-n">0</div><div class="stat-l">속도 지연<br>없음</div></div>
+    </div>
+    <div class="kw">직관 = 경험 기반 결정</div>
+    <div class="def">직관이란 이전의 경험에 바탕을 둔 본능적인 결정이다. 잠재의식 안에 모아둔 퍼즐 조각들을 필요할 때 엮어서 뽑아낸 결과다. 지휘관 결정의 80%는 직관적이다. 이것이 나쁜 게 아니다. 훈련이 부족하면 나쁜 직관이 된다.</div>
+    <div class="kw">결정 제어 프로세스 <span class="en">Decision Control Process</span></div>
+    <div class="def">결정을 행동으로 옮기기 전에 스스로 세 가지 질문을 빠르게 던지는 것. 뇌의 자연스러운 작동 경로를 거스르는 것이 아니라 북돋는 기법이다.</div>
+    <div class="step-box">
+      <div class="step-title">결정 제어 3단계</div>
+      <div class="step"><div class="step-c">1</div><div class="step-t"><strong>목표</strong> — 이 결정으로 달성하려는 것은 무엇인가?</div></div>
+      <div class="step"><div class="step-c">2</div><div class="step-t"><strong>예측</strong> — 어떤 결과를 얻을 것이라 예측하는가?</div></div>
+      <div class="step"><div class="step-c">3</div><div class="step-t"><strong>위험 vs. 이득</strong> — 이득이 위험을 얼마나 능가하는가?</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 6장 -->
+<div id="s-ch6" class="ch-card sabrina" style="scroll-margin-top:66px">
+  <div class="ch-head" onclick="toggle(this)">
+    <span class="ch-num">6장</span>
+    <span class="ch-title">그림자로 평가받기</span>
+    <span class="ch-arrow">▾</span>
+  </div>
+  <div class="ch-body">
+    <div class="kw">평판 — 나보다 먼저 도착하는 그림자</div>
+    <div class="def">나의 평판은 사건 현장에 항상 나보다 먼저 도착한다. 대원들은 내가 어떻게 반응할지 이미 예측하고 있다.</div>
+    <div class="hl">자신감은 자신감을 낳고, 공황은 공황을 낳는다. 불안한 지휘관의 보디랭귀지는 팀 전체에 빠르게 전염된다.</div>
+    <div class="kw">팀 심리 안전 <span class="en">Psychological Safety</span></div>
+    <div class="def">팀원들이 의견을 밝히는 것을 두려워한다면 지휘관의 임무를 충실히 해내는 데 실패한 것이다. 지휘관으로서 자신이 내보내는 메시지의 작은 뉘앙스까지 책임질 줄 알아야 한다.</div>
+    <div class="kw">CRM — 승무원 자원 관리 <span class="en">Crew Resource Management</span></div>
+    <div class="def">항공 사고 분석에서 비롯된 원칙. 권위를 가진 사람을 존중하면서도 의문을 제기할 수 있는 문화를 만드는 것이 목표다. 팀원이 아무 말 안 한다고 다 동의하는 게 아니다. 비행기가 추락하는 이유가 거기 있었다.</div>
+  </div>
+</div>
+
+<!-- 7장 -->
+<div id="s-ch7" class="ch-card sabrina" style="scroll-margin-top:66px">
+  <div class="ch-head" onclick="toggle(this)">
+    <span class="ch-num">7장</span>
+    <span class="ch-title">정신적 준비</span>
+    <span class="ch-arrow">▾</span>
+  </div>
+  <div class="ch-body">
+    <div class="kw">맥락(Context)의 중요성</div>
+    <div class="def">실제로 겪을 가능성이 없는 시나리오로 연습해봐야 별 소용이 없다. 자신이 실력을 발휘해야 하는 상황과 같은 조건에서 연습을 해야 한다. 이 훈련이 불편하게 느껴진다면 제대로 된 훈련이다.</div>
+    <div class="kw">세 가지 훈련법</div>
+    <div class="tag-row">
+      <span class="tag tag-gray">VR — 몰입감 있지만 혼자 가상 인물 상대</span>
+      <span class="tag tag-blue">지상 훈련 — 실제 대원 지휘 가능</span>
+      <span class="tag tag-red">라이브 번 — 실제 불, 가장 현실적</span>
+    </div>
+    <div class="def">지난 10년 소방관 출동 건수 50% 감소. 그러나 불길의 세기는 절반으로 줄어들지 않는다. 훈련을 두 배로 열심히 해야 한다.</div>
+  </div>
+</div>
+
+<!-- 8장 -->
+<div id="s-ch8" class="ch-card sabrina" style="scroll-margin-top:66px">
+  <div class="ch-head" onclick="toggle(this)">
+    <span class="ch-num">8장</span>
+    <span class="ch-title">인간됨의 대가</span>
+    <span class="ch-arrow">▾</span>
+  </div>
+  <div class="ch-body">
+    <div class="stat-row">
+      <div class="stat"><div class="stat-n">1/5</div><div class="stat-l">성인 중 PTSD<br>증상 경험</div></div>
+      <div class="stat"><div class="stat-n">90%</div><div class="stat-l">긴급구조 대원<br>정신건강 우려</div></div>
+      <div class="stat"><div class="stat-n">71%</div><div class="stat-l">직장서 정신건강<br>말하기 불편</div></div>
+    </div>
+    <div class="kw">PTSD와 취약성</div>
+    <div class="def">우리는 스스로를 '보호자'로 생각하고, 그것은 정체성의 중요한 요소로 자리잡는다. 이 때문에 취약하다는 사실을 인정하기가 매우 힘들다. 힘들다고 말하는 것이 약한 게 아니다. 그걸 혼자 참는 것이 진짜 약한 것이다.</div>
+    <div class="hl">웃음은 스트레스 호르몬을 감소시키고 엔도르핀 분비를 촉발한다. 팀원들 사이의 동지애는 가장 어두운 순간에 빛을 찾는 데 필요한 매우 중요한 요소다.</div>
+  </div>
+</div>
+
+<!-- 9장 -->
+<div id="s-ch9" class="ch-card sabrina" style="scroll-margin-top:66px">
+  <div class="ch-head" onclick="toggle(this)">
+    <span class="ch-num">9장</span>
+    <span class="ch-title">두뇌와 행동</span>
+    <span class="ch-arrow">▾</span>
+  </div>
+  <div class="ch-body">
+    <div class="kw">THINCs — 6가지 핵심 기술</div>
+    <div class="tag-row">
+      <span class="tag tag-red">① 리더십</span>
+      <span class="tag tag-blue">② 의사 결정</span>
+      <span class="tag tag-green">③ 의사소통</span>
+      <span class="tag tag-gold">④ 회복 탄력성</span>
+      <span class="tag tag-red">⑤ 상황 인식력</span>
+      <span class="tag tag-blue">⑥ 팀워크</span>
+    </div>
+    <div class="hl">리더십, 의사 결정, 상황 인식력, 의사소통 등은 타고난 능력이 아니라 연습과 노력으로 얻을 수 있는 기술이다.</div>
+    <div class="kw">신경 동조화 <span class="en">Neural Entrainment</span></div>
+    <div class="def">화자와 청자가 효과적으로 의사소통을 할 때 두뇌 활동이 서로 동기화된다. 과도한 스트레스를 받으면 의사소통도 평소보다 힘들어지고, 말하려는 바를 명확하게 전달하기도 어려워진다.</div>
+    <div class="iq">우리의 매일이 누군가에게는 최악의 날이다. 나는 그 사실을 절대 잊지 않을 것이다.</div>
+  </div>
+</div>
+
+<!-- 10장 -->
+<div id="s-ch10" class="ch-card sabrina" style="scroll-margin-top:66px">
+  <div class="ch-head" onclick="toggle(this)">
+    <span class="ch-num">10장</span>
+    <span class="ch-title">다 끝난 뒤에 깨닫는 것들</span>
+    <span class="ch-arrow">▾</span>
+  </div>
+  <div class="ch-body">
+    <div class="kw">기억의 취약성</div>
+    <div class="def">기억은 고정된 것이 아니라 변화할 수 있다. 사후 검토에서 기억이 서로 다른 것은 거짓말이 아니다. 스트레스 환경에서 두뇌가 정보를 처리하는 방식의 결과다. 사후 정보에 의해 기억은 덮어써진다.</div>
+    <div class="kw">1만 볼트 보고 회의</div>
+    <div class="def">조너선 크레고가 개발한 사후 검토 시스템. 훈련된 중재자가 주관하고 참가자는 완전히 익명으로 발언한다. 권력, 보복에 대한 두려움 없이 가장 작은 목소리까지 똑같은 크기로 들리도록 한다.</div>
+    <div class="hl">자신의 목숨을 지휘관의 손에 맡긴 사람들을 위해 일어나서 밖으로 나와 직접 눈으로 확인해야만 한다.</div>
+  </div>
+</div>
+
+<hr class="sep">
+
+<!-- ═══════════════════════════════════ 박진찬 ═══ -->
+<div class="book-header bh-park">
+  <div class="bh-label">부산소방학교 지휘역량강화센터(ICTC)</div>
+  <div class="bh-title">소방현장지휘 — 박진찬</div>
+  <div class="bh-sub">화재유형별 현장지휘 전술</div>
+</div>
+
+<!-- 공통 프레임워크 카드 -->
+<div class="ch-card park-nrb" style="scroll-margin-top:66px">
+  <div class="ch-head" onclick="toggle(this)">
+    <span class="ch-num">공통</span>
+    <span class="ch-title">모든 화재에 공통 적용되는 프레임워크</span>
+    <span class="ch-arrow">▾</span>
+  </div>
+  <div class="ch-body">
+    <div class="kw">3-1-3 프레임워크</div>
+    <div class="step-box">
+      <div class="step-title">출동~도착 핵심 행동</div>
+      <div class="step"><div class="step-c">3</div><div class="step-t"><strong>출동 중 3교신</strong> — 위치·규모 확인 / 출동대 파악 / 유관기관 요청</div></div>
+      <div class="step"><div class="step-c">1</div><div class="step-t"><strong>도착 시 지휘권 선언 1회</strong> — CAN 보고 수신 후 전 채널 선언</div></div>
+      <div class="step"><div class="step-c">3</div><div class="step-t"><strong>현장 즉각 3행동</strong> — 요구조자 확인 · 초기 상황보고 · 전략 선언</div></div>
+    </div>
+    <div class="kw">결정 제어 프로세스 (3문장)</div>
+    <div class="step-box">
+      <div class="step-title">모든 결정 전 자문</div>
+      <div class="step"><div class="step-c">1</div><div class="step-t"><strong>목표</strong> — 이 결정으로 달성하려는 것은 무엇인가?</div></div>
+      <div class="step"><div class="step-c">2</div><div class="step-t"><strong>예측</strong> — 어떤 결과를 예측하는가?</div></div>
+      <div class="step"><div class="step-c">3</div><div class="step-t"><strong>이득 vs. 위험</strong> — 이득이 위험을 충분히 능가하는가?</div></div>
+    </div>
+    <div class="kw">RECEO 프레임워크</div>
+    <div class="tag-row">
+      <span class="tag tag-red">R 인명구조</span>
+      <span class="tag tag-blue">E 노출 방지</span>
+      <span class="tag tag-green">C 화염 억제</span>
+      <span class="tag tag-gold">E 연소 차단</span>
+      <span class="tag tag-gray">O 잔불 정리</span>
+    </div>
+    <div class="kw">방면 지정 원칙</div>
+    <div class="tag-row">
+      <span class="tag tag-red">A — 주출입구·정면</span>
+      <span class="tag tag-blue">B — 좌측</span>
+      <span class="tag tag-green">C — 후면</span>
+      <span class="tag tag-gold">D — 우측</span>
+    </div>
+    <div class="kw">전략 선택 기준</div>
+    <div class="tag-row">
+      <span class="tag tag-red">공격(Offensive) — 생존 징후·복도 가시성 확보</span>
+      <span class="tag tag-blue">방어(Defensive) — 복도 전층 연소·붕괴 징후</span>
+      <span class="tag tag-green">전환(Transitional) — 붕괴 징후 발생 시 즉각 철수</span>
+    </div>
+  </div>
+</div>
+
+<!-- 노래방 -->
+<div id="p-nrb" class="ch-card park-nrb" style="scroll-margin-top:66px">
+  <div class="ch-head" onclick="toggle(this)">
+    <span class="ch-num">PART 2-1</span>
+    <span class="ch-title">노래방 화재</span>
+    <span class="ch-arrow">▾</span>
+  </div>
+  <div class="ch-body">
+    <div class="kw">핵심 위험 요소</div>
+    <div class="tag-row">
+      <span class="tag tag-red">방음재(우레탄폼) → HCN·CO 급속 발생</span>
+      <span class="tag tag-red">PVC 내장재 → 염화수소 발생</span>
+      <span class="tag tag-blue">밀폐 방음 구조 → 자연 배연 불가</span>
+      <span class="tag tag-blue">지하층 입지 → 연기 배출 어려움</span>
+    </div>
+    <div class="kw">출동 중 3교신 핵심</div>
+    <div class="def">① 지하·몇층인지 확인, 단일 계단 여부 파악. ② 지하 입지 시 환기구·배기구 위치 사전 파악. ③ 한전·가스 차단 요청 선제 발령.</div>
+    <div class="kw">인명검색 우선순위</div>
+    <div class="step-box">
+      <div class="step-title">검색 순서</div>
+      <div class="step"><div class="step-c">1</div><div class="step-t">단일 계단 인접 방 — 농연 차단 우선</div></div>
+      <div class="step"><div class="step-c">2</div><div class="step-t">지하 심층부 방 — TIC 필수</div></div>
+      <div class="step"><div class="step-c">3</div><div class="step-t">문 개방 상태 방 — 연기 흡입 요구조자</div></div>
+      <div class="step"><div class="step-c">4</div><div class="step-t">복도 끝 방 — 유도 로프 활용</div></div>
+    </div>
+    <div class="kw">배연 원칙</div>
+    <div class="def">무분별한 개구부 개방 금지. 백드래프트 방지를 위해 통제 배연 시점은 반드시 현장지휘관(IC) 승인 후 실시. 배연 후 TIC 재확인 필수.</div>
+    <div class="hl">SCBA 착용 없이는 절대 접근 금지. 유독가스(HCN·CO) 차단이 모든 행동에 선행한다.</div>
+  </div>
+</div>
+
+<!-- 고시원 -->
+<div id="p-gs" class="ch-card park-gs" style="scroll-margin-top:66px">
+  <div class="ch-head" onclick="toggle(this)">
+    <span class="ch-num">PART 2-2</span>
+    <span class="ch-title">고시원 화재</span>
+    <span class="ch-arrow">▾</span>
+  </div>
+  <div class="ch-body">
+    <div class="kw">핵심 위험 요소</div>
+    <div class="tag-row">
+      <span class="tag tag-red">단일 복도·계단 — 연기 차단 어려움</span>
+      <span class="tag tag-red">무창 구조·방범창 — 외부 구조 제한</span>
+      <span class="tag tag-green">목조·경량 칸막이 — 연소 빠름</span>
+      <span class="tag tag-blue">야간 거주자 — 자력 대피 어려움</span>
+    </div>
+    <div class="kw">출동 중 필수 확인</div>
+    <div class="def">층수·방 개수·방범창 부착 세대 위치 파악. 방범창 절단기·40mm 소구경 호스·TIC·유도 로프 필수 탑재. 관리자 현장 대기 요청 및 인원 명부 즉시 확보.</div>
+    <div class="kw">인명검색 우선순위</div>
+    <div class="step-box">
+      <div class="step-title">검색 순서</div>
+      <div class="step"><div class="step-c">1</div><div class="step-t">화점 인접 방·직상층 — TIC 2인 1조</div></div>
+      <div class="step"><div class="step-c">2</div><div class="step-t">방범창 부착·무창 방 — 절단기 사용</div></div>
+      <div class="step"><div class="step-c">3</div><div class="step-t">문 개방 상태 방 — 연기 흡입자 우선 처치</div></div>
+      <div class="step"><div class="step-c">4</div><div class="step-t">복도 말단·계단 인접 방 — 유도 로프 활용</div></div>
+    </div>
+    <div class="hl">"문 닫기(Door Closed)"의 중요성 — 방문 개방 상태에서 연기 급확산 확인. 닫힌 문을 최대한 유지한 채 검색한다.</div>
+    <div class="kw">복도 문 제어(Door Control) 원칙</div>
+    <div class="def">복도 차단 소방호스 선개설. 담당 대원 1명 지정하여 문 상태 관리. 닫힌 문은 TIC로 열 확인 후 개방 여부 결정.</div>
+  </div>
+</div>
+
+<!-- 공사장 -->
+<div id="p-gsa" class="ch-card park-gsa" style="scroll-margin-top:66px">
+  <div class="ch-head" onclick="toggle(this)">
+    <span class="ch-num">PART 2-3</span>
+    <span class="ch-title">공사장 화재</span>
+    <span class="ch-arrow">▾</span>
+  </div>
+  <div class="ch-body">
+    <div class="kw">핵심 위험 요소</div>
+    <div class="tag-row">
+      <span class="tag tag-red">비계(Scaffold) 붕괴 위험</span>
+      <span class="tag tag-red">LPG·아세틸렌 가스용기 BLEVE</span>
+      <span class="tag tag-blue">가설전기·임시배선 감전</span>
+      <span class="tag tag-green">우레탄폼·샌드위치패널 급연소</span>
+    </div>
+    <div class="kw">돌발 상황 대응</div>
+    <div class="step-box">
+      <div class="step-title">BLEVE 발생 시</div>
+      <div class="step"><div class="step-c">1</div><div class="step-t">즉각 전 대원 철수 — 폭발 반경 밖으로</div></div>
+      <div class="step"><div class="step-c">2</div><div class="step-t">외부 방수로 전환 — 용기 냉각 지속</div></div>
+      <div class="step"><div class="step-c">3</div><div class="step-t">재진입 금지 — 추가 폭발 위험 해제 확인 후</div></div>
+    </div>
+    <div class="step-box">
+      <div class="step-title">비계 붕괴 발생 시</div>
+      <div class="step"><div class="step-c">1</div><div class="step-t">즉각 철수 신호 — 전 대원</div></div>
+      <div class="step"><div class="step-c">2</div><div class="step-t">활동제한구역 확대</div></div>
+      <div class="step"><div class="step-c">3</div><div class="step-t">구조 전문팀 요청</div></div>
+    </div>
+    <div class="step-box">
+      <div class="step-title">Mayday(고립 대원) 발생 시</div>
+      <div class="step"><div class="step-c">1</div><div class="step-t">RIT 즉각 투입</div></div>
+      <div class="step"><div class="step-c">2</div><div class="step-t">교신 유지 — 위치·잔여 공기량 확인</div></div>
+      <div class="step"><div class="step-c">3</div><div class="step-t">현장 작전 일시 중단, 구조 우선</div></div>
+    </div>
+    <div class="hl">공사장 화재 현장지휘관의 최우선 판단: 비계 안전성·가스용기 위치·가설전기 차단 여부. 이 세 가지 확인 없이 내부 진입 금지.</div>
+  </div>
+</div>
+
+<!-- 빌라 -->
+<div id="p-villa" class="ch-card park-villa" style="scroll-margin-top:66px">
+  <div class="ch-head" onclick="toggle(this)">
+    <span class="ch-num">PART 2-4</span>
+    <span class="ch-title">빌라 화재</span>
+    <span class="ch-arrow">▾</span>
+  </div>
+  <div class="ch-body">
+    <div class="kw">핵심 위험 요소</div>
+    <div class="tag-row">
+      <span class="tag tag-red">협소 골목 — 사다리차·대형차 진입 곤란</span>
+      <span class="tag tag-red">필로티 구조 — 연기 확산 빠름</span>
+      <span class="tag tag-blue">다세대 혼재 — 인원 파악 어려움</span>
+      <span class="tag tag-green">단일 계단 — 피난·진입 경로 공유</span>
+    </div>
+    <div class="kw">출동 중 핵심 확인</div>
+    <div class="def">골목 폭·불법 주정차 파악. 소형펌프차 우선 진입, 대형차 외곽 대기(Staging Area) 설정. 필로티 유무 확인 — 차량 화재 연소 확대 위험.</div>
+    <div class="kw">필로티 화재 대응 원칙</div>
+    <div class="def">필로티 내 차량 화재 시 상층부 연기 급상승 차단이 우선. 계단실 연기 침투 여부 즉시 확인. 상층 거주자 대피 완료 전 내부 진압 시작 금지.</div>
+    <div class="kw">인명검색 우선순위</div>
+    <div class="step-box">
+      <div class="step-title">검색 순서</div>
+      <div class="step"><div class="step-c">1</div><div class="step-t">화점층·직상층 — 연기 노출 최대 위험층</div></div>
+      <div class="step"><div class="step-c">2</div><div class="step-t">최상층 — 피난 불가 고립자</div></div>
+      <div class="step"><div class="step-c">3</div><div class="step-t">지하·1층 — 대피 중 쓰러진 자</div></div>
+    </div>
+    <div class="hl">빌라 화재의 핵심: 계단실 확보가 모든 행동에 선행한다. 계단 소방호스 1선 전개 후 내부 진압 시작.</div>
+  </div>
+</div>
+
+<!-- 아파트 -->
+<div id="p-apt" class="ch-card park-apt" style="scroll-margin-top:66px">
+  <div class="ch-head" onclick="toggle(this)">
+    <span class="ch-num">PART 2-5</span>
+    <span class="ch-title">아파트 화재</span>
+    <span class="ch-arrow">▾</span>
+  </div>
+  <div class="ch-body">
+    <div class="kw">핵심 위험 요소</div>
+    <div class="tag-row">
+      <span class="tag tag-red">고층 — 사다리차 도달 한계</span>
+      <span class="tag tag-red">수직 연소 확대 — 발코니·외벽</span>
+      <span class="tag tag-blue">엘리베이터 사용 금지 — 화재 시</span>
+      <span class="tag tag-green">연결송수관·옥내소화전 활용 필수</span>
+    </div>
+    <div class="kw">층별 역할 분담 원칙</div>
+    <div class="step-box">
+      <div class="step-title">주요 층 임무</div>
+      <div class="step"><div class="step-c">화</div><div class="step-t"><strong>화점층</strong> — 진압 팀 집중, 복도 소방호스 1선</div></div>
+      <div class="step"><div class="step-c">직</div><div class="step-t"><strong>직상층</strong> — 인명검색 최우선, 연기 차단</div></div>
+      <div class="step"><div class="step-c">옥</div><div class="step-t"><strong>옥상</strong> — 감시·배연 담당</div></div>
+      <div class="step"><div class="step-c">1</div><div class="step-t"><strong>1층·로비</strong> — 지휘소·대기구역·부상자 집결</div></div>
+    </div>
+    <div class="kw">연결송수관 운용</div>
+    <div class="def">펌프차를 송수구에 연결해 고층부 방수 압력 확보. 송수 전 연결송수관 상태 확인 필수. 방수 시작 전 각 층 방수구 개방 대원 배치 확인.</div>
+    <div class="kw">수직 연소 확대 차단</div>
+    <div class="def">발코니 외벽 타고 오르는 화염은 상층 발코니 창 파괴로 이어진다. 외벽 냉각 소방차 1대를 전담 배치한다. 에어컨 실외기 폭발 위험 구역 통제.</div>
+    <div class="hl">아파트 화재 현장지휘관의 핵심 판단: 엘리베이터 통제 → 계단 확보 → 층별 구역 지휘관 즉시 지정. 이 순서를 지킨다.</div>
+  </div>
+</div>
+
+<a class="back-top" href="#topnav">↑ 맨 위로</a>
+
+</div>
+
+<script>
+function toggleMenu() {
+  const d = document.getElementById('toc-drawer');
+  const b = document.getElementById('menu-btn');
+  d.classList.toggle('open');
+  b.textContent = d.classList.contains('open') ? '닫기 ✕' : '목차 ▾';
+}
+function closeMenu() {
+  document.getElementById('toc-drawer').classList.remove('open');
+  document.getElementById('menu-btn').textContent = '목차 ▾';
+}
+document.addEventListener('click', function(e) {
+  if (!document.getElementById('topnav').contains(e.target)) closeMenu();
+});
+function toggle(head) {
+  const body = head.nextElementSibling;
+  const arr = head.querySelector('.ch-arrow');
+  const isOpen = body.classList.contains('open');
+  // Close all in same section
+  body.classList.toggle('open', !isOpen);
+  arr.classList.toggle('open', !isOpen);
+}
+
+// Active nav highlight
+const allSections = [...document.querySelectorAll('[id^="s-"],[id^="p-"]')];
+const allLinks = [...document.querySelectorAll('.toc-link')];
+window.addEventListener('scroll', () => {
+  let cur = '';
+  allSections.forEach(s => { if (window.scrollY >= s.offsetTop - 90) cur = s.id; });
+  allLinks.forEach(a => {
+    a.classList.toggle('cur', a.getAttribute('href').substring(1) === cur);
+  });
+}, { passive: true });
+</script>
+</body>
+</html>
