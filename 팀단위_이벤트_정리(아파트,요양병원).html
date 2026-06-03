@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>팀단위 이벤트 정리(아파트,요양병원)</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
+
+:root {
+  --bg: #2b2b2b;
+  --card: #333333;
+  --border: #454545;
+  --gold: #ffffff;
+  --green: #ffffff;
+  --red: #ffffff;
+  --blue: #ffffff;
+  --orange: #ffffff;
+  --cyan: #ffffff;
+  --pink: #ffffff;
+  --lime: #ffffff;
+  --yellow: #ffffff;
+  --white: #ffffff;
+  --muted: #ffffff;
+  --dim: #555555;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--white);
+  font-size: 18px;
+  line-height: 1.7;
+  padding-bottom: 50px;
+}
+
+/* ─ 헤더 ─ */
+.hdr {
+  background: #1f1f1f;
+  border-bottom: 2px solid #ffffff;
+  padding: 14px 14px 12px;
+  text-align: center;
+  position: sticky; top: 0; z-index: 200;
+}
+.hdr-label { font-size:10px; letter-spacing:2px; color:var(--muted); margin-bottom:2px; }
+.hdr-title { font-size:19px; font-weight:900; color:var(--white); }
+.hdr-title em { color:var(--gold); font-style:normal; }
+.hdr-sub { font-size:11px; color:var(--muted); margin-top:2px; }
+
+/* ─ 탭 ─ */
+.tabs {
+  display:flex; overflow-x:auto; -webkit-overflow-scrolling:touch;
+  background:#1f1f1f; border-bottom:1px solid var(--border);
+  scrollbar-width:none; position:sticky; top:0; z-index:190;
+}
+.tabs::-webkit-scrollbar { display:none; }
+.tab {
+  flex:0 0 auto; padding:11px 15px;
+  font-size:14px; font-weight:700; color:var(--muted);
+  border:none; border-bottom:3px solid transparent;
+  background:none; cursor:pointer; white-space:nowrap;
+  font-family:'Noto Sans KR',sans-serif; transition:.15s;
+}
+.tab.on { color:var(--gold); border-bottom-color:var(--gold); }
+
+/* ─ 패널 ─ */
+.panel { display:none; padding:14px 12px 0; }
+.panel.on { display:block; }
+
+/* ─ 이벤트 정리본 ─ */
+.sec-head {
+  display:flex; align-items:center; gap:8px;
+  margin: 20px 0 8px;
+}
+.sec-head:first-child { margin-top:0; }
+.sec-num {
+  background:#555555; color:#ffffff;
+  font-size:10px; font-weight:900;
+  padding:2px 7px; border-radius:3px; flex-shrink:0;
+}
+.sec-title { font-size:17px; font-weight:900; }
+
+.ev-list {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:8px; overflow:hidden; margin-bottom:6px;
+}
+.ev {
+  display:flex; gap:8px; align-items:flex-start;
+  padding:9px 12px; border-bottom:1px solid var(--border);
+  font-size:17px; line-height:1.65;
+}
+.ev:last-child { border-bottom:none; }
+.arr { color:var(--gold); font-size:12px; flex-shrink:0; margin-top:2px; }
+
+/* 이벤트 텍스트 강조 */
+.star  { color:var(--gold); }
+.cmd   { color:var(--cyan); }
+.warn  { color:var(--red); }
+.dim-t { color:var(--muted); font-size:13px; }
+.red2  { color:var(--red); }
+.org   { color:var(--orange); }
+.mut   { color:var(--muted); }
+
+/* ─ 팝업 메시지 카드 ─ */
+.msg {
+  border-radius:8px; margin-bottom:8px;
+  overflow:hidden; border:1px solid var(--border);
+}
+.msg-hd {
+  padding:8px 12px; font-size:14px; font-weight:700;
+  display:flex; justify-content:space-between; align-items:center;
+  letter-spacing:0.3px;
+}
+.msg-seq { font-size:12px; color:var(--muted); font-weight:400; }
+.msg-bd {
+  padding:10px 12px; font-size:17px; line-height:1.85;
+  border-top:1px solid var(--border);
+}
+.note { display:block; font-size:12px; color:var(--muted); font-style:italic; margin-top:4px; }
+
+/* 발신자별 — XVR 스타일: 전부 흰색 텍스트, 진회색 배경 통일 */
+.s-상황실  { border-left:3px solid #ffffff; }
+.s-상황실  .msg-hd { background:#3d3d3d; color:#ffffff; }
+.s-상황실  .msg-bd { background:#333333; }
+
+.s-진압1대 { border-left:3px solid #ffffff; }
+.s-진압1대 .msg-hd { background:#3d3d3d; color:#ffffff; }
+.s-진압1대 .msg-bd { background:#333333; }
+
+.s-진압1대장 { border-left:3px solid #ffffff; }
+.s-진압1대장 .msg-hd { background:#3d3d3d; color:#ffffff; }
+.s-진압1대장 .msg-bd { background:#333333; }
+
+.s-지휘대장 { border-left:3px solid #ffffff; }
+.s-지휘대장 .msg-hd { background:#3d3d3d; color:#ffffff; }
+.s-지휘대장 .msg-bd { background:#333333; }
+
+.s-선착대장 { border-left:3px solid #ffffff; }
+.s-선착대장 .msg-hd { background:#3d3d3d; color:#ffffff; }
+.s-선착대장 .msg-bd { background:#333333; }
+
+.s-구급1대  { border-left:3px solid #ffffff; }
+.s-구급1대  .msg-hd { background:#3d3d3d; color:#ffffff; }
+.s-구급1대  .msg-bd { background:#333333; }
+
+.s-구조1대  { border-left:3px solid #ffffff; }
+.s-구조1대  .msg-hd { background:#3d3d3d; color:#ffffff; }
+.s-구조1대  .msg-bd { background:#333333; }
+
+.s-진압2대  { border-left:3px solid #ffffff; }
+.s-진압2대  .msg-hd { background:#3d3d3d; color:#ffffff; }
+.s-진압2대  .msg-bd { background:#333333; }
+
+.s-진압3대  { border-left:3px solid #ffffff; }
+.s-진압3대  .msg-hd { background:#3d3d3d; color:#ffffff; }
+.s-진압3대  .msg-bd { background:#333333; }
+
+.s-진압4대  { border-left:3px solid #ffffff; }
+.s-진압4대  .msg-hd { background:#3d3d3d; color:#ffffff; }
+.s-진압4대  .msg-bd { background:#333333; }
+
+.s-진압5대  { border-left:3px solid #ffffff; }
+.s-진압5대  .msg-hd { background:#3d3d3d; color:#ffffff; }
+.s-진압5대  .msg-bd { background:#333333; }
+
+.s-구급2대  { border-left:3px solid #ffffff; }
+.s-구급2대  .msg-hd { background:#3d3d3d; color:#ffffff; }
+.s-구급2대  .msg-bd { background:#333333; }
+
+.s-안전담당 { border-left:3px solid #ffffff; }
+.s-안전담당 .msg-hd { background:#3d3d3d; color:#ffffff; }
+.s-안전담당 .msg-bd { background:#333333; }
+
+/* 단계 뱃지 — XVR 스타일 통일 */
+.badge {
+  display:inline-block; padding:3px 9px; border-radius:20px;
+  font-size:13px; font-weight:700; margin-bottom:12px; letter-spacing:0.5px;
+}
+.bg, .bb, .bo, .br, .bc, .boo {
+  background:#3d3d3d; color:#ffffff; border:1px solid #ffffff;
+}
+
+/* ─ 아코디언 (출동지령 전용) ─ */
+.ev-toggle {
+  cursor: pointer;
+  user-select: none;
+  justify-content: space-between;
+  transition: background .15s;
+}
+.ev-toggle.open {
+  background: rgba(255,255,255,.10);
+  border-bottom: 1px solid var(--gold) !important;
+}
+.ev-toggle.open .arr { color: var(--gold); }
+.ev-toggle.open > span:nth-child(2) { color: var(--gold); font-weight: 700; }
+.tog-btn {
+  flex-shrink: 0;
+  width: 30px; height: 30px;
+  border-radius: 6px;
+  background: rgba(255,255,255,.10);
+  border: 1px solid rgba(255,255,255,.35);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; line-height: 1;
+  color: var(--gold);
+  transition: transform .25s, background .15s;
+}
+.ev-toggle.open .tog-btn {
+  transform: rotate(180deg);
+  background: rgba(255,255,255,.20);
+}
+.ev-popup {
+  display: none;
+  border-bottom: 2px solid rgba(255,255,255,.45);
+}
+.ev-popup.open { display: block; }
+.popup-msg {
+  border-radius: 0;
+  margin: 0;
+  border: none;
+  border-left: 3px solid transparent;
+}
+.popup-hd {
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  justify-content: space-between;
+}
+.popup-seq { font-size: 10px; color: var(--muted); font-weight: 400; }
+.popup-bd {
+  padding: 10px 14px 12px;
+  font-size: 17px;
+  line-height: 1.85;
+  border-top: 1px solid var(--border);
+}
+
+/* 맨위로 */
+.up-btn {
+  display:block; width:100%; margin-top:24px;
+  padding:11px; background:var(--card); border:1px solid var(--border);
+  border-radius:7px; color:var(--muted); font-size:13px;
+  cursor:pointer; font-family:'Noto Sans KR',sans-serif; text-align:center;
+}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-label">부산소방학교 ICTC · XVR</div>
+  <div class="hdr-title"><em>팀단위</em> 이벤트 정리(아파트,요양병원)</div>
+  <div class="hdr-sub">푸르지오아파트 402동 301호 화재</div>
+</div>
+
+<div class="tabs">
+  <button class="tab on"  onclick="go(this,'ev')">아파트 메시지</button>
+  <button class="tab"     onclick="go(this,'pop')">팝업메시지(전체)</button>
+  <button class="tab"     onclick="go(this,'hint-apt')">아파트 힌트</button>
+  <button class="tab"     onclick="go(this,'hint-hospital')">요양병원 힌트</button>
+</div>
+
+<!-- ══════════════════════════════════
+     탭 A : 이벤트 정리본
+══════════════════════════════════ -->
+<div id="ev" class="panel on">
+
+  <div class="sec-head"><span class="sec-num">1</span><span class="sec-title">출동</span></div>
+  <div class="ev-list">
+    <div class="ev" id="row-출동지령">
+      <span class="arr">▸</span>
+      <span style="flex:1;">출동지령(M)</span>
+      <span class="tog-btn" id="icon-pop-출동지령" onclick="toggle('pop-출동지령')">▾</span>
+    </div>
+    <div class="ev-popup" id="pop-출동지령">
+      <div class="popup-msg s-상황실">
+        <div class="popup-hd">【상황실】 <span class="popup-seq">1-1</span></div>
+        <div class="popup-bd">화재출동!!화재출동!!부산시 북구 효열로 200,<br>푸르지오아파트 402동 301호에서 화재 발생!!<br><br>현재 신고 계속 접수되고 있는 상태로<br>출동대는 진압6개대, 구조2개대, 구급2개대, 굴절차,<br>고가차, 지휘차 출동중!! 선착대는 진압1대!!<br><br>현장지휘관은 현장상황 판단 후 내부진입 여부를 결정할것!!</div>
+      </div>
+    </div>
+    <div class="ev"><span class="arr">▸</span><span>1-1(메시지) 출동 보고</span></div>
+    <div class="ev"><span class="arr">▸</span><span>1-2(메시지) 상황전파</span></div>
+  </div>
+
+  <div class="sec-head"><span class="sec-num">2</span><span class="sec-title">선착대장 외부ABCD</span></div>
+  <div class="ev-list">
+    <div class="ev"><span class="arr">▸</span><span class="cmd">(클릭금지)외부ABCD 시점변경</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="cmd">(클릭금지)선착대장 시점으로 변경</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="star">★|선착| 최초 상황보고, 내부진입★</span></div>
+    <div class="ev"><span class="arr">▸</span><span>1-1 화점방수 및 보고</span></div>
+    <div class="ev"><span class="arr">▸</span><span>진압2대 도착 및 임무지시</span></div>
+  </div>
+
+  <div class="sec-head"><span class="sec-num">3</span><span class="sec-title">지휘대장 도착</span></div>
+  <div class="ev-list">
+    <div class="ev"><span class="arr">▸</span><span class="cmd">(클릭금지)외부ABCD 시점변경</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="cmd">(클릭금지)지휘대장 시점변경</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="star">★|지휘| 지휘권 선언(자원대기소)★</span></div>
+  </div>
+
+  <div class="sec-head"><span class="sec-num">4</span><span class="sec-title">현장지휘</span></div>
+  <div class="ev-list">
+    <div class="ev"><span class="arr">▸</span><span>구조1대 현장도착</span></div>
+    <div class="ev"><span class="arr">▸</span><span>1선펌프, 중요탱크지정</span></div>
+    <div class="ev"><span class="arr">▸</span><span>1) 3층 안방(환자1), 구조1대 RIT지정</span></div>
+    <div class="ev"><span class="arr">▸</span><span>진압3대 현장도착</span></div>
+    <div class="ev"><span class="arr">▸</span><span>2) 3층 거실(환자2) 나타남</span></div>
+    <div class="ev"><span class="arr">▸</span><span>3) 4층 안방(환자3) 나타남</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="warn">====연소확대==============</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="star">★4층 연소확대 및 진압3대 방수★</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="dim-t">=========================</span></div>
+    <div class="ev"><span class="arr">▸</span><span>진압4대 현장도착</span></div>
+    <div class="ev"><span class="arr">▸</span><span>구급2대 현장도착</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="cmd">|지휘| 단위지휘관 지정</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="cmd">|지휘| 무전망 분리</span></div>
+    <div class="ev"><span class="arr">▸</span><span>4층 환자4,5) 나타남, 이동</span></div>
+    <div class="ev"><span class="arr">▸</span><span>--&gt; 환자5 처치 및 분류</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="cmd">====추가 후착대===========</span></div>
+    <div class="ev"><span class="arr">▸</span><span>진압5대 현장도착(옥상층)</span></div>
+    <div class="ev"><span class="arr">▸</span><span>진압6대 현장도착(직전대기)</span></div>
+    <div class="ev"><span class="arr">▸</span><span>진압7대 현장도착(자원대기소)</span></div>
+    <div class="ev"><span class="arr">▸</span><span>진압8대 현장도착(자원대기소)</span></div>
+    <div class="ev"><span class="arr">▸</span><span>구조2대 현장도착(직전대기)</span></div>
+    <div class="ev"><span class="arr">▸</span><span>구급3대 현장도착</span></div>
+    <div class="ev"><span class="arr">▸</span><span>구급4대 현장도착</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="dim-t">=========================</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="cmd">|지휘| 구급1대에 상황파악</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="cmd">|지휘| 상황실 보고</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="cmd">|안전| 20분 경과 메시지</span></div>
+    <div class="ev"><span class="arr">▸</span><span>구급2대 이송</span></div>
+  </div>
+
+  <div class="sec-head"><span class="sec-num">5</span><span class="sec-title">화재상황</span></div>
+  <div class="ev-list">
+    <div class="ev"><span class="arr">▸</span><span class="star">★3층초진★</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="star">★4층 초진★</span></div>
+    <div class="ev"><span class="arr">▸</span><span>2차 인명검색 이상없음</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="star">★|지휘| 완진절차(순서대로 진행)★</span></div>
+  </div>
+
+  <div class="sec-head"><span class="sec-num">6</span><span class="sec-title">훈련 진행 세부 이벤트</span></div>
+  <div class="ev-list">
+    <div class="ev"><span class="arr">▸</span><span>1) 출동(선착대)및 임시의료소 설치</span></div>
+    <div class="ev"><span class="arr">▸</span><span>2) 출동(후착대) 진압2대 도착 및 임무지시</span></div>
+    <div class="ev"><span class="arr">▸</span><span>3) 출동(지휘차)</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)선착대장 지휘권 이양</span></div>
+    <div class="ev"><span class="arr">▸</span><span>3-1 선착대 활동지원</span></div>
+    <div class="ev"><span class="arr">▸</span><span>3-2 대기단계 준수 및 임무부여</span></div>
+    <div class="ev"><span class="arr">▸</span><span>-3층 거실(환자2) 이동</span></div>
+    <div class="ev"><span class="arr">▸</span><span>-3층 안방(환자1) 이동</span></div>
+    <div class="ev"><span class="arr">▸</span><span>-4층 안방(환자3) 이동</span></div>
+    <div class="ev"><span class="arr">▸</span><span>-4층 안방(환자4) 이동</span></div>
+    <div class="ev"><span class="arr">▸</span><span>-4층 거실(환자5) 이동</span></div>
+    <div class="ev"><span class="arr">▸</span><span>현장확인</span></div>
+    <div class="ev"><span class="arr">▸</span><span>상황판단회의</span></div>
+    <div class="ev"><span class="arr">▸</span><span>완진여부</span></div>
+    <div class="ev"><span class="arr">▸</span><span>----(메시지)완진절차 나타남</span></div>
+    <div class="ev"><span class="arr">▸</span><span>3-2(메시지)상황평가 및 지휘권 선언</span></div>
+    <div class="ev"><span class="arr">▸</span><span>1-2(메시지)최초상황 보고 30초</span></div>
+    <div class="ev"><span class="arr">▸</span><span>선착대장 내부진입</span></div>
+    <div class="ev"><span class="arr">▸</span><span>임시의료소 설치(메시지)</span></div>
+    <div class="ev"><span class="arr">▸</span><span>진압2대 현장도착</span></div>
+    <div class="ev"><span class="arr">▸</span><span>----(메시지)연소확대 10초</span></div>
+    <div class="ev"><span class="arr">▸</span><span>----(메시지)3층 초진 10초</span></div>
+    <div class="ev"><span class="arr">▸</span><span>----(메시지)4층 초진 10초</span></div>
+    <div class="ev"><span class="arr">▸</span><span>-3층 안방(환자1)이송 사라짐</span></div>
+    <div class="ev"><span class="arr">▸</span><span>-4층 안방(환자3) 이송 사라짐</span></div>
+    <div class="ev"><span class="arr">▸</span><span>-4층 안방(환자4) 이송 사라짐</span></div>
+    <div class="ev"><span class="arr">▸</span><span>-4층 거실(환자5) 이송 사라짐</span></div>
+  </div>
+
+  <div class="sec-head"><span class="sec-num">7</span><span class="sec-title">디폴트 분류</span></div>
+  <div class="ev-list">
+    <div class="ev"><span class="arr">▸</span><span>1) 선착진압대 방수</span></div>
+    <div class="ev"><span class="arr">▸</span><span>----선착진압대 방수 중지</span></div>
+    <div class="ev"><span class="arr">▸</span><span>----선착진압대 사라짐</span></div>
+    <div class="ev"><span class="arr">▸</span><span>2) 3층 진압대 나타남</span></div>
+    <div class="ev"><span class="arr">▸</span><span>----3층 진압대 방수</span></div>
+    <div class="ev"><span class="arr">▸</span><span>----3층 진압대 방수 중지</span></div>
+    <div class="ev"><span class="arr">▸</span><span>----3층 진압대사라짐</span></div>
+    <div class="ev"><span class="arr">▸</span><span>3) (추가)3층 진압대 나타남</span></div>
+    <div class="ev"><span class="arr">▸</span><span>----(추가)3층 진압대 방수</span></div>
+    <div class="ev"><span class="arr">▸</span><span>----(추가)3층 진압대 방수 중지</span></div>
+    <div class="ev"><span class="arr">▸</span><span>----(추가)3층 진압대 사라짐</span></div>
+    <div class="ev"><span class="arr">▸</span><span>4) 4층 진압대 나타남</span></div>
+    <div class="ev"><span class="arr">▸</span><span>----4층 진압대 방수</span></div>
+    <div class="ev"><span class="arr">▸</span><span>----4층 진압대 방수 중지</span></div>
+    <div class="ev"><span class="arr">▸</span><span>----4층 진압대 사라짐</span></div>
+    <div class="ev"><span class="arr">▸</span><span>5) (추가)4층 진압대 나타남</span></div>
+    <div class="ev"><span class="arr">▸</span><span>----(추가)4층 진압대 방수</span></div>
+    <div class="ev"><span class="arr">▸</span><span>----(추가)4층 진압대 방수 중지</span></div>
+    <div class="ev"><span class="arr">▸</span><span>----(추가)4층 진압대 사라짐</span></div>
+    <div class="ev"><span class="arr">▸</span><span>통제선 설치</span></div>
+    <div class="ev"><span class="arr">▸</span><span>에어매트 설치</span></div>
+    <div class="ev"><span class="arr">▸</span><span>방수포 차량 나타남</span></div>
+  </div>
+
+  <div class="sec-head"><span class="sec-num">8</span><span class="sec-title">구조대상자 이동 및 디폴트 분류</span></div>
+  <div class="ev-list">
+    <div class="ev"><span class="arr">▸</span><span class="warn">1.긴급</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="warn">2.긴급</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="warn">3.긴급</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="warn">4.긴급</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="warn">5.긴급</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="org">1.응급</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="org">2.응급</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="org">3.응급</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="org">4.응급</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="org">5.응급</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="cmd">1.비응급</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="cmd">2.비응급</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="cmd">3.비응급</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="cmd">4.비응급</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="cmd">5.비응급</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="mut">1.지연</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="mut">2.지연</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="mut">3.지연</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="mut">4.지연</span></div>
+  </div>
+
+  <button class="up-btn" onclick="scrollTo({top:0,behavior:'smooth'})">↑ 맨 위로</button>
+</div>
+
+<!-- ══════════════════════════════════
+<!-- ══════════════════════════════════
+     탭 B : 팝업메시지 전체 (원본 순서)
+══════════════════════════════════ -->
+
+
+<!-- ══════════════════════════════════
+<!-- ══════════════════════════════════
+     탭 B : 팝업메시지 전체 (원본 순서)
+══════════════════════════════════ -->
+
+
+<!-- ══════════════════════════════════
+<!-- ══════════════════════════════════
+     탭 B : 팝업메시지 전체 (원본 순서)
+══════════════════════════════════ -->
+
+
+<!-- ══════════════════════════════════
+<!-- ══════════════════════════════════
+     탭 B : 팝업메시지 전체 (원본 순서)
+══════════════════════════════════ -->
+<div id="pop" class="panel">
+
+<div class="msg s-상황실"><div class="msg-hd">【상황실】<span class="msg-seq">1</span></div><div class="msg-bd">화재출동!화재출동!부산시 북구 효열로 200,<br>푸르지오아파트 402동 301호에서 화재 발생!<br><br>현재 신고 계속 접수되고 있는 상태로<br>출동대는 진압6개대, 구조2개대, 구급2개대, 굴절차,<br>고가차, 지휘차 출동중! 선착대는 진압1대!<br><br>현장지휘관은 현장상황 판단 후 내부진입 여부를 결정할 것!</div></div>
+
+<div class="msg s-진압1대"><div class="msg-hd">【진압1대】<span class="msg-seq">2</span></div><div class="msg-bd">진압1대 출동 중!<br><br>교통상태 양호하며 특이사항 관측되지 않음!<br><br>사전임무 부여하겠음! 현장도착시<br>진압1대 탱크차는 인근 소화전 점령하여 용수 공급,<br>구급1대는 안전한 곳에 임시의료소 설치토록!</div></div>
+
+<div class="msg s-구급1대"><div class="msg-hd">【구급1대】<span class="msg-seq">3</span></div><div class="msg-bd">안전한 곳에 임시의료소 설치 사칠!</div></div>
+
+<div class="msg s-진압1대"><div class="msg-hd">【진압1대】<span class="msg-seq">4</span></div><div class="msg-bd">상황실 여기 진압1대인데<br>500미터 전방 검은 구름 관측됨!</div></div>
+
+<div class="msg s-지휘대장"><div class="msg-hd">【지휘대장】<span class="msg-seq">5</span></div><div class="msg-bd">진압1대! 여기 지휘대장!</div></div>
+
+<div class="msg s-진압1대"><div class="msg-hd">【진압1대】<span class="msg-seq">6</span></div><div class="msg-bd">여기 진압1대!</div></div>
+
+<div class="msg s-지휘대장"><div class="msg-hd">【지휘대장】<span class="msg-seq">7</span></div><div class="msg-bd">진압1대가 선착대니 현장도착시 상황보고 및<br>후착대 임무부여 철저히 하고 특수차 부서위치<br>확보할 수 있도록!</div></div>
+
+<div class="msg s-진압1대"><div class="msg-hd">【진압1대】<span class="msg-seq">8</span></div><div class="msg-bd">진압1대 상황보고 철저 및 후착대 임무부여 사칠!</div></div>
+
+<div class="msg s-지휘대장"><div class="msg-hd">【지휘대장】<span class="msg-seq">9</span></div><div class="msg-bd">지휘대장이 전 출동대에 알립니다.<br><br>후착분대는 대기단계 준수토록하고<br>현장도착시 현장지휘관의 임무지시 받고<br>현장활동 할 수 있도록!</div></div>
+
+<div class="msg s-상황실"><div class="msg-hd">【상황실】<span class="msg-seq">10</span></div><div class="msg-bd">상황실에서 전분대에 전파합니다.<br><br>후착출동대는 대기단계 준수토록하고<br>현장도착시 현장지휘관의 임무지시 받고 현장활동토록!</div></div>
+
+<div class="msg s-진압1대"><div class="msg-hd">【진압1대】<span class="msg-seq">11</span></div><div class="msg-bd">진압1대 현장도착!</div></div>
+
+<div class="msg s-진압1대장"><div class="msg-hd">【진압1대장】<span class="msg-seq">12</span></div><div class="msg-bd">현 시간부로 진압1대장이 현장지휘 하겠음!<br><br>푸르지오아파트 402동 20층 건물 중 3층에서<br>꽃, 구름 분출중이고 상층부로 연소확대 우려있음.<br>주 출입구를 A면으로 지정, 시계방향으로 B,C,D면 지정.<br><br>진압1대는 공격전략으로 전진지휘 하겠음!<br><br>연소확대 및 다수 인명피해 예상되니<br>진압3개대, 구조2개대, 구급5개대 추가출동 바람!</div></div>
+
+<div class="msg s-상황실"><div class="msg-hd">【상황실】<span class="msg-seq">13</span></div><div class="msg-bd">진압3개대, 구조2개대, 구급5개대<br>추가출동 요청 사칠!</div></div>
+
+<div class="msg s-구급1대"><div class="msg-hd">【구급1대】<span class="msg-seq">14</span></div><div class="msg-bd">선착대장! 여기 구급1대!<br>아파트 정문 입구에 임시의료소 설치 완료!</div></div>
+
+<div class="msg s-선착대장"><div class="msg-hd">【선착대장】<span class="msg-seq">15</span></div><div class="msg-bd">정문 입구 임시의료소 설치 사칠!</div></div>
+
+<div class="msg s-선착대장"><div class="msg-hd">【선착대장】<span class="msg-seq">16</span></div><div class="msg-bd">상황실! 여기 선착대장이고<br>301호 화점발견! 화점방수중!</div></div>
+
+<div class="msg s-상황실"><div class="msg-hd">【상황실】<span class="msg-seq">17</span></div><div class="msg-bd">선착대 301호 화점발견, 화점방수중 사칠!</div></div>
+
+<div class="msg s-진압2대"><div class="msg-hd">【진압2대】<span class="msg-seq">18</span></div><div class="msg-bd">진압2대 현장도착! 임무대기중!</div></div>
+
+<div class="msg s-선착대장"><div class="msg-hd">【선착대장】<span class="msg-seq">19</span></div><div class="msg-bd">진압2대는 301호 진입하여 화재진압 실시하도록!</div></div>
+
+<div class="msg s-진압2대"><div class="msg-hd">【진압2대】<span class="msg-seq">20</span></div><div class="msg-bd">진압2대 301호 화재진압 사칠!<span class="note">(--&gt;화점층부스로 이동한다.)</span></div></div>
+
+<div class="msg s-지휘대장"><div class="msg-hd">【지휘대장】<span class="msg-seq">21</span></div><div class="msg-bd">지휘대장 현장도착! 선착대장은 현 상황 보고토록!</div></div>
+
+<div class="msg s-선착대장"><div class="msg-hd">【선착대장】<span class="msg-seq">22</span></div><div class="msg-bd">현 상황 보고하겠음!<br><br>푸르지오아파트 402동 20층 건물 중 3층 301호 화재발생!<br><br>진압1대, 진압2대는 301호 화점방수 중이며<br>현재까지 인명피해는 없는 상태! 이상!</div></div>
+
+<div class="msg s-지휘대장"><div class="msg-hd">【지휘대장】<span class="msg-seq">23</span></div><div class="msg-bd">현 시간부로 지휘대장이 현장 지휘하겠음!<br>큰 대로변, 아파트 베란다 방면을 A면,<br>시계방향으로 B,C,D면으로 방면지정 하겠음!<br>전략은 공격전략, 지휘대장은 A면 앞에서 고정지휘 하겠음!<br><br>내화조건물로 20층 건물 중 3층에서 외부로 꽃, 구름<br>분출중이며 상층부로 연소확대 우려있음.<br>현 시간부로 대응1단계 발령하고,<br>한전, 가스, 경찰, 구청 유관기관 추가출동 요청바람!</div></div>
+
+<div class="msg s-상황실"><div class="msg-hd">【상황실】<span class="msg-seq">24</span></div><div class="msg-bd">대응1단계 발령 및<br>한전, 가스, 경찰, 구청 유관기관 요청 사칠!</div></div>
+
+<div class="msg s-지휘대장"><div class="msg-hd">【지휘대장】<span class="msg-seq">25</span></div><div class="msg-bd">지휘대장이 알립니다.<br><br>금곡초등학교 운동장을 자원대기소로 지정하니 추가분대는<br>자원대기소로 집결, 지휘차 운전원은 자원대기소 운영하기 바람!</div></div>
+
+<div class="msg s-상황실"><div class="msg-hd">【상황실】<span class="msg-seq">26</span></div><div class="msg-bd">상황실에서 재전파 합니다.<br><br>금곡초등학교 운동장을 자원대기소로 지정하니<br>추가분대는 자원대기소로 집결하기 바람!</div></div>
+
+<div class="msg s-구조1대"><div class="msg-hd">【구조1대】<span class="msg-seq">27</span></div><div class="msg-bd">구조1대 현장도착! 임무대기중!</div></div>
+
+<div class="msg s-지휘대장"><div class="msg-hd">【지휘대장】<span class="msg-seq">28</span></div><div class="msg-bd">구조1대는 301호 진입하여 인명검색 실시토록!</div></div>
+
+<div class="msg s-구조1대"><div class="msg-hd">【구조1대】<span class="msg-seq">29</span></div><div class="msg-bd">구조1대, 301호 인명검색 사칠!<span class="note">(--&gt;화점층 부스로 이동한다.)</span></div></div>
+
+<div class="msg s-지휘대장"><div class="msg-hd">【지휘대장】<span class="msg-seq">30</span></div><div class="msg-bd">지휘대장이 전분대에 알립니다.<br><br>진압1대 펌프차를 1선펌프차로<br>진압1대 탱크차를 중요탱크차로 지정하겠음!<br>후착 탱크차는 중요탱크차에 용수공급토록!</div></div>
+
+<div class="msg s-상황실"><div class="msg-hd">【상황실】<span class="msg-seq">31</span></div><div class="msg-bd">상황실에서 전분대에 알립니다.<br><br>진압1대 펌프차를 1선펌프차로<br>진압1대 탱크차를 중요탱크차로 지정하니<br>후착 탱크차는 중요탱크차에 용수공급하기 바람!</div></div>
+
+<div class="msg s-구조1대"><div class="msg-hd">【구조1대】<span class="msg-seq">32</span></div><div class="msg-bd">우선순위보고! 우선순위보고!<br>지휘대장! 여기 3층 구조1대!<br>301호 안방에서 구조대상자 1명 발견!</div></div>
+
+<div class="msg s-지휘대장"><div class="msg-hd">【지휘대장】<span class="msg-seq">33</span></div><div class="msg-bd">구조1대는 3층 안방 구조대상자 1명<br>임시의료소 이송토록!</div></div>
+
+<div class="msg s-구조1대"><div class="msg-hd">【구조1대】<span class="msg-seq">34</span></div><div class="msg-bd">3층 안방 구조대상자 1명 임시의료소 이송 사칠!<span class="note">(--&gt; 임시의료소 부스로 이동한다.)</span></div></div>
+
+<div class="msg s-구조1대"><div class="msg-hd">【구조1대】<span class="msg-seq">35</span></div><div class="msg-bd">지휘대장! 여기 구조1대!<br>3층 안방 구조대상자 1명 임시의료소 이송완료!<br>임무대기중!</div></div>
+
+<div class="msg s-지휘대장"><div class="msg-hd">【지휘대장】<span class="msg-seq">36</span></div><div class="msg-bd">구조1대를 RIT로 지정하니<br>구조1대는 건물A면 앞 직전대기소에서<br>직전대기토록!</div></div>
+
+<div class="msg s-구조1대"><div class="msg-hd">【구조1대】<span class="msg-seq">37</span></div><div class="msg-bd">구조1대 RIT지정 사칠!<span class="note">(--&gt; 지휘대장 앞 직전대기소로 이동한다.)</span></div></div>
+
+<div class="msg s-진압3대"><div class="msg-hd">【진압3대】<span class="msg-seq">38</span></div><div class="msg-bd">진압3대 현장도착! 임무대기중!</div></div>
+
+<div class="msg s-지휘대장"><div class="msg-hd">【지휘대장】<span class="msg-seq">39</span></div><div class="msg-bd">진압3대는 4층 진입하여 연소확대 저지 및<br>인명검색 실시토록!</div></div>
+
+<div class="msg s-진압3대"><div class="msg-hd">【진압3대】<span class="msg-seq">40</span></div><div class="msg-bd">진압3대, 4층 연소확대 저지 및 인명검색 사칠!<span class="note">(--&gt;직상층 부스로 이동한다.)</span></div></div>
+
+<div class="msg s-진압2대"><div class="msg-hd">【진압2대】<span class="msg-seq">41</span></div><div class="msg-bd">우선순위보고! 우선순위보고!<br>지휘대장! 여기 3층 진압2대!<br>301호 거실에서 구조대상자 1명 발견!</div></div>
+
+<div class="msg s-지휘대장"><div class="msg-hd">【지휘대장】<span class="msg-seq">42</span></div><div class="msg-bd">진압2대는 3층 거실 구조대상자 1명<br>임시의료소 이송토록!</div></div>
+
+<div class="msg s-진압2대"><div class="msg-hd">【진압2대】<span class="msg-seq">43</span></div><div class="msg-bd">진압2대 3층 거실 구조대상자<br>1명 임시의료소 이송 사칠!<span class="note">(--&gt;임시의료소 부스로 이동한다.)</span></div></div>
+
+<div class="msg s-진압2대"><div class="msg-hd">【진압2대】<span class="msg-seq">44</span></div><div class="msg-bd">지휘대장! 여기 진압2대!<br>3층 거실 구조대상자 1명 임시의료소 이송완료!<br>임무대기중!</div></div>
+
+<div class="msg s-지휘대장"><div class="msg-hd">【지휘대장】<span class="msg-seq">45</span></div><div class="msg-bd">진압2대는 3층 진입하여 화재진압 실시토록!</div></div>
+
+<div class="msg s-진압2대"><div class="msg-hd">【진압2대】<span class="msg-seq">46</span></div><div class="msg-bd">진압2대 3층 화재진압 사칠!<span class="note">(--&gt;화점층 부스로 이동한다.)</span></div></div>
+
+<div class="msg s-진압3대"><div class="msg-hd">【진압3대】<span class="msg-seq">47</span></div><div class="msg-bd">우선순위보고! 우선순위보고!<br>지휘대장! 여기 4층 진압3대!<br>401호 안방에서 구조대상자 1명 발견!</div></div>
+
+<div class="msg s-지휘대장"><div class="msg-hd">【지휘대장】<span class="msg-seq">48</span></div><div class="msg-bd">진압3대는 4층 안방 구조대상자 1명<br>임시의료소 이송토록!</div></div>
+
+<div class="msg s-진압3대"><div class="msg-hd">【진압3대】<span class="msg-seq">49</span></div><div class="msg-bd">진압3대 4층 안방 구조대상자 1명<br>임시의료소 이송 사칠!<span class="note">(--&gt;임시의료소 부스로 이동한다.)</span></div></div>
+
+<div class="msg s-진압3대"><div class="msg-hd">【진압3대】<span class="msg-seq">50</span></div><div class="msg-bd">지휘대장! 여기 진압3대!<br>4층 안방 구조대상자 1명 임시의료소 이송완료!<br>임무대기중!</div></div>
+
+<div class="msg s-지휘대장"><div class="msg-hd">【지휘대장】<span class="msg-seq">51</span></div><div class="msg-bd">진압3대는 4층 진입하여 연소확대 저지토록!</div></div>
+
+<div class="msg s-진압3대"><div class="msg-hd">【진압3대】<span class="msg-seq">52</span></div><div class="msg-bd">진압3대 4층 진입 사칠!<span class="note">(--&gt;직상층 부스로 이동한다.)</span></div></div>
+
+<div class="msg s-진압3대"><div class="msg-hd">【진압3대】<span class="msg-seq">53</span></div><div class="msg-bd">우선순위보고! 우선순위보고!<br>4층으로 연소확대! 연소확대!</div></div>
+
+<div class="msg s-지휘대장"><div class="msg-hd">【지휘대장】<span class="msg-seq">54</span></div><div class="msg-bd">4층 연소확대 사칠!<br>진압3대는 화점방수 실시토록!</div></div>
+
+<div class="msg s-진압3대"><div class="msg-hd">【진압3대】<span class="msg-seq">55</span></div><div class="msg-bd">진압3대 화점방수 사칠!</div></div>
+
+<div class="msg s-진압4대"><div class="msg-hd">【진압4대】<span class="msg-seq">56</span></div><div class="msg-bd">진압4대 현장도착! 임무대기중!</div></div>
+
+<div class="msg s-지휘대장"><div class="msg-hd">【지휘대장】<span class="msg-seq">57</span></div><div class="msg-bd">진압4대는 4층 진입하여 화재진압 실시토록!</div></div>
+
+<div class="msg s-진압4대"><div class="msg-hd">【진압4대】<span class="msg-seq">58</span></div><div class="msg-bd">진압4대, 4층 화재진압 사칠!<span class="note">(--&gt;직상층 부스로 이동한다.)</span></div></div>
+
+<div class="msg s-구급2대"><div class="msg-hd">【구급2대】<span class="msg-seq">59</span></div><div class="msg-bd">구급2대 현장도착! 임무대기중!</div></div>
+
+<div class="msg s-지휘대장"><div class="msg-hd">【지휘대장】<span class="msg-seq">60</span></div><div class="msg-bd">구급2대는 임시의료소에서 구급1대<br>임무지시 받고 현장활동 하도록!</div></div>
+
+<div class="msg s-구급2대"><div class="msg-hd">【구급2대】<span class="msg-seq">61</span></div><div class="msg-bd">구급1대 임무지시 받고 현장활동 사칠!<span class="note">(--&gt;임시의료소 부스로 이동한다.)</span></div></div>
+
+<div class="msg s-지휘대장"><div class="msg-hd">【지휘대장】<span class="msg-seq">62</span></div><div class="msg-bd">진압1대! 여기 지휘대장!</div></div>
+
+<div class="msg s-진압1대"><div class="msg-hd">【진압1대】<span class="msg-seq">63</span></div><div class="msg-bd">여기 3층 진압1대!</div></div>
+
+<div class="msg s-지휘대장"><div class="msg-hd">【지휘대장】<span class="msg-seq">64</span></div><div class="msg-bd">진압1대장을 3층 단위지휘관으로 지정하겠음!<br>소속대는 진압2대!<br>진압1대는 3층 방면지휘할 수 있도록!</div></div>
+
+<div class="msg s-진압1대"><div class="msg-hd">【진압1대】<span class="msg-seq">65</span></div><div class="msg-bd">3층 방면지휘 사칠!</div></div>
+
+<div class="msg s-지휘대장"><div class="msg-hd">【지휘대장】<span class="msg-seq">66</span></div><div class="msg-bd">진압3대! 여기 지휘대장!</div></div>
+
+<div class="msg s-진압3대"><div class="msg-hd">【진압3대】<span class="msg-seq">67</span></div><div class="msg-bd">여기 4층 진압3대!</div></div>
+
+<div class="msg s-지휘대장"><div class="msg-hd">【지휘대장】<span class="msg-seq">68</span></div><div class="msg-bd">진압3대장을 4층 단위지휘관으로 지정하겠음!<br>소속대는 진압4대!<br>진압3대는 4층 방면지휘할 수 있도록!</div></div>
+
+<div class="msg s-진압3대"><div class="msg-hd">【진압3대】<span class="msg-seq">69</span></div><div class="msg-bd">4층 방면지휘 사칠!</div></div>
+
+<div class="msg s-지휘대장"><div class="msg-hd">【지휘대장】<span class="msg-seq">70</span></div><div class="msg-bd">지휘대장이 알립니다.<br><br>지금부터 무전망 분리 운영하니,<br>상황실과 단위지휘관은 지휘망으로,<br>현장대원은 작전망 사용토록!</div></div>
+
+<div class="msg s-진압1대"><div class="msg-hd">【진압1대】<span class="msg-seq">71</span></div><div class="msg-bd">3층 단위지휘관 무전망 분리 사칠!</div></div>
+
+<div class="msg s-진압3대"><div class="msg-hd">【진압3대】<span class="msg-seq">72</span></div><div class="msg-bd">4층 단위지휘관 무전망 분리 사칠!</div></div>
+
+<div class="msg s-진압4대"><div class="msg-hd">【진압4대】<span class="msg-seq">73</span></div><div class="msg-bd">우선순위보고! 우선순위보고!<br>지휘대장! 여기 4층 진압4대!<br>401호 안방과 거실에서 구조대상자 2명 발견!</div></div>
+
+<div class="msg s-지휘대장"><div class="msg-hd">【지휘대장】<span class="msg-seq">74</span></div><div class="msg-bd">4층 구조대상자 2명 발견 사칠!</div></div>
+
+<div class="msg s-지휘대장"><div class="msg-hd">【지휘대장】<span class="msg-seq">75</span></div><div class="msg-bd">4층 단위지휘관! 여기 지휘대장!</div></div>
+
+<div class="msg s-진압3대"><div class="msg-hd">【진압3대】<span class="msg-seq">76</span></div><div class="msg-bd">여기 4층 단위지휘관!</div></div>
+
+<div class="msg s-지휘대장"><div class="msg-hd">【지휘대장】<span class="msg-seq">77</span></div><div class="msg-bd">4층에서 구조대상자 2명 발견!<br>구조대상자 2명 구조토록!</div></div>
+
+<div class="msg s-진압3대"><div class="msg-hd">【진압3대】<span class="msg-seq">78</span></div><div class="msg-bd">4층 구조대상자 2명 구조 사칠!</div></div>
+
+<div class="msg s-진압3대"><div class="msg-hd">【진압3대】<span class="msg-seq">79</span></div><div class="msg-bd">진압4대! 여기 4층 단위지휘관!</div></div>
+
+<div class="msg s-진압4대"><div class="msg-hd">【진압4대】<span class="msg-seq">80</span></div><div class="msg-bd">여기 4층 진압4대!</div></div>
+
+<div class="msg s-진압3대"><div class="msg-hd">【진압3대】<span class="msg-seq">81</span></div><div class="msg-bd">4층 구조대상자 2명 구조토록!</div></div>
+
+<div class="msg s-진압4대"><div class="msg-hd">【진압4대】<span class="msg-seq">82</span></div><div class="msg-bd">4층 구조대상자 2명 구조 사칠!<span class="note">(--&gt;임시의료소 부스로 이동한다.)</span></div></div>
+
+<div class="msg s-진압4대"><div class="msg-hd">【진압4대】<span class="msg-seq">83</span></div><div class="msg-bd">지휘대장! 여기 진압4대!<br>4층 구조대상자 2명 임시의료소 이송완료!<br>임무대기중!</div></div>
+
+<div class="msg s-지휘대장"><div class="msg-hd">【지휘대장】<span class="msg-seq">84</span></div><div class="msg-bd">진압4대는 4층 재진입하여 4층 단위지휘관 임무지시 받고 현장활동 할 것!</div></div>
+
+<div class="msg s-진압4대"><div class="msg-hd">【진압4대】<span class="msg-seq">85</span></div><div class="msg-bd">진압4대 4층 재진입 사칠!<span class="note">(--&gt;직상층 부스로 이동한다.)</span></div></div>
+
+<div class="msg s-진압5대"><div class="msg-hd">【진압5대】<span class="msg-seq">86</span></div><div class="msg-bd">진압5대 현장도착! 임무대기중!</div></div>
+
+<div class="msg s-지휘대장"><div class="msg-hd">【지휘대장】<span class="msg-seq">87</span></div><div class="msg-bd">진압5대는 계단실 방화문 폐쇄하고<br>옥상층 문개방토록!</div></div>
+
+<div class="msg s-진압5대"><div class="msg-hd">【진압5대】<span class="msg-seq">88</span></div><div class="msg-bd">진압5대 계단실 방화문 폐쇄 및 옥상층 문개방 사칠!<span class="note">(--&gt;옥상/상층부 부스로 이동한다.)</span></div></div>
+
+<div class="msg s-지휘대장"><div class="msg-hd">【지휘대장】<span class="msg-seq">89</span></div><div class="msg-bd">구급1대! 여기 지휘대장!</div></div>
+
+<div class="msg s-구급1대"><div class="msg-hd">【구급1대】<span class="msg-seq">90</span></div><div class="msg-bd">여기 구급1대!</div></div>
+
+<div class="msg s-지휘대장"><div class="msg-hd">【지휘대장】<span class="msg-seq">91</span></div><div class="msg-bd">현재까지 인명피해 현황 보고토록!</div></div>
+
+<div class="msg s-구급1대"><div class="msg-hd">【구급1대】<span class="msg-seq">92</span></div><div class="msg-bd">현재 사상자 총 5명으로 긴급환자 1명, 응급환자 1명<br>비응급환자 1명, 지연환자 2명 응급처치중!<br>구급2대에서 긴급환자 1명 이송 예정!</div></div>
+
+<div class="msg s-지휘대장"><div class="msg-hd">【지휘대장】<span class="msg-seq">93</span></div><div class="msg-bd">긴급환자 1명 이송예정 사칠!<br>구급1대는 임시의료소 운영 철저히 하도록!</div></div>
+
+<div class="msg s-구급1대"><div class="msg-hd">【구급1대】<span class="msg-seq">94</span></div><div class="msg-bd">구급1대 임시의료소 운영철저 사칠!</div></div>
+
+<div class="msg s-지휘대장"><div class="msg-hd">【지휘대장】<span class="msg-seq">95</span></div><div class="msg-bd">상황실! 여기 지휘대장!</div></div>
+
+<div class="msg s-상황실"><div class="msg-hd">【상황실】<span class="msg-seq">96</span></div><div class="msg-bd">여기 상황실!</div></div>
+
+<div class="msg s-지휘대장"><div class="msg-hd">【지휘대장】<span class="msg-seq">97</span></div><div class="msg-bd">현재 푸르지오 아파트 402동 301호에서 화재발생하여<br>401호로 연소확대 된 상태로 화재진압중,<br><br>현재 사상자 총 5명으로 임시의료소에서 처치중이며<br>긴급환자 1명, 응급환자 1명, 비응급환자 1명, 지연환자 2명<br>발생하였으며 구급2대에서 긴급환자 1명 이송 예정!</div></div>
+
+<div class="msg s-상황실"><div class="msg-hd">【상황실】<span class="msg-seq">98</span></div><div class="msg-bd">상층부 연소확대 및 화재진압중이며<br>사상자 5명 발생, 긴급환자 1명 이송예정 사칠!</div></div>
+
+<div class="msg s-안전담당"><div class="msg-hd">【안전담당】<span class="msg-seq">99</span></div><div class="msg-bd">안전담당이 알립니다. 화재진압 20분 경과!<br><br>전 대원은 공기호흡기 잔량 확인하고<br>교체 필요시 보고토록!</div></div>
+
+<button class="up-btn" onclick="scrollTo({top:0,behavior:'smooth'})">↑ 맨 위로</button>
+</div>
+
+
+
+
+<style>
+.popup-msg.s-상황실  { border-left-color:#ffffff; }
+.popup-msg.s-상황실  .popup-hd { background:#3d3d3d; color:#ffffff; }
+.popup-msg.s-상황실  .popup-bd { background:#333333; }
+</style>
+
+<script>
+// 탭바를 헤더 바로 아래에 고정
+function fixTabs() {
+  const hdr = document.querySelector('.hdr');
+  const tabs = document.querySelector('.tabs');
+  if (hdr && tabs) {
+    tabs.style.top = hdr.offsetHeight + 'px';
+  }
+}
+window.addEventListener('load', fixTabs);
+window.addEventListener('resize', fixTabs);
+
+function toggle(id) {
+  const popup = document.getElementById(id);
+  const icon  = document.getElementById('icon-' + id);
+  const row   = document.getElementById('row-' + id);
+  const isOpen = popup.classList.contains('open');
+  popup.classList.toggle('open');
+  icon.classList.toggle('open');
+  if (row) row.classList.toggle('open');
+}
+function go(btn, id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  btn.classList.add('on');
+  scrollTo({top: 0, behavior: 'smooth'});
+}
+</script>
+<!-- ══════════════════════════════════
+     탭 C : 팀단위 아파트 힌트
+══════════════════════════════════ -->
+<div id="hint-apt" class="panel">
+
+  <div class="sec-head"><span class="sec-num">디폴트</span><span class="sec-title">디폴트 분류</span></div>
+  <div class="ev-list">
+    <div class="ev"><span class="arr">▸</span><span>1) 선착진압대 방수</span></div>
+    <div class="ev"><span class="arr">▸</span><span>----선착진압대 방수 중지</span></div>
+    <div class="ev"><span class="arr">▸</span><span>----선착진압대 사라짐</span></div>
+    <div class="ev"><span class="arr">▸</span><span>2) 3층 진압대 나타남</span></div>
+    <div class="ev"><span class="arr">▸</span><span>----3층 진압대 방수</span></div>
+    <div class="ev"><span class="arr">▸</span><span>----3층 진압대 사라짐</span></div>
+    <div class="ev"><span class="arr">▸</span><span>3) (추가)3층 진압대 나타남</span></div>
+    <div class="ev"><span class="arr">▸</span><span>----(추가)3층 진압대 방수</span></div>
+    <div class="ev"><span class="arr">▸</span><span>----(추가)3층 진압대 사라짐</span></div>
+    <div class="ev"><span class="arr">▸</span><span>4) 4층 진압대 나타남</span></div>
+    <div class="ev"><span class="arr">▸</span><span>----4층 진압대 방수</span></div>
+    <div class="ev"><span class="arr">▸</span><span>----4층 진압대 사라짐</span></div>
+    <div class="ev"><span class="arr">▸</span><span>5) (추가)4층 진압대 나타남</span></div>
+    <div class="ev"><span class="arr">▸</span><span>----(추가)4층 진압대 방수</span></div>
+    <div class="ev"><span class="arr">▸</span><span>----(추가)4층 진압대 사라짐</span></div>
+    <div class="ev"><span class="arr">▸</span><span>통제선 설치</span></div>
+    <div class="ev"><span class="arr">▸</span><span>옥상층 문개방</span></div>
+    <div class="ev"><span class="arr">▸</span><span>----옥상층 대원 사라짐</span></div>
+    <div class="ev"><span class="arr">▸</span><span>에어매트 설치</span></div>
+    <div class="ev"><span class="arr">▸</span><span>방수포 차량 나타남</span></div>
+  </div>
+
+  <div class="sec-head"><span class="sec-num">1</span><span class="sec-title">출동</span></div>
+  <div class="ev-list">
+    <div class="ev"><span class="arr">▸</span><span class="star">★★출동 지령(M) 전차량 출동★★</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="dim-t">========불꽃 연기 보이면 클릭========</span></div>
+    <div class="ev"><span class="arr">▸</span><span>•(Image)| 선착| 출동중 상황전파 20초</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="dim-t">================================</span></div>
+    <div class="ev"><span class="arr">▸</span><span>••(Image)| 지휘| 선착대 지원 30초</span></div>
+    <div class="ev"><span class="arr">▸</span><span>•••(Image)| 선착| 현장도착, 상황 보고</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 선착| 출동중 상황전파</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 선착| 후착대 대기단계</span></div>
+    <div class="ev"><span class="arr">▸</span><span>••(메시지)| 지휘| 선착대 지원</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 지휘| 후착대 대기단계</span></div>
+    <div class="ev"><span class="arr">▸</span><span>••••(메시지)| 선착| 현장도착, 상황보고</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 선착| 방면,전략,지휘위치</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 상황실| 선착대 추가소방력 필..</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 선착| 위험요소 파악보고</span></div>
+  </div>
+
+  <div class="sec-head"><span class="sec-num">2</span><span class="sec-title">선착대장 외부ABCD</span></div>
+  <div class="ev-list">
+    <div class="ev"><span class="arr">▸</span><span class="cmd">(클릭금지)외부ABCD 시점변경</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="cmd">(클릭금지)선착대장 시점으로 변경</span></div>
+  </div>
+
+  <div class="sec-head"><span class="sec-num">3</span><span class="sec-title">선착대장 내부진입</span></div>
+  <div class="ev-list">
+    <div class="ev"><span class="arr">▸</span><span class="star">★★선착대장 내부진입★★</span></div>
+    <div class="ev"><span class="arr">▸</span><span>ㄴ 진압대 방수</span></div>
+    <div class="ev"><span class="arr">▸</span><span>임시의료소 나타남</span></div>
+    <div class="ev"><span class="arr">▸</span><span>•(Image)임시의료소 설치완료</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 구급| 임시의료소 위치 전파</span></div>
+  </div>
+
+  <div class="sec-head"><span class="sec-num">4</span><span class="sec-title">지휘대장 도착</span></div>
+  <div class="ev-list">
+    <div class="ev"><span class="arr">▸</span><span class="cmd">(클릭금지)외부ABCD 시점변경</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="cmd">(클릭금지)지휘대장 시점변경</span></div>
+    <div class="ev"><span class="arr">▸</span><span>•(Image)| 지휘| 지휘권 선언 30초</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 지휘| 지휘권 이양</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 지휘| 지휘권 선언 및 방면지정</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 상황실| 지휘대장 추가소방력</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 지휘| 임무지시</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 지휘| 상황보고</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 지휘| 용수분대지정</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 지휘| 직전대기, 자원대기소 지정</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 상황실| 통제선 설치여부</span></div>
+  </div>
+
+  <div class="sec-head"><span class="sec-num">5</span><span class="sec-title">후착대 도착</span></div>
+  <div class="ev-list">
+    <div class="ev"><span class="arr">▸</span><span>진압2대 현장도착</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 선착| 후착대 임무부여</span></div>
+    <div class="ev"><span class="arr">▸</span><span>구조1대 현장도착</span></div>
+    <div class="ev"><span class="arr">▸</span><span>구급2대 현장도착</span></div>
+    <div class="ev"><span class="arr">▸</span><span>진압3대 현장도착</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 지휘| 후착대 임무부여</span></div>
+    <div class="ev"><span class="arr">▸</span><span>진압4대 현장도착</span></div>
+    <div class="ev"><span class="arr">▸</span><span>진압5대 현장도착</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 지휘| 인명피해현황 확인</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 지휘| 중간상황 보고 무전</span></div>
+    <div class="ev"><span class="arr">▸</span><span>진압6대 현장도착</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="cmd">(메시지)| 지휘| 단위지휘관 지정</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="cmd">(메시지)| 지휘| 무전망분리</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 안전| 20분 경과 메시지</span></div>
+    <div class="ev"><span class="arr">▸</span><span>진압7대 현장도착</span></div>
+    <div class="ev"><span class="arr">▸</span><span>진압8대 현장도착</span></div>
+    <div class="ev"><span class="arr">▸</span><span>구조2대 현장도착</span></div>
+    <div class="ev"><span class="arr">▸</span><span>구급3대 현장도착</span></div>
+    <div class="ev"><span class="arr">▸</span><span>구급4대 현장도착</span></div>
+  </div>
+
+  <div class="sec-head"><span class="sec-num">6</span><span class="sec-title">화상상황</span></div>
+  <div class="ev-list">
+    <div class="ev"><span class="arr">▸</span><span class="star">★4층 연소확대★</span></div>
+    <div class="ev"><span class="arr">▸</span><span>•(Image)연소확대 10초</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메세지)| 4층 진압대| 연소확대 보고</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="dim-t">====화재진압====================</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="star">★3층 초진★</span></div>
+    <div class="ev"><span class="arr">▸</span><span>•(Image)3층 초진 10초</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메세지)| 3층 초진| 초진 보고</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 지휘| 2차인명검색+배연 지시</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="star">★4층 초진★</span></div>
+    <div class="ev"><span class="arr">▸</span><span>•(Image)4층 초진 10초</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메세지)| 4층 초진| 초진 보고</span></div>
+    <div class="ev"><span class="arr">▸</span><span>2차 인명검색 이상없음(M) ·</span></div>
+    <div class="ev"><span class="arr">▸</span><span>•(Image)완진절차</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="star">★완진★</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 지휘| 지휘대장 완진절차 준수</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 상황실| 완진여부</span></div>
+  </div>
+
+  <div class="sec-head"><span class="sec-num">7</span><span class="sec-title">구조대상자 현황</span></div>
+  <div class="ev-list">
+    <div class="ev"><span class="arr">▸</span><span>├──3층 안방(환자1) 나타남</span></div>
+    <div class="ev"><span class="arr">▸</span><span>| •(Image)3층 안방(환자1) 나타남</span></div>
+    <div class="ev"><span class="arr">▸</span><span>| (메시지)| 진압| 구조대상자 발견 보고</span></div>
+    <div class="ev"><span class="arr">▸</span><span>|    3층 안방(환자1)의료소 이동</span></div>
+    <div class="ev"><span class="arr">▸</span><span>└──3층 안방(환자1)병원이송 사라짐</span></div>
+    <div class="ev"><span class="arr">▸</span><span>├──3층 거실(환자2) 나타남</span></div>
+    <div class="ev"><span class="arr">▸</span><span>| •(Image)3층 거실(환자2) 나타남</span></div>
+    <div class="ev"><span class="arr">▸</span><span>|    3층 거실(환자2) 이동</span></div>
+    <div class="ev"><span class="arr">▸</span><span>└──3층 거실(환자2) 이송 사라짐</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="dim-t">=====[4층]=================</span></div>
+    <div class="ev"><span class="arr">▸</span><span>├──4층 안방(환자3) 나타남</span></div>
+    <div class="ev"><span class="arr">▸</span><span>| •(Image)4층 안방(환자3) 나타남</span></div>
+    <div class="ev"><span class="arr">▸</span><span>|    4층 안방(환자3) 이동</span></div>
+    <div class="ev"><span class="arr">▸</span><span>└──4층 안방(환자3) 이송 사라짐</span></div>
+    <div class="ev"><span class="arr">▸</span><span>├──4층 안방(환자4) 나타남</span></div>
+    <div class="ev"><span class="arr">▸</span><span>| •(Image)4층 안방(환자4) 나타남</span></div>
+    <div class="ev"><span class="arr">▸</span><span>|    4층 안방(환자4) 이동</span></div>
+    <div class="ev"><span class="arr">▸</span><span>└──4층 안방(환자4) 이송 사라짐</span></div>
+    <div class="ev"><span class="arr">▸</span><span>├──4층 거실(환자5) 나타남</span></div>
+    <div class="ev"><span class="arr">▸</span><span>| •(Image)4층 거실(환자5) 나타남</span></div>
+    <div class="ev"><span class="arr">▸</span><span>|    4층 거실(환자5) 이동</span></div>
+    <div class="ev"><span class="arr">▸</span><span>└──4층 거실(환자5) 이송 사라짐</span></div>
+  </div>
+
+  <button class="up-btn" onclick="scrollTo({top:0,behavior:'smooth'})">↑ 맨 위로</button>
+</div>
+
+
+<!-- ══════════════════════════════════
+     탭 D : 팀단위 요양병원 힌트
+══════════════════════════════════ -->
+<div id="hint-hospital" class="panel">
+
+  <div class="sec-head"><span class="sec-num">디폴트</span><span class="sec-title">디폴트 분류</span></div>
+  <div class="ev-list">
+    <div class="ev"><span class="arr">▸</span><span>├──화재발생 20분 경과</span></div>
+    <div class="ev"><span class="arr">▸</span><span>└──화재발생 30분 경과</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="star">★ ├──| 진압2| 2층 탈의실 나타남★</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="star">★ └──| 진압2| 2층 탈의실 사라짐★</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="star">★ ├──| 진압3| 2층 세탁실 나타남★</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="star">★ └──| 진압3| 2층 세탁실 사라짐★</span></div>
+    <div class="ev"><span class="arr">▸</span><span>통제선 설치</span></div>
+    <div class="ev"><span class="arr">▸</span><span>에어매트 설치</span></div>
+    <div class="ev"><span class="arr">▸</span><span>송풍기 진입</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="star">★| 후착대| '옥상층' 진입★</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="star">★| 후착대| '3층' 진입★</span></div>
+  </div>
+
+  <div class="sec-head"><span class="sec-num">1</span><span class="sec-title">출동</span></div>
+  <div class="ev-list">
+    <div class="ev"><span class="arr">▸</span><span class="star">★★출동지령★★</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="dim-t">=====상황전개 메시지=====</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 선착| 출동중 상황전파</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 선착| 후착대 대기단계</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 지휘| 선착대 지원</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 지휘| 후착대 대기단계</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 선착| 현장도착 상황보고</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 선착| 방면,전략,지휘위치</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 상황실| 선착대 추가소방력 필..</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 선착| 위험요소 파악보고</span></div>
+  </div>
+
+  <div class="sec-head"><span class="sec-num">2</span><span class="sec-title">선착대장 외부ABCD</span></div>
+  <div class="ev-list">
+    <div class="ev"><span class="arr">▸</span><span class="cmd">(클릭금지)외부ABCD 시점변경</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="cmd">(클릭금지)선착대장 시점으로 변경</span></div>
+  </div>
+
+  <div class="sec-head"><span class="sec-num">3</span><span class="sec-title">선착대장 내부진입</span></div>
+  <div class="ev-list">
+    <div class="ev"><span class="arr">▸</span><span class="star">★관계인&amp;진압1대 나타남★</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="star">★| 진압1| 내부진입★</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="star">★선착대장 내부진입★</span></div>
+    <div class="ev"><span class="arr">▸</span><span>| 진압2| 도착&amp;내부진입</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 선착| 후착대 임무부여</span></div>
+    <div class="ev"><span class="arr">▸</span><span>| 구조1| 도착&amp;내부진입</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="star">★| 진압3| 도착&amp;내부진입&amp;지휘차출동★</span></div>
+  </div>
+
+  <div class="sec-head"><span class="sec-num">4</span><span class="sec-title">지휘대장 도착</span></div>
+  <div class="ev-list">
+    <div class="ev"><span class="arr">▸</span><span class="cmd">(클릭금지)외부ABCD 시점변경</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="cmd">(클릭금지)지휘대장 시점변경</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="star">★| 관계인| 옥상 구조대상자 정보★</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 지휘| 지휘권 이양</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 지휘| 지휘권 선언 및 방면지정</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 상황실| 지휘대장 추가소방력</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 지휘| 임무지시</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 지휘| 상황보고</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 지휘| 용수분대지정</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 지휘| 직전대기, 자원대기소 지정</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 상황실| 통제선 설치여부</span></div>
+  </div>
+
+  <div class="sec-head"><span class="sec-num">5</span><span class="sec-title">후착대 도착</span></div>
+  <div class="ev-list">
+    <div class="ev"><span class="arr">▸</span><span class="star">★| 진압4| 현장도착★</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="star">★| 진압4| 내부진입★</span></div>
+    <div class="ev"><span class="arr">▸</span><span>구급2대 현장도착</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 지휘| 후착대 임무부여</span></div>
+    <div class="ev"><span class="arr">▸</span><span>5대 현장도착</span></div>
+    <div class="ev"><span class="arr">▸</span><span>5대 내부진입</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 지휘| 중간상황 보고 무전</span></div>
+    <div class="ev"><span class="arr">▸</span><span>6대 현장도착</span></div>
+    <div class="ev"><span class="arr">▸</span><span>6대 내부진입</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="cmd">(메시지)| 지휘| 단위지휘관</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="cmd">(메시지)| 지휘| 무전망분리</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 안전| 20분 경과 메시지</span></div>
+    <div class="ev"><span class="arr">▸</span><span>굴절차, 고가차 현장도착</span></div>
+    <div class="ev"><span class="arr">▸</span><span>----고가차, 굴절차 전개</span></div>
+    <div class="ev"><span class="arr">▸</span><span>7대 현장도착</span></div>
+    <div class="ev"><span class="arr">▸</span><span>7대 내부진입</span></div>
+    <div class="ev"><span class="arr">▸</span><span>8대 현장도착</span></div>
+    <div class="ev"><span class="arr">▸</span><span>| 구조2| 현장도착</span></div>
+  </div>
+
+  <div class="sec-head"><span class="sec-num">6</span><span class="sec-title">화재사항</span></div>
+  <div class="ev-list">
+    <div class="ev"><span class="arr">▸</span><span class="star">★화재 초진★</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 지휘| 2차인명검색+배연 지시</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="star">★2차인명검색 결과&amp;완진★</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 지휘| 인명피해현황 파악</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 지휘| 완진절차 준수</span></div>
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 상황실| 완진여부</span></div>
+  </div>
+
+  <div class="sec-head"><span class="sec-num">7</span><span class="sec-title">구조대상자 현황</span></div>
+  <div class="ev-list">
+    <div class="ev"><span class="arr">▸</span><span>(메시지)| 상황실| 옥상 구조대상자 구조</span></div>
+    <div class="ev"><span class="arr">▸</span><span>├──2층 (2병동 환자2명발견)</span></div>
+    <div class="ev"><span class="arr">▸</span><span>└──(2병동 환자2명) 임시의료소 이동</span></div>
+    <div class="ev"><span class="arr">▸</span><span>├──2층 (작업실 환자2명발견)</span></div>
+    <div class="ev"><span class="arr">▸</span><span>└──(작업실 환자2명) 임시의료소 이동</span></div>
+    <div class="ev"><span class="arr">▸</span><span>├──3층 구조1팀 나타남</span></div>
+    <div class="ev"><span class="arr">▸</span><span>└──(3층 구조1팀, 휠체어 2명) 임시의료소 이동</span></div>
+    <div class="ev"><span class="arr">▸</span><span>├──3층 구조2팀 나타남</span></div>
+    <div class="ev"><span class="arr">▸</span><span>└──(3층 구조2팀 베드2명) 임시의료소 이동</span></div>
+    <div class="ev"><span class="arr">▸</span><span>├──옥상 구조1팀 나타남</span></div>
+    <div class="ev"><span class="arr">▸</span><span>└──(옥상 구조1팀, 구조자 4명) 임시의료소 이동</span></div>
+    <div class="ev"><span class="arr">▸</span><span>├──옥상 구조2팀 나타남</span></div>
+    <div class="ev"><span class="arr">▸</span><span>└──(옥상 구조2팀, 구조자 4명) 임시의료소 이동</span></div>
+  </div>
+
+  <div class="sec-head"><span class="sec-num">돌발</span><span class="sec-title">돌발이벤트</span></div>
+  <div class="ev-list">
+    <div class="ev"><span class="arr">▸</span><span class="warn">(메시지)| 진압1| 2층 인명검색중</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="warn">(메시지)| 진압1| 2층 연소저지 안됨</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="warn">(메시지)| 진압1| 2층 추가 관창필요</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="warn">(메시지)| 진압1| 2층 탈의실 화재 거의</span></div>
+    <div class="ev"><span class="arr">▸</span><span class="warn">(메시지)| 진압1| 2층 방수압 안나옴</span></div>
+  </div>
+
+  <button class="up-btn" onclick="scrollTo({top:0,behavior:'smooth'})">↑ 맨 위로</button>
+</div>
+
+</body>
+</html>
